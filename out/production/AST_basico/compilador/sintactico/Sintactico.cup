@@ -34,14 +34,14 @@ action code
 terminal MAIN,PUNTO,MAS, MENOS, MULTIPLICAR, DIVIDIR, APERTURA_PARENTESIS, CIERRE_PARENTESIS, MAYOR, MENOR, MAYOR_IGUAL, MENOR_IGUAL, IGUAL_IGUAL, DISTINTO, PUNTO_COMA, OR, AND, NOT, VARIABLE, IS, IGUAL,WHILE,DO,IF,THEN,ELSE,BEGIN,END,WRITE, WRITELN,WHEN, BREAK,CONTINUE,FUNCTION,RETURN,COMA,FOR,BY,TO,FROM;
 terminal String IDENTIFICADOR, INTEGER_LITERAL, FLOAT_LITERAL,TRUE,FALSE,INTEGER,FLOAT,BOOLEAN, STRING_LITERAL;
 
-non terminal Expresion condicion,comparacion,expresion,exp_arit,exp_or,exp_and,exp_not, termino, factor, valor_constante;
+non terminal Expresion invocacion_funciones,condicion,comparacion,expresion,exp_arit,exp_or,exp_and,exp_not, termino, factor, valor_constante;
 //non terminal Comparacion comparacion;
 non terminal List<Expresion> parametros_invocacion;
 non terminal Programa programa;
 //non terminal List<Declaracion> declaraciones;
 non terminal Bloque bloque_main;
 non terminal List<Sentencia> sentencias;
-non terminal Sentencia sentencia, instruccion, bloque,invocacion_funciones;
+non terminal Sentencia sentencia, instruccion, bloque;
 non terminal DeclaracionVariable declaracion_variable;
 //non  terminal DeclaracionFuncion declaracion_funcion;
 //non terminal List<Parametro> parametros, parametros_con_v_defecto;
@@ -275,7 +275,7 @@ instruccion ::= when:w{:
 */
 
 instruccion ::= invocacion_funciones:i {:
-            RESULT=i;
+            RESULT=(Sentencia) i;
         :};
 
 instruccion ::= asignacion:a {:
@@ -613,11 +613,11 @@ factor ::= TRUE:t {:
 factor ::= FALSE:f {:
             RESULT = new Constante(f, Tipo.BOOL);
             :};
-/*
+
 factor ::= invocacion_funciones:i {:
             RESULT = i;
             :};
-*/
+
 factor ::= MENOS factor:f {:
             RESULT = new MenosUnario(f);
             :};

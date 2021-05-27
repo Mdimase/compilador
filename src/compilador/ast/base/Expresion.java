@@ -1,9 +1,8 @@
 package compilador.ast.base;
 
-import compilador.ast.instrucciones.InvocacionFuncionAbs;
 import compilador.ast.instrucciones.Sentencia;
 
-public abstract class Expresion extends Nodo {
+public abstract class Expresion extends Sentencia {
     
     private Tipo tipo;
 

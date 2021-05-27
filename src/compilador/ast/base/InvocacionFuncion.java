@@ -7,7 +7,7 @@ import compilador.visitor.Visitor;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InvocacionFuncion extends Sentencia {
+public class InvocacionFuncion extends Expresion {
 
     private Identificador identificador;
     private List<Expresion> params = new ArrayList<Expresion>();

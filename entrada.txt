@@ -38,13 +38,10 @@ if entero? >= 10 then
         end
         else
             writeln("Estoy en el else");
-  } #hasta aca bien
-#a = 1 + pepe();
-#b = pagar(1,true);
-#c = saltar(impulsar());
-if a == 1 then
-         begin
-            z=1;
-            pepe();
-         end;
+a = 1 + pepe();
+b = pagar(1,true);
+c = saltar(impulsar());
+prueba_Funcion(a,b);
+}  #hasta aca bien
+a=2;
 end.

@@ -1,24 +1,10 @@
 graph G {1 [label="Programa"]
 2 [label="MAIN"]
 1 -- 2
-3 [label="IF"]
+3 [label="="]
 2 -- 3
-4 [label="== UNKNOWN"]
+4 [label="Ident a UNKNOWN"]
 3 -- 4
-5 [label="Ident a UNKNOWN"]
-4 -- 5
-6 [label="Const 1 INTEGER"]
-4 -- 6
-7 [label="BLOQUE"]
-3 -- 7
-8 [label="="]
-7 -- 8
-9 [label="Ident z UNKNOWN"]
-8 -- 9
-10 [label="Const 1 INTEGER"]
-8 -- 10
-11 [label="InvocacionFuncion"]
-7 -- 11
-12 [label="Ident pepe UNKNOWN"]
-11 -- 12
+5 [label="Const 2 INTEGER"]
+3 -- 5
 }
