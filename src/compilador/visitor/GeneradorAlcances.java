@@ -45,6 +45,21 @@ public class GeneradorAlcances extends Visitor<Void>{
         return null;
     }
 
+    @Override
+    protected Void procesarPrograma(Programa programa, Void declaraciones, Void sentencias) {
+        return null;
+    }
+
+    @Override
+    protected Void procesarDeclaracionFuncion(DeclaracionFuncion declaracionFuncion, Void identificador, List<Void> sentencias) {
+        return null;
+    }
+
+    @Override
+    protected Void procesarDeclaracionFuncion(DeclaracionFuncion declaracionFuncion, Void identificador, List<Void> parametros, List<Void> sentencias) {
+        return null;
+    }
+
     //revisar esto si todos retornan null esta bien?
 
     @Override

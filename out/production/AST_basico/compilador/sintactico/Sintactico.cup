@@ -34,96 +34,35 @@ action code
 terminal MAIN,PUNTO,MAS, MENOS, MULTIPLICAR, DIVIDIR, APERTURA_PARENTESIS, CIERRE_PARENTESIS, MAYOR, MENOR, MAYOR_IGUAL, MENOR_IGUAL, IGUAL_IGUAL, DISTINTO, PUNTO_COMA, OR, AND, NOT, VARIABLE, IS, IGUAL,WHILE,DO,IF,THEN,ELSE,BEGIN,END,WRITE, WRITELN,WHEN, BREAK,CONTINUE,FUNCTION,RETURN,COMA,FOR,BY,TO,FROM;
 terminal String IDENTIFICADOR, INTEGER_LITERAL, FLOAT_LITERAL,TRUE,FALSE,INTEGER,FLOAT,BOOLEAN, STRING_LITERAL;
 
-non terminal Expresion invocacion_funciones,condicion,comparacion,expresion,exp_arit,exp_or,exp_and,exp_not, termino, factor, valor_constante;
-//non terminal Comparacion comparacion;
+non terminal Expresion invocacion_funciones,condicion,comparacion,expresion,exp_arit,exp_or,exp_and,exp_not, termino, factor;
 non terminal List<Expresion> parametros_invocacion;
 non terminal Programa programa;
-//non terminal List<Declaracion> declaraciones;
 non terminal Bloque bloque_main;
-non terminal List<Sentencia> sentencias;
+non terminal List<Sentencia> sentencias,declaraciones;
 non terminal Sentencia sentencia, instruccion, bloque;
 non terminal DeclaracionVariable declaracion_variable;
-//non  terminal DeclaracionFuncion declaracion_funcion;
-//non terminal List<Parametro> parametros, parametros_con_v_defecto;
-//non terminal Parametro parametro,parametro_con_v_defecto;
+non  terminal DeclaracionFuncion declaracion_funcion;
+non terminal List<Parametro> parametros, parametros_con_v_defecto;
+non terminal Parametro parametro,parametro_con_v_defecto;
 non terminal Asignacion asignacion;
 non terminal Tipo tipo;
 non terminal Write write, writeln;
 non terminal While while;
 non terminal For for;
 non terminal If if;
-//non terminal InvocacionFuncion invocacion_funciones;
+non terminal Constante valor_defecto;
+//non terminal InvocacionFuncion invocacion_funciones; TUVIMOS QUE HACER QUE SEA EXPRESION Y QUE EXPRESION EXTIENDA DE SENTENCIA PARA SOLUCIONAR PROBLEMAS DE TIPOS ENEL PARSING
 //non terminal When when;
-//comparaciones_is?
 
 precedence left IS; //para evitar shift/reduce en el when sin else
 precedence left ELSE; // para evitar shift/reduce en el if
 
 start with programa;
 
-/*
-programa ::=    lista_variables:lv sentencias:ss {:
-                    lv.addAll(ss);  //para tener una sola lista
-                    Bloque bloque = new Bloque(lv, "CUERPO", true); //bloque main
-                    RESULT = new Programa(bloque);
-                :};
-
-lista_variables ::= VARS LLAVE_ABRE variables:vv LLAVE_CIERRA {:
-                        RESULT = vv;
-                    :} |
-                    {:
-                        RESULT = new ArrayList<>(); //corta la recursion e instancio
-                    :}
-                    ;
-
-variables ::=   variables:vv variable:v {:
-                    vv.addAll(v);
-                    RESULT = vv;
-                :} |
-                variable:v
-                {:
-                    List<Sentencia> vs = new ArrayList<>(); //donde corta la recursion instancio
-                    vs.addAll(v);
-                    RESULT = vs;
-                :}
-                ;
-
-sentencias ::=  sentencias:ss sentencia:s {:
-                    ss.add(s);
-                    RESULT = ss;
-                :} |
-                {:
-                    List<Sentencia> ls = new ArrayList<>(); //donde corta la recursion instancio
-                    RESULT = ls;              
-                :}
-                ;
-
-tipo ::=    TIPO_FLOAT:t {:
-                RESULT = Tipo.FLOAT;
-            :} |
-            TIPO_BOOL:t {: 
-                RESULT = Tipo.BOOL;
-            :} |
-            TIPO_INT:t {:
-                RESULT = Tipo.INTEGER;
-            :};
-//declaraciond e variables, esta asi xq el ejemplo soporta declaracion multiple a,b,c=10;
-variable ::=    IDENTIFICADOR:id COLON tipo:t {:
-                    List<DeclaracionVariable> dv = new ArrayList<>();
-                    dv.add(new DeclaracionVariable(new Identificador(id, t), t));
-                    RESULT = dv;
-                :} |
-                IDENTIFICADOR:id COMA variable:v {:
-                    v.add(new DeclaracionVariable(new Identificador(id, v.get(0).getTipo()), v.get(0).getTipo()));
-                    RESULT = v;
-                :};
-*/
-//INICIO PROGRAMA NUESTRO
-/*
 programa ::= declaraciones:d bloque_main:bm{:
-            RESULT = d+bm;
+            Bloque declaraciones = new Bloque(d,"DECLARACIONES",false);
+            RESULT = new Programa(declaraciones,bm);
         :};
-*/
 
 //programa sin declaraciones anteriores al main is
 programa ::=  bloque_main:bm{:
@@ -134,112 +73,95 @@ bloque_main ::= MAIN IS sentencias:ss END PUNTO{:
             RESULT = new Bloque(ss,"MAIN",true);
             :};
 
-/*
 declaraciones ::= declaraciones:d declaracion_variable:dv PUNTO_COMA{:
-            System.out.println("REGLA 2.1: declaraciones -> declaraciones declaracion_variable ;");
-            RESULT=d+dv;
+            d.add(dv);
+            RESULT= d;
         :};
 
 declaraciones ::= declaracion_variable:dv PUNTO_COMA{:
-            System.out.println("REGLA 2.2: declaraciones -> declaracion_variable ;");
-            RESULT=dv;
+            List<Sentencia> ds = new ArrayList<>();
+            ds.add(dv);
+            RESULT= ds;
         :};
 
 declaraciones ::= declaraciones:d declaracion_funcion:df {:
-            System.out.println("REGLA 2.3: declaraciones -> declaraciones declaracion_funcion");
-            RESULT=d+df;
+            d.add(df);
+            RESULT= d;
         :};
 
 declaraciones ::= declaracion_funcion:df {:
-            RESULT=df;
+            List<Sentencia> dfs = new ArrayList<>();
+            dfs.add(df);
+            RESULT= dfs;
         :};
 
-declaracion_variable ::= VARIABLE IDENTIFICADOR:id IS tipo:t{:
-            RESULT= new DeclaracionVariable(id,t);
-        :};
-
-declaracion_variable ::= VARIABLE IDENTIFICADOR:id IS tipo:t IGUAL expresion:e {:
-            RESULT= new DeclaracionVariable(id,t,e);
-        :};
-
-tipo::= INTEGER:i {:
-            RESULT= Tipo.INTEGER;
-        :};
-
-tipo::= FLOAT:f {:
-            RESULT= Tipo.FLOAT;
-        :};
-
-tipo::= BOOLEAN:b {:
-            RESULT= Tipo.BOOL;
-        :};
-
-//funcion con una sola sentencia y parametros
 declaracion_funcion::= FUNCTION IDENTIFICADOR:id APERTURA_PARENTESIS parametros:p CIERRE_PARENTESIS RETURN tipo:t sentencia:s {:
-            System.out.println("REGLA: 5.1: declaracion_funcion -> FUNCTION IDENTIFICADOR ( parametros ) RETURN tipo sentencia");
-            RESULT="FUNCTION"+id+"("+p+")"+"RETURN"+t+s;
+            Identificador identificador = new Identificador(id,t);
+            List<Sentencia> aux = new ArrayList<Sentencia>();
+            aux.add(s);
+            Bloque bloque = new Bloque(aux,false);
+            RESULT= new DeclaracionFuncion(identificador,t,p,bloque);
         :};
 
-//funcion con una sola sentencia sin parametros
 declaracion_funcion::= FUNCTION IDENTIFICADOR:id APERTURA_PARENTESIS CIERRE_PARENTESIS RETURN tipo:t sentencia:s {:
-            System.out.println("REGLA: 5.2: declaracion_funcion -> FUNCTION IDENTIFICADOR () RETURN tipo sentencia");
-            RESULT="FUNCTION"+id+"()"+"RETURN"+t+s;
+            Identificador identificador = new Identificador(id,t);
+            List<Sentencia> aux = new ArrayList<Sentencia>();
+            aux.add(s);
+            Bloque bloque = new Bloque(aux,false);
+            RESULT= new DeclaracionFuncion(identificador,t,bloque);
         :};
 
 parametros::= parametro:p COMA parametros:pp {:
-            System.out.println("REGLA : parametros -> parametro COMA parametros");
-            RESULT = p+","+pp;
+            pp.add(p);
+            RESULT = pp;
         :};
 
 parametros::= parametro_con_v_defecto:p parametros_con_v_defecto:pp {:
-            System.out.println("REGLA : parametros -> parametro_con_v_defecto parametros_con_v_defecto");
-            RESULT = p+pp;
+            pp.add(p);
+            RESULT = pp;
         :};
 
 parametros::= parametro:p {:
-            System.out.println("REGLA : parametros -> parametro");
-            RESULT = p;
+            List<Parametro> ps = new ArrayList<>();
+            ps.add(p);
+            RESULT= ps;
         :};
 
 parametros_con_v_defecto::= COMA parametro_con_v_defecto:p parametros_con_v_defecto:pp {:
-            System.out.println("REGLA : parametros -> COMA parametro_con_v_defecto parametros_con_v_defecto");
-            RESULT = ","+p+pp;
+            pp.add(p);
+            RESULT=pp;
         :};
 
 parametros_con_v_defecto::=  {:
-            System.out.println("REGLA : parametros -> ");
+            List<Parametro> pvs = new ArrayList<>();
+            RESULT= pvs;
         :};
 
 parametro::= IDENTIFICADOR:id IS tipo:t {:
-            System.out.println("REGLA 7.1: declaracion_parametro -> IDENTIFICADOR IS tipo");
-            RESULT=id + "IS" +t;
+            Identificador identificador = new Identificador(id,t);
+            RESULT= new Parametro(t,identificador);
         :};
 
 parametro_con_v_defecto::= IDENTIFICADOR:id IS tipo:t IGUAL valor_defecto:v {:
-            System.out.println("REGLA 7.2: declaracion_parametro -> IDENTIFICADOR IS tipo = valor_defecto");
-            RESULT=id + "IS" +t + "=" +v;
+            Identificador identificador = new Identificador(id,t);
+            RESULT= new Parametro(t,identificador,v);
         :};
 
 valor_defecto::= INTEGER_LITERAL:i{:
-        System.out.println("REGLA 8.1: valor_defecto -> INTEGER_LITERAL");
-        RESULT=i;
+        RESULT= new Constante(i, Tipo.INTEGER);
 :};
 
 valor_defecto::= FLOAT_LITERAL:f{:
-        System.out.println("REGLA 8.2: valor_defecto -> FLOAT_LITERAL");
-        RESULT=f;
+        RESULT= new Constante (f, Tipo.FLOAT);
 :};
 
 valor_defecto::= TRUE:t{:
-        System.out.println("REGLA 8.3: valor_defecto -> TRUE");
-        RESULT=t;
+        RESULT=new Constante(t,Tipo.BOOL);
 :};
 
 valor_defecto::= FALSE:f{:
-        System.out.println("REGLA 8.4: valor_defecto -> FALSE");
-        RESULT=f;
+        RESULT= new Constante(f,Tipo.BOOL);
 :};
-*/
 
 sentencias ::= sentencias:ss sentencia:s {:
             ss.add(s);

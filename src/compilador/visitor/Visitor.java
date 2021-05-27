@@ -10,6 +10,7 @@ import compilador.ast.instrucciones.*;
 import compilador.ast.operaciones.binarias.OperacionBinaria;
 import compilador.ast.operaciones.unarias.OperacionUnaria;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -65,7 +66,14 @@ public abstract class Visitor<T> {
     }
 
     public T visit(Programa p) throws ExcepcionDeAlcance{
-        return p.getCuerpo().accept(this);  //invoca el accept del bloque main
+        if(p.getDeclaraciones() == null){
+            return p.getCuerpo().accept(this);  //invoca el accept del bloque main
+        } else {
+            T declaraciones = p.getDeclaraciones().accept(this);
+            T sentencias = p.getCuerpo().accept(this);
+            return procesarPrograma(p,declaraciones,sentencias);
+        }
+
     };
 
     public T visit(Bloque b) throws ExcepcionDeAlcance{
@@ -146,6 +154,36 @@ public abstract class Visitor<T> {
         }
         return procesarWhile(aWhile,exp,bloque);
     }
+
+    public T visit(DeclaracionFuncion declaracionFuncion) throws ExcepcionDeAlcance {
+        T id = declaracionFuncion.getIdentificador().accept(this);
+        List<T> bloque = new ArrayList<>();
+        for (Sentencia sentencia : declaracionFuncion.getBloque().getSentencias()){  //para cada sentencia dentro del bloque
+            bloque.add(sentencia.accept(this)); //invoco al accept de sentencia, es decir, de alguna de las clases que heredan de ella(xq sentencia es abstract)
+        }
+        if(declaracionFuncion.getParametros().isEmpty()){
+            return procesarDeclaracionFuncion(declaracionFuncion,id,bloque);
+        } else{
+            List<T> parametros = new ArrayList<>();
+            List<Parametro> list= declaracionFuncion.getParametros();
+            Collections.reverse(list);
+            for (Parametro parametro : list){
+                if(parametro.getValorDefecto() != null){
+                    parametros.add(parametro.getIdentificador().accept(this));
+                    parametros.add(parametro.getValorDefecto().accept(this));
+                }else{
+                    parametros.add(parametro.getIdentificador().accept(this));
+                }
+            }
+            return procesarDeclaracionFuncion(declaracionFuncion,id,parametros,bloque);
+        }
+    }
+
+    protected abstract T procesarPrograma (Programa programa,T declaraciones,T sentencias);
+
+    protected abstract T procesarDeclaracionFuncion(DeclaracionFuncion declaracionFuncion,T identificador, List<T> sentencias);
+
+    protected abstract T procesarDeclaracionFuncion(DeclaracionFuncion declaracionFuncion,T identificador,List<T> parametros, List<T> sentencias);
 
     protected abstract T procesarDeclaracionVariable(DeclaracionVariable declaracionVariable,T identificador,T expresion);
 

@@ -1,10 +1,78 @@
 graph G {1 [label="Programa"]
-2 [label="MAIN"]
+2 [label="DECLARACIONES"]
 1 -- 2
-3 [label="="]
+3 [label="DeclaracionVariable"]
 2 -- 3
-4 [label="Ident a UNKNOWN"]
-3 -- 4
-5 [label="Const 2 INTEGER"]
+5 [label="Ident a FLOAT"]
 3 -- 5
+6 [label="DeclaracionFuncion"]
+2 -- 6
+7 [label="Ident prueba_Funcion INTEGER"]
+6 -- 7
+27 [label="Ident a FLOAT"]
+6 -- 27
+28 [label="Ident b INTEGER"]
+6 -- 28
+29 [label="Const 2 INTEGER"]
+6 -- 29
+30 [label="Ident c BOOL"]
+6 -- 30
+31 [label="Const false BOOL"]
+6 -- 31
+8 [label="BLOQUE"]
+6 -- 8
+9 [label="IF/ELSE"]
+8 -- 9
+10 [label=">= UNKNOWN"]
+9 -- 10
+11 [label="Ident entero? UNKNOWN"]
+10 -- 11
+12 [label="Const 10 INTEGER"]
+10 -- 12
+13 [label="BLOQUE"]
+9 -- 13
+14 [label="="]
+13 -- 14
+15 [label="Ident a UNKNOWN"]
+14 -- 15
+16 [label="Const 5 INTEGER"]
+14 -- 16
+17 [label="="]
+13 -- 17
+18 [label="Ident b UNKNOWN"]
+17 -- 18
+19 [label="+ UNKNOWN"]
+17 -- 19
+20 [label="Ident b UNKNOWN"]
+19 -- 20
+21 [label="Const 5 INTEGER"]
+19 -- 21
+22 [label="WriteLn String"]
+9 -- 22
+23 [label="Return"]
+8 -- 23
+24 [label="+ UNKNOWN"]
+23 -- 24
+25 [label="Ident a UNKNOWN"]
+24 -- 25
+26 [label="Ident b UNKNOWN"]
+24 -- 26
+32 [label="MAIN"]
+1 -- 32
+33 [label="="]
+32 -- 33
+34 [label="Ident a UNKNOWN"]
+33 -- 34
+35 [label="+ UNKNOWN"]
+33 -- 35
+36 [label="Const 1 INTEGER"]
+35 -- 36
+37 [label="InvocacionFuncion"]
+35 -- 37
+38 [label="Ident pepe UNKNOWN"]
+37 -- 38
+39 [label="DeclaracionVariable"]
+32 -- 39
+41 [label="Ident f FLOAT"]
+39 -- 41
 }

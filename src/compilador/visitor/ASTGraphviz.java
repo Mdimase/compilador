@@ -101,6 +101,17 @@ public class ASTGraphviz extends Visitor<String>{
     }
 
     @Override
+    public String visit(DeclaracionFuncion declaracionFuncion) throws ExcepcionDeAlcance{
+        StringBuilder resultado = new StringBuilder();
+        current_id = this.getID();
+        resultado.append(this.procesarNodo(declaracionFuncion));
+        parents.push(current_id);
+        resultado.append(super.visit(declaracionFuncion)); //invoco los visit de sus nodos atributos
+        parents.pop();
+        return resultado.toString();
+    }
+
+    @Override
     public String visit(Write w) throws ExcepcionDeAlcance{
         StringBuilder resultado = new StringBuilder();
         current_id = this.getID();
@@ -203,9 +214,49 @@ public class ASTGraphviz extends Visitor<String>{
         return resultado.toString();
     }
 
+    //graficar nodo return
+    @Override
+    public String visit(Return r) throws ExcepcionDeAlcance{
+        StringBuilder resultado = new StringBuilder();
+        current_id = this.getID();
+        resultado.append(this.procesarNodo(r));
+        parents.push(current_id);
+        resultado.append(super.visit(r)); //invoco los visit de sus nodos atributos
+        parents.pop();
+        return resultado.toString();
+    }
+
+    @Override
+    protected String procesarPrograma(Programa programa, String declaraciones, String sentencias) {
+        return declaraciones+sentencias;
+    }
+
     @Override
     protected String procesarDeclaracionVariable(DeclaracionVariable declaracionVariable, String identificador, String expresion) {
         return identificador+expresion;
+    }
+
+    @Override
+    protected String procesarDeclaracionFuncion(DeclaracionFuncion declaracionFuncion, String identificador, List<String> sentencias) {
+        StringBuilder resultado = new StringBuilder();
+        resultado.append(identificador);
+        sentencias.forEach((sentencia) -> {
+            resultado.append(sentencia);
+        });
+        return resultado.toString();
+    }
+
+    @Override
+    protected String procesarDeclaracionFuncion(DeclaracionFuncion declaracionFuncion, String identificador, List<String> parametros, List<String> sentencias) {
+        StringBuilder resultado = new StringBuilder();
+        resultado.append(identificador);
+        parametros.forEach((parametro) -> {
+            resultado.append(parametro);
+        });
+        sentencias.forEach((sentencia) -> {
+            resultado.append(sentencia);
+        });
+        return resultado.toString();
     }
 
     @Override

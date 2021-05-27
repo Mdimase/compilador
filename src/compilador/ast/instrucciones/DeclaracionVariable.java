@@ -16,7 +16,7 @@ import compilador.visitor.Visitor;
  *
  * @author ITT
  */
-public class DeclaracionVariable extends Sentencia{
+public class DeclaracionVariable extends Declaracion{
     
     private Identificador id;   //identificador que estoy creando (seria con nombre solo aca, xq el tipo lo agrego abajo)
     private Tipo tipo;      //tipo de dato, util para hacer el chequeo despues

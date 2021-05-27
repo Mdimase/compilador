@@ -1,5 +1,16 @@
 ## Testeando compilador de Dimase Matias e Isea Maximiliano ##
-
+variable a is float;
+function prueba_Funcion (a is float, b is integer = 2, c is boolean = false) return integer
+begin
+    if entero? >= 10 then
+        begin
+            a=5;
+            b=b+5;
+        end
+        else
+            writeln("Estoy en el else");
+    return a+b;
+end;
 main is
 {
 variable a is float;
@@ -43,5 +54,7 @@ b = pagar(1,true);
 c = saltar(impulsar());
 prueba_Funcion(a,b);
 }  #hasta aca bien
-a=2;
+
+a = 1 + pepe();
+variable f is float;
 end.
