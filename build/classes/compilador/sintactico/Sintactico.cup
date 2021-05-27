@@ -1,0 +1,151 @@
+package compilador.sintactico;
+
+import compilador.ast.base.*;
+import compilador.ast.instrucciones.*;
+import compilador.ast.operaciones.binarias.*;
+
+import java.util.*;
+
+import java_cup.runtime.*;
+
+class Sintactico;
+
+parser code
+{:
+    public void syntax_error(Symbol s) {
+        System.out.println("Error en la línea " + (s.right+1) + ", columna " + s.left + ": "
+            + SintacticoSym.terminalNames[s.sym] + "(" + s.value + ") no reconocido.");
+    }
+:}
+
+action code
+{:
+
+:}
+
+terminal MAS, MENOS, ASTERISCO, BARRA, IGUAL, PARENTESIS_ABRE, PARENTESIS_CIERRA; 
+terminal VARS, LLAVE_ABRE, LLAVE_CIERRA, COLON, COMA, TIPO_FLOAT, TIPO_BOOL, TIPO_INT;
+terminal String IDENTIFICADOR, CONSTANTE_ENTERA, CONSTANTE_FLOAT, CONSTANTE_BOOL;
+
+non terminal Expresion termino, factor_sin_signo, expresion_numerica, valor_constante;
+non terminal Programa programa;
+non terminal List<Sentencia> lista_variables, variables, sentencias, sentencia;
+non terminal List<DeclaracionVariable> variable;
+non terminal List<Asignacion> asignacion;
+non terminal Tipo tipo;
+
+start with programa;
+
+programa ::=    lista_variables:lv sentencias:ss {:
+                    lv.addAll(ss);
+                    Bloque bloque = new Bloque(lv, "CUERPO", true);
+                    RESULT = new Programa(bloque);
+                :};
+
+lista_variables ::= VARS LLAVE_ABRE variables:vv LLAVE_CIERRA {:
+                        RESULT = vv;
+                    :} |
+                    {:
+                        RESULT = new ArrayList<>();
+                    :}
+                    ;
+
+variables ::=   variables:vv variable:v {:
+                    vv.addAll(v);
+                    RESULT = vv;
+                :} |
+                variable:v
+                {:
+                    List<Sentencia> vs = new ArrayList<>();
+                    vs.addAll(v);
+                    RESULT = vs;
+                :}
+                ;
+
+sentencias ::=  sentencias:ss sentencia:s {:
+                    ss.addAll(s);
+                    RESULT = ss;
+                :} |
+                {:
+                    List<Sentencia> ls = new ArrayList<>();
+                    RESULT = ls;              
+                :}
+                ;
+
+tipo ::=    TIPO_FLOAT:t {:
+                RESULT = Tipo.FLOAT;
+            :} |
+            TIPO_BOOL:t {: 
+                RESULT = Tipo.BOOL;
+            :} |
+            TIPO_INT:t {:
+                RESULT = Tipo.INTEGER;
+            :};
+
+variable ::=    IDENTIFICADOR:id COLON tipo:t {:
+                    List<DeclaracionVariable> dv = new ArrayList<>();
+                    dv.add(new DeclaracionVariable(new Identificador(id, t), t));
+                    RESULT = dv;
+                :} |
+                IDENTIFICADOR:id COMA variable:v {:
+                    v.add(new DeclaracionVariable(new Identificador(id, v.get(0).getTipo()), v.get(0).getTipo()));
+                    RESULT = v;
+                :};
+
+sentencia ::=   asignacion:a {:
+                    List<Sentencia> ls = new ArrayList<>();
+                    ls.addAll(a);
+                    RESULT = ls;
+                :}
+                ;
+
+asignacion ::=  IDENTIFICADOR:id IGUAL expresion_numerica:e {:
+                   Identificador ident = new Identificador(id);
+                   List<Asignacion> a = new ArrayList<>();
+                   a.add(new Asignacion(ident, e));
+                   RESULT = a;
+              :};
+
+expresion_numerica ::=  expresion_numerica:a MAS termino:b {:
+                            RESULT = new Suma(a, b);
+                        :}
+                        | expresion_numerica:a MENOS termino:b {:
+                            RESULT = new Resta(a, b);
+                        :}
+                        | termino:a {:
+                            RESULT = a;
+                        :}
+                        ;
+
+termino ::= termino:a ASTERISCO factor_sin_signo :b {:
+                RESULT = new Multiplicacion(a, b);
+            :}
+          | termino:a BARRA factor_sin_signo :b {:
+                RESULT = new Division(a, b);
+            :}
+          | factor_sin_signo :a {: 
+                RESULT = a;
+            :}
+          ;
+
+factor_sin_signo ::=    valor_constante:valor {:
+                            RESULT = valor;
+                        :}
+                        | IDENTIFICADOR:id {:
+                              RESULT = new Identificador(id);
+                          :}
+                        | PARENTESIS_ABRE expresion_numerica:expr PARENTESIS_CIERRA {:
+                              RESULT = expr;
+                          :}
+                        ;
+
+valor_constante ::=     CONSTANTE_ENTERA:entero {:
+                            RESULT = new Constante(entero, Tipo.INTEGER);
+                        :}
+                        | CONSTANTE_BOOL:booleano {:
+                            RESULT = new Constante(booleano, Tipo.BOOL);
+                        :}
+                        | CONSTANTE_FLOAT:flotante {:
+                            RESULT = new Constante(flotante, Tipo.FLOAT);
+                        :}
+                        ;

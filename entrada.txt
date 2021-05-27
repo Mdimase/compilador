@@ -1,0 +1,50 @@
+## Testeando compilador de Dimase Matias e Isea Maximiliano ##
+
+main is
+{
+variable a is float;
+variable b is boolean=true;
+writeln(2+2);
+writeln("hola");
+write("pepe");
+write(7);
+b=-(2+2/4);
+b = not(a and b or true);
+b= (b>2+4*b) or f;
+begin
+    variable pepe is float;
+end;
+b=2;
+ while a==2 do
+         begin
+             while b > 1 do a=2;
+             f=f+1;
+         end;
+
+for i from 1 to 6 do
+    begin
+        v=99;
+        variable e is float;
+    end;
+for i from 4 to 89 by 4 do
+    a=2+2;
+break;
+continue;
+prueba_Funcion(a,b);
+if entero? >= 10 then
+        begin
+            a=5;
+            b=b+5;
+        end
+        else
+            writeln("Estoy en el else");
+  } #hasta aca bien
+#a = 1 + pepe();
+#b = pagar(1,true);
+#c = saltar(impulsar());
+if a == 1 then
+         begin
+            z=1;
+            pepe();
+         end;
+end.

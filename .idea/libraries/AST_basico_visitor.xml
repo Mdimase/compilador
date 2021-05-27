@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="AST_basico_visitor">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/dist/AST_basico_visitor.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
