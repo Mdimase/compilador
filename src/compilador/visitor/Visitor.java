@@ -148,6 +148,7 @@ public abstract class Visitor<T> {
 
     public T visit(While aWhile) throws ExcepcionDeAlcance {
         T exp = aWhile.getCondicion().accept(this);
+        /*
         if (aWhile.getBloque().getSentencias().get(0).getClass() == Bloque.class) {
             aWhile.getBloque().getSentencias().get(0).setNombre("BLOQUE_WHILE");    //asigno nombre al bloque while
             List<T> bloque = new ArrayList<>();
@@ -159,6 +160,12 @@ public abstract class Visitor<T> {
             T bloqueWhile = aWhile.getBloque().accept(this);
             return procesarWhile(aWhile,exp,bloqueWhile);
         }
+         */
+        List<T> bloque = new ArrayList<>();
+        for (Sentencia sentencia : aWhile.getBloque().getSentencias()) {  //para cada sentencia dentro del bloque
+            bloque.add(sentencia.accept(this)); //invoco al accept de sentencia, es decir, de alguna de las clases que heredan de ella(xq sentencia es abstract)
+        }
+        return procesarWhile(aWhile, exp, bloque);
     }
 
     public T visit(DeclaracionFuncion declaracionFuncion) throws ExcepcionDeAlcance {

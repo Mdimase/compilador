@@ -37,7 +37,7 @@ terminal String IDENTIFICADOR, INTEGER_LITERAL, FLOAT_LITERAL,TRUE,FALSE,INTEGER
 non terminal Expresion invocacion_funciones,condicion,comparacion,expresion,exp_arit,exp_or,exp_and,exp_not, termino, factor;
 non terminal List<Expresion> parametros_invocacion;
 non terminal Programa programa;
-non terminal Bloque bloque_main;
+non terminal Bloque bloque_main,for;
 non terminal List<Sentencia> sentencias,declaraciones;
 non terminal Sentencia sentencia, instruccion, bloque;
 non terminal DeclaracionVariable declaracion_variable;
@@ -48,7 +48,7 @@ non terminal Asignacion asignacion;
 non terminal Tipo tipo;
 non terminal Write write, writeln;
 non terminal While while;
-non terminal For for;
+//non terminal For for;
 non terminal If if;
 non terminal Constante valor_defecto;
 //non terminal InvocacionFuncion invocacion_funciones; TUVIMOS QUE HACER QUE SEA EXPRESION Y QUE EXPRESION EXTIENDA DE SENTENCIA PARA SOLUCIONAR PROBLEMAS DE TIPOS ENEL PARSING
@@ -260,7 +260,7 @@ while::= WHILE condicion:c DO instruccion:i {:
         :};
 
 for::= FOR IDENTIFICADOR:id FROM INTEGER_LITERAL:f TO INTEGER_LITERAL:t BY INTEGER_LITERAL:b DO instruccion:i{:
-
+/*
             Identificador identificador = new Identificador(id);
             Constante from = new Constante(f, Tipo.INTEGER);
             Constante to = new Constante(t, Tipo.INTEGER);
@@ -269,8 +269,8 @@ for::= FOR IDENTIFICADOR:id FROM INTEGER_LITERAL:f TO INTEGER_LITERAL:t BY INTEG
             aux.add(i);
             Bloque bloque = new Bloque(aux,"FOR",false);
             RESULT= new For(identificador,from,to,by,bloque);
-
-            /* FOR -> WHILE esta bien aca, no me grafica BLOQUE en el while interno
+*/
+            //FOR -> WHILE esta bien aca, no me grafica BLOQUE en el while interno
             List<Sentencia> cuerpoFor = new ArrayList<Sentencia>(); //lista de sentencias del bloque principal
             Expresion from = new Constante(f, Tipo.INTEGER);    //constante from
             Identificador identificador = new Identificador(id);    //identificador
@@ -292,12 +292,11 @@ for::= FOR IDENTIFICADOR:id FROM INTEGER_LITERAL:f TO INTEGER_LITERAL:t BY INTEG
             While w = new While("WHILE",condicion,bloque);  // while interno completo
             cuerpoFor.add(w);   //agrego el while completo a la lista de sentencias del cuerpo de mi for original
             RESULT = new Bloque (cuerpoFor,"FOR->WHILE",false);
-            */
 
         :};
 
 for::= FOR IDENTIFICADOR:id FROM INTEGER_LITERAL:f TO INTEGER_LITERAL:t DO instruccion:i{:
-
+/*
             Identificador identificador = new Identificador(id);
             Constante from = new Constante(f, Tipo.INTEGER);
             Constante to = new Constante(t, Tipo.INTEGER);
@@ -306,8 +305,8 @@ for::= FOR IDENTIFICADOR:id FROM INTEGER_LITERAL:f TO INTEGER_LITERAL:t DO instr
             aux.add(i);
             Bloque bloque = new Bloque(aux,"FOR",false);
             RESULT= new For(identificador,from,to,by,bloque);
-
-            /* FOR -> WHILE esta bien aca, no me grafica BLOQUE en el while interno
+*/
+            //FOR -> WHILE esta bien aca, no me grafica BLOQUE en el while interno
             List<Sentencia> cuerpoFor = new ArrayList<Sentencia>(); //lista de sentencias del bloque principal
             Expresion from = new Constante(f, Tipo.INTEGER);    //constante from
             Identificador identificador = new Identificador(id);    //identificador
@@ -329,7 +328,7 @@ for::= FOR IDENTIFICADOR:id FROM INTEGER_LITERAL:f TO INTEGER_LITERAL:t DO instr
             While w = new While("WHILE",condicion,bloque);  // while interno completo
             cuerpoFor.add(w);   //agrego el while completo a la lista de sentencias del cuerpo de mi for original
             RESULT = new Bloque (cuerpoFor,"FOR->WHILE",false);
-            */
+
         :};
 
 // falla en una expresion
