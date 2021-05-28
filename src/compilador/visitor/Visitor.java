@@ -117,18 +117,12 @@ public abstract class Visitor<T> {
 
     public T visit(If anIf) throws ExcepcionDeAlcance {
         T exp = anIf.getCondicion().accept(this);   //accepto la expresion
-        List<T> sentenciasThen = new ArrayList<>();
-        for (Sentencia sentencia : anIf.getBloqueThen().getSentencias()){
-            sentenciasThen.add(sentencia.accept(this)); //acepto cada una de las sentencias que estan en el bloque if
-        }
+        T bloqueThen = anIf.getBloqueThen().accept(this);
         if(anIf.getBloqueElse() != null) {  //si tiene bloque else
-            List<T> sentenciasElse = new ArrayList<>();
-            for (Sentencia sentencia : anIf.getBloqueElse().getSentencias()) {
-                sentenciasThen.add(sentencia.accept(this)); //acepto cada una de las sentencias que estan en el bloque else
-            }
-            return procesarIf(anIf,exp,sentenciasThen,sentenciasElse);  //proceso con else
+            T bloqueElse = anIf.getBloqueElse().accept(this);
+            return procesarIf(anIf,exp,bloqueThen,bloqueElse);  //proceso con else
         } else {
-            return procesarIf(anIf, exp, sentenciasThen); //proceso sin else
+            return procesarIf(anIf, exp, bloqueThen); //proceso sin else
         }
     }
 
@@ -138,33 +132,14 @@ public abstract class Visitor<T> {
         T from = aFor.getFrom().accept(this);
         T to = aFor.getTo().accept(this);
         T by = aFor.getBy().accept(this);
-        List<T> bloque = new ArrayList<>();
-        for (Sentencia sentencia : aFor.getBloque().getSentencias()){  //para cada sentencia dentro del bloque
-            bloque.add(sentencia.accept(this)); //invoco al accept de sentencia, es decir, de alguna de las clases que heredan de ella(xq sentencia es abstract)
-        }
+        T bloque = aFor.getBloque().accept(this);
         return procesarFor(aFor,id,bloque,from,to,by);
         }
 
 
     public T visit(While aWhile) throws ExcepcionDeAlcance {
         T exp = aWhile.getCondicion().accept(this);
-        /*
-        if (aWhile.getBloque().getSentencias().get(0).getClass() == Bloque.class) {
-            aWhile.getBloque().getSentencias().get(0).setNombre("BLOQUE_WHILE");    //asigno nombre al bloque while
-            List<T> bloque = new ArrayList<>();
-            for (Sentencia sentencia : aWhile.getBloque().getSentencias()) {  //para cada sentencia dentro del bloque
-                bloque.add(sentencia.accept(this)); //invoco al accept de sentencia, es decir, de alguna de las clases que heredan de ella(xq sentencia es abstract)
-            }
-            return procesarWhile(aWhile, exp, bloque);
-        } else {    // si tiene una sola linea adentro el while, primero imprimo BLOQUE_WHILE
-            T bloqueWhile = aWhile.getBloque().accept(this);
-            return procesarWhile(aWhile,exp,bloqueWhile);
-        }
-         */
-        List<T> bloque = new ArrayList<>();
-        for (Sentencia sentencia : aWhile.getBloque().getSentencias()) {  //para cada sentencia dentro del bloque
-            bloque.add(sentencia.accept(this)); //invoco al accept de sentencia, es decir, de alguna de las clases que heredan de ella(xq sentencia es abstract)
-        }
+        T bloque = aWhile.getBloque().accept(this);
         return procesarWhile(aWhile, exp, bloque);
     }
 
@@ -204,11 +179,9 @@ public abstract class Visitor<T> {
 
     protected abstract T procesarInvocacionFuncion(InvocacionFuncion invocacionFuncion, T identificador);
 
-    protected abstract T procesarWhile(While aWhile, T expresion, List<T> sentencias);
-
     protected abstract T procesarWhile(While aWhile, T expresion, T bloqueWhile);
 
-    protected abstract T procesarFor(For aFor, T identificador,List<T> sentencias , T from, T to,T by);
+    protected abstract T procesarFor(For aFor, T identificador,T bloque , T from, T to,T by);
 
     protected abstract T procesarBloque(Bloque bloque, List<T> sentencias);
     
@@ -218,9 +191,9 @@ public abstract class Visitor<T> {
 
     protected abstract T procesarAsignacion(Asignacion a, T identificador, T expresion);
 
-    protected abstract T procesarIf(If anIf,T expresion, List<T> sentencias);
+    protected abstract T procesarIf(If anIf,T expresion, T bloqueThen);
 
-    protected abstract T procesarIf(If anIf, T expresion, List<T> sentenciasIf, List<T> sentenciasElse);
+    protected abstract T procesarIf(If anIf, T expresion, T bloqueThen, T bloqueElse);
 
     public <T> T visit(Variable v) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

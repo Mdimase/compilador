@@ -78,17 +78,12 @@ public class GeneradorAlcances extends Visitor<Void>{
     }
 
     @Override
-    protected Void procesarWhile(While aWhile, Void expresion, List<Void> sentencias) {
-        return null;
-    }
-
-    @Override
     protected Void procesarWhile(While aWhile, Void expresion, Void bloqueWhile) {
         return null;
     }
 
     @Override
-    protected Void procesarFor(For aFor, Void identificador, List<Void> sentencias, Void from, Void to, Void by) {
+    protected Void procesarFor(For aFor, Void identificador, Void bloque, Void from, Void to, Void by) {
         return null;
     }
 
@@ -113,14 +108,13 @@ public class GeneradorAlcances extends Visitor<Void>{
     }
 
     @Override
-    protected Void procesarIf(If anIf, Void expresion, List<Void> sentencias) {
+    protected Void procesarIf(If anIf, Void expresion, Void bloqueThen) {
         return null;
     }
 
     @Override
-    protected Void procesarIf(If anIf, Void expresion, List<Void> sentenciasIf, List<Void> sentenciasElse) {
+    protected Void procesarIf(If anIf, Void expresion, Void bloqueThen, Void bloqueElse) {
         return null;
     }
-
 
 }

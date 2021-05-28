@@ -66,5 +66,4 @@ for i from 1 to 6 do
         v=99;
         if a > b then ju=45;
     end;
-
 end.

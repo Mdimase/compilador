@@ -35,7 +35,7 @@ public class For extends Sentencia{
     public For(String nombre, Identificador identificador, Bloque bloque, Constante from, Constante to, Constante by) {
         super(nombre);
         this.identificador = identificador;
-        this.bloque = bloque;
+        this.bloque = new Bloque(bloque.initSentencia(bloque),"BLOQUE_FOR",false);
         this.from = from;
         this.to = to;
         this.by = by;
@@ -44,7 +44,7 @@ public class For extends Sentencia{
     public For(String nombre, Identificador identificador, Bloque bloque, Constante from, Constante to) {
         super(nombre);
         this.identificador = identificador;
-        this.bloque = bloque;
+        this.bloque = new Bloque(bloque.initSentencia(bloque),"BLOQUE_FOR",false);
         this.from = from;
         this.to = to;
     }

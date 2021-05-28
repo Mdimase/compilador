@@ -273,16 +273,6 @@ public class ASTGraphviz extends Visitor<String>{
     protected String procesarInvocacionFuncion(InvocacionFuncion invocacionFuncion, String identificador) {
         return identificador;
     }
-
-    @Override
-    protected String procesarWhile(While aWhile, String expresion, List<String> sentencias) {
-        StringBuilder resultado = new StringBuilder();
-        resultado.append(expresion);
-        sentencias.forEach((sentencia) -> {
-            resultado.append(sentencia);
-        });
-        return resultado.toString();
-    }
     
     @Override
     protected String procesarWhile(While aWhile, String expresion, String bloqueWhile) {
@@ -294,15 +284,13 @@ public class ASTGraphviz extends Visitor<String>{
 
     // QUEDO SIN USO, POR LA TRANSFORMACION DE UN FOR A WHILE EN EL PARSING
     @Override
-    protected String procesarFor(For aFor, String identificador, List<String> sentencias, String from, String to, String by) {
+    protected String procesarFor(For aFor, String identificador, String bloque, String from, String to, String by) {
         StringBuilder resultado = new StringBuilder();
         resultado.append(identificador);
         resultado.append(from);
         resultado.append(to);
         resultado.append(by);
-        sentencias.forEach((sentencia) -> {
-            resultado.append(sentencia);
-        });
+        resultado.append(bloque);
         return resultado.toString();
     }
 
@@ -326,25 +314,19 @@ public class ASTGraphviz extends Visitor<String>{
     }
 
     @Override
-    protected String procesarIf(If anIf, String expresion, List<String> sentencias) {
+    protected String procesarIf(If anIf, String expresion, String bloqueThen) {
         StringBuilder resultado = new StringBuilder();
         resultado.append(expresion);
-        sentencias.forEach((sentencia) -> {
-            resultado.append(sentencia);
-        });
+        resultado.append(bloqueThen);
         return resultado.toString();
     }
 
     @Override
-    protected String procesarIf(If anIf, String expresion, List<String> sentenciasIf, List<String> sentenciasElse) {
+    protected String procesarIf(If anIf, String expresion, String bloqueThen, String bloqueElse) {
         StringBuilder resultado = new StringBuilder();
         resultado.append(expresion);
-        sentenciasIf.forEach((sentencia) -> {
-            resultado.append(sentencia);
-        });
-        sentenciasElse.forEach((sentencia) -> {
-            resultado.append(sentencia);
-        });
+        resultado.append(bloqueThen);
+        resultado.append(bloqueElse);
         return resultado.toString();
     }
 

@@ -74,6 +74,16 @@ public class Bloque extends Sentencia{
         this.sentencias = sentencias;
     }
 
+    public List<Sentencia> initSentencia(Bloque bloque){
+        if(bloque.getSentencias().get(0).getClass() == Bloque.class){   //mi sentencia es un bloque de sentencias
+            Bloque aux = (Bloque) bloque.getSentencias().get(0);    //guardo dicho bloque de sentencias
+            System.out.println(aux);
+            return aux.getSentencias();
+        } else{
+            return bloque.getSentencias();
+        }
+    }
+
     @Override
     public <T> T accept(Visitor<T> v) throws ExcepcionDeAlcance{
         return v.visit(this);   //invoca el visit(bloque) de visitor o el visit(bloque) de cualquier subclase de Visitor, va a depender de <T>

@@ -21,12 +21,12 @@ public class Main {
         try{
             PrintWriter pw = new PrintWriter(new FileWriter("arbol.dot"));
             ASTGraphviz graficador = new ASTGraphviz(); //instancio el concrete visitor para graficar
-            pw.println(graficador.visit(programa)); //empiezo a visitar desde el raiz
+            pw.println(graficador.visit(programa)); //empiezo a visitar desde el raiz con mi graficador
             pw.close();
-            String cmd = "dot -Tpng arbol.dot -o arbol.png";
-            Runtime.getRuntime().exec(cmd);
-            GeneradorAlcances ga = new GeneradorAlcances();
-            ga.procesar(programa);
+            String cmd = "dot -Tpng arbol.dot -o arbol.png";        //comando consola
+            Runtime.getRuntime().exec(cmd); //genero archivos dot y png
+            //GeneradorAlcances ga = new GeneradorAlcances();
+            //ga.procesar(programa);
             System.out.println("Alcances procesados");
             //ValidadorTipos vt = new ValidadorTipos();
             //vt.procesar(programa);

@@ -327,7 +327,7 @@ for::= FOR IDENTIFICADOR:id FROM INTEGER_LITERAL:f TO INTEGER_LITERAL:t DO instr
 
             While w = new While("WHILE",condicion,bloque);  // while interno completo
             cuerpoFor.add(w);   //agrego el while completo a la lista de sentencias del cuerpo de mi for original
-            RESULT = new Bloque (cuerpoFor,"FOR->WHILE",false);
+            RESULT = new Bloque (cuerpoFor,"BLOQUE_FOR to WHILE",false);
 
         :};
 

@@ -12,13 +12,13 @@ public class While extends Sentencia{
 
     public While(Expresion condicion, Bloque bloque) {
         this.condicion = condicion;
-        this.bloque = bloque;
+        this.bloque = new Bloque(bloque.initSentencia(bloque),"BLOQUE_WHILE",false);
     }
 
     public While(String nombre, Expresion condicion, Bloque bloque) {
         super(nombre);
         this.condicion = condicion;
-        this.bloque = bloque;
+        this.bloque = new Bloque(bloque.initSentencia(bloque),"BLOQUE_WHILE",false);
     }
 
     public Expresion getCondicion() {

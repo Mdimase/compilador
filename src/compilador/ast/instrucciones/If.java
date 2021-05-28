@@ -5,6 +5,8 @@ import compilador.ast.base.ExcepcionDeAlcance;
 import compilador.ast.base.Expresion;
 import compilador.visitor.Visitor;
 
+import java.util.List;
+
 public class If extends Sentencia{
 
     private Expresion condicion;
@@ -14,25 +16,25 @@ public class If extends Sentencia{
     public If(String nombre, Expresion condicion, Bloque bloqueThen, Bloque bloqueElse) {
         super(nombre);
         this.condicion = condicion;
-        this.bloqueThen = bloqueThen;
-        this.bloqueElse = bloqueElse;
+        this.bloqueThen = new Bloque(bloqueThen.initSentencia(bloqueThen),"BLOQUE_THEN",false);
+        this.bloqueElse = new Bloque(bloqueElse.initSentencia(bloqueElse),"BLOQUE_ELSE",false);
     }
 
     public If(String nombre, Expresion condicion, Bloque bloqueThen) {
         super(nombre);
         this.condicion = condicion;
-        this.bloqueThen = bloqueThen;
+        this.bloqueThen = new Bloque(bloqueThen.initSentencia(bloqueThen),"BLOQUE_THEN",false);
     }
 
     public If(Expresion condicion, Bloque bloqueThen) {
         this.condicion = condicion;
-        this.bloqueThen = bloqueThen;
+        this.bloqueThen = new Bloque(bloqueThen.initSentencia(bloqueThen),"BLOQUE_THEN",false);
     }
 
     public If(Expresion condicion, Bloque bloqueThen, Bloque bloqueElse) {
-        this.bloqueElse = bloqueElse;
+        this.bloqueElse = new Bloque(bloqueElse.initSentencia(bloqueElse),"BLOQUE_ELSE",false);
         this.condicion = condicion;
-        this.bloqueThen = bloqueThen;
+        this.bloqueThen = new Bloque(bloqueThen.initSentencia(bloqueThen),"BLOQUE_THEN",false);
     }
 
     public Expresion getCondicion() {
@@ -58,6 +60,8 @@ public class If extends Sentencia{
     public void setBloqueElse(Bloque bloqueElse) {
         this.bloqueElse = bloqueElse;
     }
+
+
 
     @Override
     public <T> T accept(Visitor<T> v) throws ExcepcionDeAlcance {

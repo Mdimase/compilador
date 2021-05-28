@@ -1,7 +1,7 @@
 graph G {1 [label="Programa"]
 2 [label="MAIN"]
 1 -- 2
-3 [label="FOR->WHILE"]
+3 [label="BLOQUE_FOR to WHILE"]
 2 -- 3
 4 [label="="]
 3 -- 4
@@ -17,7 +17,7 @@ graph G {1 [label="Programa"]
 8 -- 9
 10 [label="Const 6 INTEGER"]
 8 -- 10
-11 [label="BLOQUE"]
+11 [label="BLOQUE_WHILE"]
 7 -- 11
 12 [label="="]
 11 -- 12
@@ -33,20 +33,12 @@ graph G {1 [label="Programa"]
 16 -- 17
 18 [label="Ident b UNKNOWN"]
 16 -- 18
-19 [label="="]
+19 [label="BLOQUE_THEN"]
 15 -- 19
-20 [label="Ident ju UNKNOWN"]
+20 [label="="]
 19 -- 20
-21 [label="Const 45 INTEGER"]
-19 -- 21
-22 [label="="]
-7 -- 22
-23 [label="Ident i UNKNOWN"]
-22 -- 23
-24 [label="+ UNKNOWN"]
-22 -- 24
-25 [label="Ident i UNKNOWN"]
-24 -- 25
-26 [label="Const 1 INTEGER"]
-24 -- 26
+21 [label="Ident ju UNKNOWN"]
+20 -- 21
+22 [label="Const 45 INTEGER"]
+20 -- 22
 }
