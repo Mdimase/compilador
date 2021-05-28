@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class Bloque extends Sentencia{
     
-    private Alcance alcance;    //alcance para despues
+    private Alcance alcance;    //alcance del bloque
     private List<Sentencia> sentencias;     //sentencias que estan dentro del bloque
     private boolean esProgramaPrincipal = false;    // me sirve para diferenciar si es el bloque main o de otra estructura como un if
 

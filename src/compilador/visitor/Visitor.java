@@ -107,11 +107,11 @@ public abstract class Visitor<T> {
         return aReturn.getExpresion().accept(this);
     }
 
-    public T visit(Continue aContinue){
+    public T visit(Continue aContinue) throws ExcepcionDeAlcance {
         return procesarNodo(aContinue);
     }
 
-    public T visit(Break aBreak){
+    public T visit(Break aBreak) throws ExcepcionDeAlcance {
         return procesarNodo(aBreak);
     }
 

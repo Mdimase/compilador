@@ -55,34 +55,12 @@ graph G {1 [label="Programa"]
 22 -- 23
 24 [label="Ident b UNKNOWN"]
 22 -- 24
-30 [label="DeclaracionFuncion"]
-2 -- 30
-31 [label="Ident prueba_Funcion INTEGER"]
+30 [label="MAIN"]
+1 -- 30
+31 [label="="]
 30 -- 31
-36 [label="Ident a FLOAT"]
-30 -- 36
-37 [label="Ident b INTEGER"]
-30 -- 37
-38 [label="Const 21 INTEGER"]
-30 -- 38
-39 [label="Ident c BOOL"]
-30 -- 39
-40 [label="Const false BOOL"]
-30 -- 40
-32 [label="BLOQUE_FUNCION"]
-30 -- 32
-33 [label="="]
-32 -- 33
-34 [label="Ident a UNKNOWN"]
-33 -- 34
-35 [label="Const 2 INTEGER"]
-33 -- 35
-41 [label="MAIN"]
-1 -- 41
-42 [label="="]
-41 -- 42
-43 [label="Ident a UNKNOWN"]
-42 -- 43
-44 [label="Const 66 INTEGER"]
-42 -- 44
+32 [label="Ident a UNKNOWN"]
+31 -- 32
+33 [label="Const 2 INTEGER"]
+31 -- 33
 }

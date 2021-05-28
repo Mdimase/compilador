@@ -10,25 +10,25 @@ import compilador.ast.instrucciones.*;
 import compilador.ast.operaciones.binarias.OperacionBinaria;
 import java.util.List;
 
-/**
- *
- * @author ITT
- */
 // no retorna nada
+// clase que se encargara de recorrer el AST y setear los valores de alcance correspondientes
 public class GeneradorAlcances extends Visitor<Void>{
     
-    private Alcance alcance_actual;
+    private Alcance alcance_actual; //alcance actual de un bloque determinado
     private Alcance alcance_global; //alcance al que todos pueden acceder
 
     // dispara toda la generacion de alcances del AST
+    // MODIFICARLO XQ SINO SE VA A CHOCAR CON LOS VISIT(BLOQUE)
     public void procesar(Programa programa) throws ExcepcionDeAlcance{
-        programa.getCuerpo().setAlcance(new Alcance("global")); // el alcance del cuerpo del programa va a ser global
-        alcance_global = alcance_actual = programa.getCuerpo().getAlcance();    // el actual y global es el mismo xq es el unico bloque en este ejemplo
+        programa.getDeclaraciones().setAlcance(new Alcance("global"));  //bloque declaraciones tiene alcance global
+        Alcance padre = programa.getDeclaraciones().getAlcance();
+        programa.getCuerpo().setAlcance(new Alcance("Main",padre)); // seteo alcance de bloque main, que tendra como padre a bloque declaraciones
+        alcance_global = alcance_actual = programa.getCuerpo().getAlcance();
         this.visit(programa);   // como aca no hay visit(programa) usa de la superclase
     }
     
     private Object agregarSimbolo(String nombre, Object s){
-        // agregar un nodo, en este ejemplo declaraciones de variables, a nuestro alcance actual, si no estaba
+        // agregar un nodo, en este ejemplo declaraciones de variables, al alcance actual, si no estaba
         return this.alcance_actual.putIfAbsent(nombre, s);  //retorna lo que habia previamente, si no habia nada tira null
     }
 
@@ -46,6 +46,8 @@ public class GeneradorAlcances extends Visitor<Void>{
     }
     
      //sobreescribir el visit(declaracionFuncion)
+
+     // sobreescribir el visit(bloque)
 
     @Override
     protected Void procesarPrograma(Programa programa, Void declaraciones, Void sentencias) {
