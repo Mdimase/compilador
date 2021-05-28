@@ -53,12 +53,12 @@ public class GeneradorAlcances extends Visitor<Void>{
     }
 
     @Override
-    protected Void procesarDeclaracionFuncion(DeclaracionFuncion declaracionFuncion, Void identificador, List<Void> sentencias) {
+    protected Void procesarDeclaracionFuncion(DeclaracionFuncion declaracionFuncion, Void identificador, Void bloque) {
         return null;
     }
 
     @Override
-    protected Void procesarDeclaracionFuncion(DeclaracionFuncion declaracionFuncion, Void identificador, List<Void> parametros, List<Void> sentencias) {
+    protected Void procesarDeclaracionFuncion(DeclaracionFuncion declaracionFuncion, Void identificador, List<Void> parametros, Void bloque) {
         return null;
     }
 

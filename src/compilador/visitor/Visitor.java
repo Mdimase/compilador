@@ -145,10 +145,7 @@ public abstract class Visitor<T> {
 
     public T visit(DeclaracionFuncion declaracionFuncion) throws ExcepcionDeAlcance {
         T id = declaracionFuncion.getIdentificador().accept(this);
-        List<T> bloque = new ArrayList<>();
-        for (Sentencia sentencia : declaracionFuncion.getBloque().getSentencias()){  //para cada sentencia dentro del bloque
-            bloque.add(sentencia.accept(this)); //invoco al accept de sentencia, es decir, de alguna de las clases que heredan de ella(xq sentencia es abstract)
-        }
+        T bloque = declaracionFuncion.getBloque().accept(this);
         if(declaracionFuncion.getParametros().isEmpty()){
             return procesarDeclaracionFuncion(declaracionFuncion,id,bloque);
         } else{
@@ -169,9 +166,9 @@ public abstract class Visitor<T> {
 
     protected abstract T procesarPrograma (Programa programa,T declaraciones,T sentencias);
 
-    protected abstract T procesarDeclaracionFuncion(DeclaracionFuncion declaracionFuncion,T identificador, List<T> sentencias);
+    protected abstract T procesarDeclaracionFuncion(DeclaracionFuncion declaracionFuncion,T identificador, T bloque);
 
-    protected abstract T procesarDeclaracionFuncion(DeclaracionFuncion declaracionFuncion,T identificador,List<T> parametros, List<T> sentencias);
+    protected abstract T procesarDeclaracionFuncion(DeclaracionFuncion declaracionFuncion,T identificador,List<T> parametros, T bloque);
 
     protected abstract T procesarDeclaracionVariable(DeclaracionVariable declaracionVariable,T identificador,T expresion);
 

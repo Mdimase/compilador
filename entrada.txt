@@ -10,7 +10,10 @@ begin
         else
             writeln("Estoy en el else");
     return a+b;
-end;}
+end;
+function prueba_Funcion (a is float, b is integer = 21, c is boolean = false) return integer
+    a=2;}
+
 main is
 {
 variable a is float;
@@ -60,10 +63,5 @@ while a==2 do
                f=f+1;
            end;
 }  #hasta aca bien
-
-for i from 1 to 6 do
-    begin
-        v=99;
-        if a > b then ju=45;
-    end;
+a=66;
 end.

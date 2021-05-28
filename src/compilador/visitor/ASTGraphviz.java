@@ -237,25 +237,21 @@ public class ASTGraphviz extends Visitor<String>{
     }
 
     @Override
-    protected String procesarDeclaracionFuncion(DeclaracionFuncion declaracionFuncion, String identificador, List<String> sentencias) {
+    protected String procesarDeclaracionFuncion(DeclaracionFuncion declaracionFuncion, String identificador, String bloque) {
         StringBuilder resultado = new StringBuilder();
         resultado.append(identificador);
-        sentencias.forEach((sentencia) -> {
-            resultado.append(sentencia);
-        });
+        resultado.append(bloque);
         return resultado.toString();
     }
 
     @Override
-    protected String procesarDeclaracionFuncion(DeclaracionFuncion declaracionFuncion, String identificador, List<String> parametros, List<String> sentencias) {
+    protected String procesarDeclaracionFuncion(DeclaracionFuncion declaracionFuncion, String identificador, List<String> parametros, String bloque) {
         StringBuilder resultado = new StringBuilder();
         resultado.append(identificador);
         parametros.forEach((parametro) -> {
             resultado.append(parametro);
         });
-        sentencias.forEach((sentencia) -> {
-            resultado.append(sentencia);
-        });
+        resultado.append(bloque);
         return resultado.toString();
     }
 

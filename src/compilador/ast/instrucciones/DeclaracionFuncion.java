@@ -16,13 +16,13 @@ public class DeclaracionFuncion extends Declaracion{
         this.identificador = identificador;
         this.tipoRetorno = tipoRetorno;
         this.parametros = parametros;
-        this.bloque = bloque;
+        this.bloque = new Bloque(bloque.initSentencia(bloque),"BLOQUE_FUNCION",false);
     }
 
     public DeclaracionFuncion(Identificador identificador, Tipo tipoRetorno, Bloque bloque) {
         this.identificador = identificador;
         this.tipoRetorno = tipoRetorno;
-        this.bloque = bloque;
+        this.bloque = new Bloque(bloque.initSentencia(bloque),"BLOQUE_FUNCION",false);
     }
 
     public DeclaracionFuncion(String nombre, Identificador identificador, Tipo tipoRetorno, List<Parametro> parametros, Bloque bloque) {
@@ -30,14 +30,14 @@ public class DeclaracionFuncion extends Declaracion{
         this.identificador = identificador;
         this.tipoRetorno = tipoRetorno;
         this.parametros = parametros;
-        this.bloque = bloque;
+        this.bloque = new Bloque(bloque.initSentencia(bloque),"BLOQUE_FUNCION",false);
     }
 
     public DeclaracionFuncion(String nombre, Identificador identificador, Tipo tipoRetorno, Bloque bloque) {
         super(nombre);
         this.identificador = identificador;
         this.tipoRetorno = tipoRetorno;
-        this.bloque = bloque;
+        this.bloque = new Bloque(bloque.initSentencia(bloque),"BLOQUE_FUNCION",false);
     }
 
     public Identificador getIdentificador() {
