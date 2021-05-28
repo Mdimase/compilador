@@ -283,6 +283,14 @@ public class ASTGraphviz extends Visitor<String>{
         });
         return resultado.toString();
     }
+    
+    @Override
+    protected String procesarWhile(While aWhile, String expresion, String bloqueWhile) {
+        StringBuilder resultado = new StringBuilder();
+        resultado.append(expresion);
+        resultado.append(bloqueWhile);
+        return resultado.toString();
+    }
 
     // QUEDO SIN USO, POR LA TRANSFORMACION DE UN FOR A WHILE EN EL PARSING
     @Override

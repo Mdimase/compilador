@@ -148,11 +148,17 @@ public abstract class Visitor<T> {
 
     public T visit(While aWhile) throws ExcepcionDeAlcance {
         T exp = aWhile.getCondicion().accept(this);
-        List<T> bloque = new ArrayList<>();
-        for (Sentencia sentencia : aWhile.getBloque().getSentencias()){  //para cada sentencia dentro del bloque
-            bloque.add(sentencia.accept(this)); //invoco al accept de sentencia, es decir, de alguna de las clases que heredan de ella(xq sentencia es abstract)
+        if (aWhile.getBloque().getSentencias().get(0).getClass() == Bloque.class) {
+            aWhile.getBloque().getSentencias().get(0).setNombre("BLOQUE_WHILE");    //asigno nombre al bloque while
+            List<T> bloque = new ArrayList<>();
+            for (Sentencia sentencia : aWhile.getBloque().getSentencias()) {  //para cada sentencia dentro del bloque
+                bloque.add(sentencia.accept(this)); //invoco al accept de sentencia, es decir, de alguna de las clases que heredan de ella(xq sentencia es abstract)
+            }
+            return procesarWhile(aWhile, exp, bloque);
+        } else {    // si tiene una sola linea adentro el while, primero imprimo BLOQUE_WHILE
+            T bloqueWhile = aWhile.getBloque().accept(this);
+            return procesarWhile(aWhile,exp,bloqueWhile);
         }
-        return procesarWhile(aWhile,exp,bloque);
     }
 
     public T visit(DeclaracionFuncion declaracionFuncion) throws ExcepcionDeAlcance {
@@ -192,6 +198,8 @@ public abstract class Visitor<T> {
     protected abstract T procesarInvocacionFuncion(InvocacionFuncion invocacionFuncion, T identificador);
 
     protected abstract T procesarWhile(While aWhile, T expresion, List<T> sentencias);
+
+    protected abstract T procesarWhile(While aWhile, T expresion, T bloqueWhile);
 
     protected abstract T procesarFor(For aFor, T identificador,List<T> sentencias , T from, T to,T by);
 

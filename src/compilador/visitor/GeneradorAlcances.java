@@ -44,6 +44,8 @@ public class GeneradorAlcances extends Visitor<Void>{
         }
         return null;
     }
+    
+     //sobreescribir el visit(declaracionFuncion)
 
     @Override
     protected Void procesarPrograma(Programa programa, Void declaraciones, Void sentencias) {
@@ -59,8 +61,6 @@ public class GeneradorAlcances extends Visitor<Void>{
     protected Void procesarDeclaracionFuncion(DeclaracionFuncion declaracionFuncion, Void identificador, List<Void> parametros, List<Void> sentencias) {
         return null;
     }
-
-    //revisar esto si todos retornan null esta bien?
 
     @Override
     protected Void procesarDeclaracionVariable(DeclaracionVariable declaracionVariable, Void identificador, Void expresion) {
@@ -83,11 +83,14 @@ public class GeneradorAlcances extends Visitor<Void>{
     }
 
     @Override
-    protected Void procesarFor(For aFor, Void identificador, List<Void> sentencias, Void from, Void to, Void by) {
+    protected Void procesarWhile(While aWhile, Void expresion, Void bloqueWhile) {
         return null;
     }
 
-    //sobreescribir el visit(declaracionFuncion)
+    @Override
+    protected Void procesarFor(For aFor, Void identificador, List<Void> sentencias, Void from, Void to, Void by) {
+        return null;
+    }
 
     @Override
     protected Void procesarBloque(Bloque bloque, List<Void> sentencias) {

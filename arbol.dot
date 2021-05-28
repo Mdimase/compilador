@@ -13,7 +13,7 @@ graph G {1 [label="Programa"]
 6 -- 27
 28 [label="Ident b INTEGER"]
 6 -- 28
-29 [label="Const 2 INTEGER"]
+29 [label="Const 21 INTEGER"]
 6 -- 29
 30 [label="Ident c BOOL"]
 6 -- 30
@@ -59,20 +59,40 @@ graph G {1 [label="Programa"]
 24 -- 26
 32 [label="MAIN"]
 1 -- 32
-33 [label="="]
+33 [label="WHILE"]
 32 -- 33
-34 [label="Ident a UNKNOWN"]
+34 [label="== UNKNOWN"]
 33 -- 34
-35 [label="+ UNKNOWN"]
-33 -- 35
-36 [label="Const 1 INTEGER"]
-35 -- 36
-37 [label="InvocacionFuncion"]
-35 -- 37
-38 [label="Ident pepe UNKNOWN"]
+35 [label="Ident a UNKNOWN"]
+34 -- 35
+36 [label="Const 2 INTEGER"]
+34 -- 36
+37 [label="BLOQUE_WHILE"]
+33 -- 37
+38 [label="WHILE"]
 37 -- 38
-39 [label="DeclaracionVariable"]
-32 -- 39
-41 [label="Ident f FLOAT"]
+39 [label="> UNKNOWN"]
+38 -- 39
+40 [label="Ident b UNKNOWN"]
+39 -- 40
+41 [label="Const 1 INTEGER"]
 39 -- 41
+42 [label="BLOQUE_WHILE"]
+38 -- 42
+43 [label="="]
+42 -- 43
+44 [label="Ident a UNKNOWN"]
+43 -- 44
+45 [label="Const 2 INTEGER"]
+43 -- 45
+46 [label="="]
+37 -- 46
+47 [label="Ident f UNKNOWN"]
+46 -- 47
+48 [label="+ UNKNOWN"]
+46 -- 48
+49 [label="Ident f UNKNOWN"]
+48 -- 49
+50 [label="Const 1 INTEGER"]
+48 -- 50
 }
