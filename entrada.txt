@@ -1,5 +1,5 @@
 ## Testeando compilador de Dimase Matias e Isea Maximiliano ##
-#variable a is float = a + pepe();
+variable a is float = 1 + pepe();
 function prueba_Funcion (a is float, b is integer = 21, c is boolean = false) return integer
 begin
     if entero? >= 10 then
@@ -13,21 +13,9 @@ begin
 end;
 {function prueba_Funciones (a is float, b is integer = 21, c is boolean = false) return integer
     a=2;}
+#variable c is float;
 main is
 {
-variable a is float;
-variable b is boolean=true;
-writeln(2+2);
-writeln("hola");
-write("pepe");
-write(7);
-b=-(2+2/4);
-b = not(a and b or true);
-b= (b>2+4*b) or f;
-begin
-    variable pepe is float;
-end;
-b=2;
  while a==2 do
          begin
              while b > 1 do a=2;
@@ -41,8 +29,6 @@ for i from 1 to 6 do
     end;
 for i from 4 to 89 by 4 do
     a=2+2;
-break;
-continue;
 prueba_Funcion(a,b);
 if entero? >= 10 then
         begin
@@ -54,7 +40,6 @@ if entero? >= 10 then
 a = 1 + pepe();
 b = pagar(1,true);
 c = saltar(impulsar());
-prueba_Funcion(a,b);
 while a==2 do
            begin
                a=2;
@@ -67,8 +52,8 @@ while a==2 do
                continue;
                f=1;
            end;
-}  #hasta aca bien
-{if a == 2 then pepe() else while b > 1 do a=2+2;
+}
+{
 if b != 4 then zz=-4;
 while a>3 do if a==true then fun();
 if a==1 then a=4 else while g>34 do sa();
@@ -87,12 +72,13 @@ if a > 3 then l();
 variable c is boolean;
 variable x is float = a + pepe();
 pepe();
+#variable prueba_Funcion is integer;
 if a==1 then
     begin
         while a==1 do
             begin
                 if a>3 then p();
-                variable x is boolean;
+                #variable x is boolean;
                 variable lk is float;
             end;
         if b==4 then gol();

@@ -47,6 +47,7 @@ public class Alcance extends HashMap{
 
     //revisar
     // posible uso para cuando tengamos que buscar un nombre en un alcance, busca primero en actual sino en su padre hasta llegar a null
+    //retorna objeto encontrado o null si no lo encuentra
     public Object resolver(String name){
         Alcance alcance_actual = this;
         Object elemento = null;

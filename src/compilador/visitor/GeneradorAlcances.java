@@ -20,7 +20,6 @@ public class GeneradorAlcances extends Visitor<Void> {
     private Stack<Bloque> alcances = new Stack<Bloque>();
     private Alcance alcance_actual; //alcance actual de un bloque determinado
     private Alcance alcance_global; //alcance al que todos pueden acceder
-    boolean anidamientoFlag = false;
 
     // seteo el alcance global, que puede ser declaraciones o main(en caso de que no haya declaraciones)
     private void setGlobal(Bloque bloque){
@@ -47,26 +46,21 @@ public class GeneradorAlcances extends Visitor<Void> {
             if (!bloque.esProgramaPrincipal()){ //es declaraciones
                 this.setGlobal(bloque);
             } else {  // bloque main sin declaraciones
-                this.setGlobal(bloque); //aca cambiar
+                this.setGlobal(bloque);
+                alcances.push(bloque);
+                this.mainConDeclaraciones(bloque);
             }
-            System.out.println("bloque: " + bloque.getAlcance().getNombre());
-            System.out.println("actual: " + alcance_actual.getNombre());
-            System.out.println("padre: " + bloque.getAlcance().getPadre());
-            System.out.println("\n");
         } else{ //global ya establecido
             if (bloque.esProgramaPrincipal()){  // bloque main con declaraciones previas
                 this.mainConDeclaraciones(bloque);
-                System.out.println("bloque: " + bloque.getAlcance().getNombre());
-                System.out.println("actual: " + alcance_actual.getNombre());
-                System.out.println("padre: " + bloque.getAlcance().getPadre().getNombre());
-                System.out.println("\n");
             } else {
                 bloque.setAlcance(new Alcance(bloque.getNombre(),alcances.peek().getAlcance()));
                 this.alcance_actual = bloque.getAlcance();
+                /*
                 System.out.println("bloque: " + bloque.getAlcance().getNombre());
                 System.out.println("actual: " + alcance_actual.getNombre());
                 System.out.println("padre: " + bloque.getAlcance().getPadre().getNombre());
-                System.out.println("\n");
+                System.out.println("\n"); */
             }
         }
         alcances.push(bloque);
@@ -74,7 +68,6 @@ public class GeneradorAlcances extends Visitor<Void> {
         if(!alcances.peek().getAlcance().getNombre().equals("global")){
             alcances.pop();
             this.alcance_actual = alcances.peek().getAlcance();
-            //System.out.println(alcance_actual.getNombre());
         }
         return null;
     }
@@ -82,11 +75,16 @@ public class GeneradorAlcances extends Visitor<Void> {
     // cuando llegue a visit(decaracionVariable) aca si esta, por ende, usa este y no el de la superclase
     @Override
     public Void visit(DeclaracionVariable dv) throws ExcepcionDeAlcance{
+        /*
+        // EVITAR VARIABLE A IS FLOAT = 1 + PEPE();
+        if(alcance_actual == alcance_global){
+            Expresion exp = dv.getExpresion();
+            while (exp.getClass() != InvocacionFuncion.class){
+                exp =
+            }
+        }*/
         Variable var = new Variable(dv);    // var : declaracionVariable
         Object result = this.agregarSimbolo(var.getDeclaracion().getId().getNombre(), dv);
-        System.out.println(alcance_actual.values());
-        System.out.println(alcance_actual.getNombre());
-        System.out.println("\n");
         if(result!=null){   //repetido
             throw new ExcepcionDeAlcance(
                     String.format("El nombre de la variable %1$s de tipo %2$s fue utilizado previamente\"]\n", 
@@ -95,26 +93,27 @@ public class GeneradorAlcances extends Visitor<Void> {
         return null;
     }
 
+
     @Override
     public Void visit(DeclaracionFuncion declaracionFuncion) throws ExcepcionDeAlcance{
         Funcion funcion = new Funcion(declaracionFuncion);    // var : declaracionVariable
         Object result = this.agregarSimbolo(funcion.getDeclaracionFuncion().getIdentificador().getNombre(), declaracionFuncion);
-        System.out.println(alcance_actual.values());
-        System.out.println(alcance_actual.getNombre());
-        System.out.println("\n");
         if(result!=null){   //repetido
             throw new ExcepcionDeAlcance(
                     String.format("El nombre de la funcion %1$s de tipo retorno %2$s fue utilizado previamente\"]\n",
                             declaracionFuncion.getIdentificador().getNombre(), declaracionFuncion.getTipoRetorno() ));
         }
+        super.visit(declaracionFuncion);    //visito el bloque de la funcion
         return null;
     }
 
     // agregarSimbolo(nombre variable, declaracion)
-    private Object agregarSimbolo(String nombre, Object s){
+    private Object agregarSimbolo(String nombre, Object s) throws ExcepcionDeAlcance {
+        if(alcance_actual.resolver(nombre) != null){    //retorna el repetido, si no esta -> null
+            throw new ExcepcionDeAlcance(String.format("El nombre de %2$s %1$s fue utilizado previamente\"]\n",nombre,s.getClass().getSimpleName()));
+        }
         return this.alcance_actual.putIfAbsent(nombre, s);  //retorna lo que habia previamente, si no habia nada tira null
     }
-
 
     @Override
     protected Void procesarPrograma(Programa programa, Void declaraciones, Void sentencias) {
