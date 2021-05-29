@@ -5,10 +5,7 @@
  */
 package compilador.ast.instrucciones;
 
-import compilador.ast.base.ExcepcionDeAlcance;
-import compilador.ast.base.Expresion;
-import compilador.ast.base.Identificador;
-import compilador.ast.base.Tipo;
+import compilador.ast.base.*;
 import compilador.visitor.Transformer;
 import compilador.visitor.Visitor;
 
@@ -62,10 +59,10 @@ public class DeclaracionVariable extends Declaracion{
         return v.visit(this);   //invoca el visit(declaracionVariable) de visitor o el visit(declaracionVariable) de cualquier subclase de Visitor, va a depender de <T>
     }
 
-    /*
+
     @Override
-    public DeclaracionVariable accept_transfomer(Transformer t) {
+    public DeclaracionVariable accept_transfomer(Transformer t) throws ExcepcionDeTipos {
         return t.transform(this);
     }
-    */
+
 }

@@ -56,10 +56,9 @@ public class Asignacion extends Sentencia{
         return v.visit(this);   //invoca el visit(asignacion) de visitor o el visit(asignacion) de cualquier subclase de Visitor, va a depender de <T>
     }
 
-    /*
     @Override
     public Asignacion accept_transfomer(Transformer t) throws ExcepcionDeTipos{
         return t.transform(this);
     }
-    */
+
 }

@@ -39,11 +39,9 @@ public class Constante extends Expresion {
         return v.visit(this); //invoca el visit(constante) de visitor o o el visit(constante) de cualquier subclase de Visitor, va a depender de <T>
     }
 
-    /*
     @Override
     public Constante accept_transfomer(Transformer t) {
         return t.transform(this);
     }
 
-     */
 }

@@ -1,6 +1,7 @@
 package compilador.ast.instrucciones;
 
 import compilador.ast.base.*;
+import compilador.visitor.Transformer;
 import compilador.visitor.Visitor;
 
 import java.util.ArrayList;
@@ -75,5 +76,10 @@ public class DeclaracionFuncion extends Declaracion{
     @Override
     public <T> T accept(Visitor<T> v) throws ExcepcionDeAlcance {
         return v.visit(this);
+    }
+
+    @Override
+    public DeclaracionFuncion accept_transfomer(Transformer t) throws ExcepcionDeTipos {
+        return t.transform(this);
     }
 }

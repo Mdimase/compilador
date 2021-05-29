@@ -22,11 +22,9 @@ public class Division extends OperacionBinaria {
         return v.visit(this);
     }
 
-    /*
     @Override
     public Division accept_transfomer(Transformer t) throws ExcepcionDeTipos{
         return t.transform(this);
     }
-    */
 
 }

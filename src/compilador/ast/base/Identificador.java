@@ -34,10 +34,9 @@ public class Identificador extends Expresion{
         return v.visit(this);   //invoca el visit(identificador) en visitor o el visit(identificador) de cualquier subclase de Visitor, va a depender de <T>
     }
 
-    /*
     @Override
     public Identificador accept_transfomer(Transformer t) throws ExcepcionDeTipos{
         return t.transform(this);
     }
-    */
+
 }

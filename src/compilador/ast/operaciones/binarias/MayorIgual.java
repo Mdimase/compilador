@@ -22,11 +22,9 @@ public class MayorIgual extends ComparacionDesigualdad{
         return v.visit(this);
     }
 
-    /*
     @Override
     public MayorIgual accept_transfomer(Transformer t) throws ExcepcionDeTipos {
         return t.transform(this);
     }
 
-     */
 }

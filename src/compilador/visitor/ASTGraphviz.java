@@ -239,6 +239,11 @@ public class ASTGraphviz extends Visitor<String>{
     }
 
     @Override
+    protected String procesarParametro(Parametro parametro, String identificador, String valor_defecto) {
+        return identificador+valor_defecto;
+    }
+
+    @Override
     protected String procesarPrograma(Programa programa, String declaraciones, String sentencias) {
         return declaraciones+sentencias;
     }

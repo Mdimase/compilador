@@ -1,6 +1,10 @@
 package compilador.ast.base;
 
-public class Parametro {
+import compilador.ast.instrucciones.Sentencia;
+import compilador.visitor.Transformer;
+import compilador.visitor.Visitor;
+
+public class Parametro extends Sentencia {
     private Tipo tipo;
     private Identificador identificador;
     private Constante valorDefecto;
@@ -38,5 +42,15 @@ public class Parametro {
 
     public void setValorDefecto(Constante valorDefecto) {
         this.valorDefecto = valorDefecto;
+    }
+
+    @Override
+    public <T> T accept(Visitor<T> v) throws ExcepcionDeAlcance {
+        return v.visit(this);
+    }
+
+    @Override
+    public Parametro accept_transfomer(Transformer t) throws ExcepcionDeTipos {
+        return t.transform(this);
     }
 }

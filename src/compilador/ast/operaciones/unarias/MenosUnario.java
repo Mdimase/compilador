@@ -22,11 +22,9 @@ public class MenosUnario extends OperacionUnaria {
         return v.visit(this);
     }
 
-    /*
     @Override
     public MenosUnario accept_transfomer(Transformer t) throws ExcepcionDeTipos {
         return t.transform(this);
     }
 
-     */
 }

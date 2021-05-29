@@ -60,11 +60,9 @@ public class Write extends Sentencia{
         return v.visit(this);
     }
 
-    /*
     @Override
-    public <R> R accept_transfomer(Transformer t) throws ExcepcionDeTipos {
-        return null;
+    public Write accept_transfomer(Transformer t) throws ExcepcionDeTipos {
+        return t.transform(this);
     }
-    */
 
 }

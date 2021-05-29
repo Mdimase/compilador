@@ -162,6 +162,14 @@ public abstract class Visitor<T> {
         }
     }
 
+    public T visit(Parametro parametro){
+        T id = parametro.getIdentificador().accept(this);
+        T valor_defecto = parametro.getValorDefecto().accept(this);
+        return procesarParametro(parametro,id,valor_defecto);
+    }
+
+    protected abstract T procesarParametro(Parametro parametro, T identificador, T valor_defecto);
+
     protected abstract T procesarPrograma (Programa programa,T declaraciones,T sentencias);
 
     protected abstract T procesarDeclaracionFuncion(DeclaracionFuncion declaracionFuncion,T identificador, T bloque);

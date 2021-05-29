@@ -12,10 +12,6 @@ import compilador.ast.base.Tipo;
 import compilador.visitor.Transformer;
 import compilador.visitor.Visitor;
 
-/**
- *
- * @author ITT
- */
 public class EnteroAFlotante extends OperacionConversion{
     
     
@@ -28,11 +24,9 @@ public class EnteroAFlotante extends OperacionConversion{
         return v.visit(this);
     }
 
-    /*
     @Override
     public EnteroAFlotante accept_transfomer(Transformer t) throws ExcepcionDeTipos{
         return t.transform(this);
     }
 
-     */
 }

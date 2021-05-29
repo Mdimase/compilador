@@ -83,4 +83,5 @@ if a==1 then
             end;
         if b==4 then gol();
     end;
+    variable a is float = 5 + 1.0;
 end.

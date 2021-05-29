@@ -21,11 +21,10 @@ public class Distinto extends ComparacionIgualdad{
         return v.visit(this);
     }
 
-    /*
+
     @Override
     public Distinto accept_transfomer(Transformer t) throws ExcepcionDeTipos {
         return t.transform(this);
     }
-    */
 
 }

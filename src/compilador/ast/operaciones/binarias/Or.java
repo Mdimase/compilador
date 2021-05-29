@@ -22,11 +22,9 @@ public class Or extends OperacionBinaria{
         return v.visit(this);
     }
 
-    /*
     @Override
     public Or accept_transfomer(Transformer t) throws ExcepcionDeTipos{
         return t.transform(this);
     }
 
-     */
 }

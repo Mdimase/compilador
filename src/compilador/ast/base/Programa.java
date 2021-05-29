@@ -51,10 +51,9 @@ public class Programa extends Nodo{
         return v.visit(this);
     }
 
-    /*
     @Override
     public Programa accept_transfomer(Transformer t) throws ExcepcionDeTipos{
         return t.transform(this);
     }
-    */
+
 }

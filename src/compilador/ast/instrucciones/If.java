@@ -2,7 +2,9 @@ package compilador.ast.instrucciones;
 
 import compilador.ast.base.Bloque;
 import compilador.ast.base.ExcepcionDeAlcance;
+import compilador.ast.base.ExcepcionDeTipos;
 import compilador.ast.base.Expresion;
+import compilador.visitor.Transformer;
 import compilador.visitor.Visitor;
 
 import java.util.List;
@@ -61,10 +63,13 @@ public class If extends Sentencia{
         this.bloqueElse = bloqueElse;
     }
 
-
-
     @Override
     public <T> T accept(Visitor<T> v) throws ExcepcionDeAlcance {
         return v.visit(this);
+    }
+
+    @Override
+    public If accept_transfomer(Transformer t) throws ExcepcionDeTipos {
+        return t.transform(this);
     }
 }

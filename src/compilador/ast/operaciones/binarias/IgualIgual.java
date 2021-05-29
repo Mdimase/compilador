@@ -22,11 +22,9 @@ public class IgualIgual extends ComparacionIgualdad{
         return v.visit(this);
     }
 
-    /*
+
     @Override
     public IgualIgual accept_transfomer(Transformer t) throws ExcepcionDeTipos {
         return t.transform(this);
     }
-
-     */
 }

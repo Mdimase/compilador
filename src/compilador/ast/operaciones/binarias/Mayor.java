@@ -22,11 +22,10 @@ public class Mayor extends ComparacionDesigualdad{
         return v.visit(this);
     }
 
-    /*
+
     @Override
     public Mayor accept_transfomer(Transformer t) throws ExcepcionDeTipos {
         return t.transform(this);
     }
 
-     */
 }

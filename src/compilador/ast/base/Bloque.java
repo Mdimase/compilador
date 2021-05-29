@@ -88,11 +88,9 @@ public class Bloque extends Sentencia{
         return v.visit(this);   //invoca el visit(bloque) de visitor o el visit(bloque) de cualquier subclase de Visitor, va a depender de <T>
     }
 
-    /*
     @Override
     public Bloque accept_transfomer(Transformer t) throws ExcepcionDeTipos{
         return t.transform(this);
     }
-  */
     
 }

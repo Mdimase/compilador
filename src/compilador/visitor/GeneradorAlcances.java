@@ -185,4 +185,9 @@ public class GeneradorAlcances extends Visitor<Void> {
         return null;
     }
 
+    @Override
+    protected Void procesarParametro(Parametro parametro, Void identificador, Void valor_defecto) {
+        return null;
+    }
+
 }

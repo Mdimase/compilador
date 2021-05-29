@@ -35,7 +35,6 @@ public abstract class Nodo{
     
     public abstract <T> T accept(Visitor<T> v) throws ExcepcionDeAlcance;
 
-    /*
     public abstract <R> R accept_transfomer(Transformer t) throws ExcepcionDeTipos;
-     */
+
 }

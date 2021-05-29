@@ -34,10 +34,9 @@ public class Variable extends Expresion{
         return v.visit(this); //invoca el visit(variable) de visitor o el visit(variable) de cualquier subclase de Visitor, va a depender de <T>
     }
 
-    /*
     @Override
     public Variable accept_transfomer(Transformer t) {
         return t.transform(this);
     }
-    */
+
 }

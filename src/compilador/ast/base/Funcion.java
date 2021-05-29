@@ -1,6 +1,7 @@
 package compilador.ast.base;
 
 import compilador.ast.instrucciones.DeclaracionFuncion;
+import compilador.visitor.Transformer;
 import compilador.visitor.Visitor;
 
 public class Funcion extends Expresion{
@@ -22,5 +23,10 @@ public class Funcion extends Expresion{
     @Override
     public <T> T accept(Visitor<T> v) throws ExcepcionDeAlcance {
         return v.visit(this);
+    }
+
+    @Override
+    public Funcion accept_transfomer(Transformer t) throws ExcepcionDeTipos {
+        return t.transform(this);
     }
 }

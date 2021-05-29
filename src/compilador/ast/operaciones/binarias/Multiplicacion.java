@@ -22,12 +22,10 @@ public class Multiplicacion extends OperacionBinaria {
         return v.visit(this);
     }
 
-    /*
+
     @Override
     public Multiplicacion accept_transfomer(Transformer t) throws ExcepcionDeTipos{
         return t.transform(this);
     }
-
-     */
  
 }

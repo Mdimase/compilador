@@ -6,25 +6,19 @@
 package compilador.visitor;
 
 import compilador.ast.base.*;
-import compilador.ast.instrucciones.Asignacion;
-import compilador.ast.instrucciones.DeclaracionVariable;
-import compilador.ast.instrucciones.Sentencia;
+import compilador.ast.instrucciones.*;
 import compilador.ast.operaciones.binarias.*;
-import compilador.ast.operaciones.unarias.EnteroAFlotante;
-import compilador.ast.operaciones.unarias.FlotanteAEntero;
-import compilador.ast.operaciones.unarias.MenosUnario;
-import compilador.ast.operaciones.unarias.Not;
+import compilador.ast.operaciones.unarias.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-/**
- *
- * @author ITT
- */
 public abstract class Transformer {
-/*
+
     // retorna un Programa tranformado
     public Programa transform(Programa p) throws ExcepcionDeTipos{
+        p.setDeclaraciones(p.getDeclaraciones().accept_transfomer(this));
         p.setCuerpo(p.getCuerpo().accept_transfomer(this));
         return p;
     }
@@ -58,7 +52,11 @@ public abstract class Transformer {
         return a;
     }
 
-    public DeclaracionVariable transform(DeclaracionVariable dv) {
+    public DeclaracionVariable transform(DeclaracionVariable dv) throws ExcepcionDeTipos {
+        Identificador id = dv.getId().accept_transfomer(this);
+        Expresion e = dv.getExpresion().accept_transfomer(this);
+        dv.setId(id);
+        dv.setExpresion(e);
         return dv;
     }
     
@@ -82,16 +80,6 @@ public abstract class Transformer {
 
     public Suma transform(Suma s) throws ExcepcionDeTipos {
         return (Suma) transformar_operacion_binaria(s);
-    }
-    
-    public FlotanteAEntero transform(FlotanteAEntero fae) throws ExcepcionDeTipos {
-        fae.setExpresion(fae.getExpresion().accept_transfomer(this));
-        return fae;
-    }
-
-    public EnteroAFlotante transform(EnteroAFlotante eaf) throws ExcepcionDeTipos {
-        eaf.setExpresion(eaf.getExpresion().accept_transfomer(this));
-        return eaf;
     }
 
     public Mayor transform(Mayor mayor) throws ExcepcionDeTipos {
@@ -126,19 +114,118 @@ public abstract class Transformer {
         return (And) transformar_operacion_binaria(and);
     }
 
+    private OperacionUnaria transformar_operacion_unaria(OperacionUnaria operacion) throws ExcepcionDeTipos{
+        operacion.setExpresion(operacion.getExpresion().accept_transfomer(this));
+        return operacion;
+    }
+
     public MenosUnario transform(MenosUnario menosUnario) throws ExcepcionDeTipos{
-        menosUnario.setExpresion(menosUnario.getExpresion().accept_transfomer(this));
-        return menosUnario;
+        return (MenosUnario) transformar_operacion_unaria(menosUnario);
     }
 
     public Not transform(Not not) throws ExcepcionDeTipos {
-        not.setExpresion(not.getExpresion().accept_transfomer(this));
-        return not;
+        return (Not) transformar_operacion_unaria(not);
+    }
+
+    public FlotanteAEntero transform(FlotanteAEntero fae) throws ExcepcionDeTipos {
+        fae.setExpresion(fae.getExpresion().accept_transfomer(this));
+        return fae;
+    }
+
+    public EnteroAFlotante transform(EnteroAFlotante eaf) throws ExcepcionDeTipos {
+        eaf.setExpresion(eaf.getExpresion().accept_transfomer(this));
+        return eaf;
     }
 
     public InvocacionFuncion transform(InvocacionFuncion invocacionFuncion) throws ExcepcionDeTipos {
+        Identificador id = invocacionFuncion.getIdentificador().accept_transfomer(this);
+        ArrayList<Expresion> result = new ArrayList<>();
+        for (Expresion expresion : invocacionFuncion.getParams()){
+            result.add(expresion.accept_transfomer(this));
+        }
+        invocacionFuncion.setIdentificador(id);
+        invocacionFuncion.setParams(result);
         return invocacionFuncion;
     }
 
- */
+    public Funcion transform(Funcion funcion) throws ExcepcionDeTipos {
+        return funcion;
+    }
+
+    public Break transform(Break aBreak){
+        return aBreak;
+    }
+
+    public Continue transform(Continue aContinue){
+        return aContinue;
+    }
+
+    public Return transform(Return aReturn) throws ExcepcionDeTipos {
+        Expresion e = aReturn.getExpresion().accept_transfomer(this);
+        aReturn.setExpresion(e);
+        return aReturn;
+    }
+
+    public Parametro transform(Parametro parametro) throws ExcepcionDeTipos {
+        Identificador id = parametro.getIdentificador().accept_transfomer(this);
+        Constante valor_defecto = parametro.getValorDefecto().accept_transfomer(this);
+        parametro.setIdentificador(id);
+        parametro.setValorDefecto(valor_defecto);
+        return parametro;
+    }
+
+    public DeclaracionFuncion transform(DeclaracionFuncion declaracionFuncion) throws ExcepcionDeTipos {
+        Identificador id = declaracionFuncion.getIdentificador().accept_transfomer(this);
+        if(!declaracionFuncion.getParametros().isEmpty()){
+            List<Parametro> parametros = declaracionFuncion.getParametros();
+            for (Parametro parametro : parametros){
+                parametros.add(parametro.accept_transfomer(this));
+            }
+            declaracionFuncion.setParametros(parametros);
+        }
+        Bloque bloque = declaracionFuncion.getBloque().accept_transfomer(this);
+        declaracionFuncion.setIdentificador(id);
+        declaracionFuncion.setBloque(bloque);
+        return declaracionFuncion;
+    }
+
+    public For transform(For aFor) throws ExcepcionDeTipos {
+        Identificador id = aFor.getIdentificador().accept_transfomer(this);
+        Bloque bloque = aFor.getBloque().accept_transfomer(this);
+        Constante from = aFor.getFrom().accept_transfomer(this);
+        Constante to = aFor.getTo().accept_transfomer(this);
+        Constante by = aFor.getBy().accept_transfomer(this);
+        aFor.setIdentificador(id);
+        aFor.setBloque(bloque);
+        aFor.setFrom(from);
+        aFor.setTo(to);
+        aFor.setBy(by);
+        return aFor;
+    }
+
+    public If transform(If anIf) throws ExcepcionDeTipos {
+        Expresion e = anIf.getCondicion().accept_transfomer(this);
+        Bloque bloqueThen = anIf.getBloqueThen().accept_transfomer(this);
+        if(anIf.getBloqueElse() != null){
+            Bloque bloqueElse = anIf.getBloqueElse().accept_transfomer(this);
+            anIf.setBloqueElse(bloqueElse);
+        }
+        anIf.setCondicion(e);
+        anIf.setBloqueThen(bloqueThen);
+        return anIf;
+    }
+
+    public While transform(While aWhile) throws ExcepcionDeTipos {
+        Expresion e = aWhile.getCondicion().accept_transfomer(this);
+        Bloque bloque = aWhile.getBloque().accept_transfomer(this);
+        aWhile.setCondicion(e);
+        aWhile.setBloque(bloque);
+        return aWhile;
+    }
+
+    public Write transform(Write write) throws ExcepcionDeTipos {
+        Expresion e = write.getExpresion().accept_transfomer(this);
+        write.setExpresion(e);
+        return write;
+    }
 }

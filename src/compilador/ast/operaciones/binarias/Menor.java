@@ -22,11 +22,9 @@ public class Menor extends ComparacionDesigualdad{
         return v.visit(this);
     }
 
-    /*
     @Override
     public Menor accept_transfomer(Transformer t) throws ExcepcionDeTipos {
         return t.transform(this);
     }
 
-     */
 }

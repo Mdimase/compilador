@@ -22,11 +22,9 @@ public class Suma extends OperacionBinaria{
         return v.visit(this);
     }
 
-    /*
     @Override
     public Suma accept_transfomer(Transformer t) throws ExcepcionDeTipos{
         return t.transform(this);
     }
 
-     */
 }

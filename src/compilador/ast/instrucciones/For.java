@@ -1,9 +1,7 @@
 package compilador.ast.instrucciones;
 
-import compilador.ast.base.Bloque;
-import compilador.ast.base.Constante;
-import compilador.ast.base.ExcepcionDeAlcance;
-import compilador.ast.base.Identificador;
+import compilador.ast.base.*;
+import compilador.visitor.Transformer;
 import compilador.visitor.Visitor;
 
 public class For extends Sentencia{
@@ -92,5 +90,10 @@ public class For extends Sentencia{
     @Override
     public <T> T accept(Visitor<T> v) throws ExcepcionDeAlcance {
         return v.visit(this);
+    }
+
+    @Override
+    public For accept_transfomer(Transformer t) throws ExcepcionDeTipos {
+        return t.transform(this);
     }
 }
