@@ -47,7 +47,7 @@ public class GeneradorAlcances extends Visitor<Void> {
             if (!bloque.esProgramaPrincipal()){ //es declaraciones
                 this.setGlobal(bloque);
             } else {  // bloque main sin declaraciones
-                this.setGlobal(bloque);
+                this.setGlobal(bloque); //aca cambiar
             }
             System.out.println("bloque: " + bloque.getAlcance().getNombre());
             System.out.println("actual: " + alcance_actual.getNombre());
@@ -71,16 +71,23 @@ public class GeneradorAlcances extends Visitor<Void> {
         }
         alcances.push(bloque);
         super.visit(bloque);    //visito a visit(Bloque) de Visitor, para recorrer las sentencias de este bloque
-        alcances.pop();
+        if(!alcances.peek().getAlcance().getNombre().equals("global")){
+            alcances.pop();
+            this.alcance_actual = alcances.peek().getAlcance();
+            //System.out.println(alcance_actual.getNombre());
+        }
         return null;
     }
 
     // cuando llegue a visit(decaracionVariable) aca si esta, por ende, usa este y no el de la superclase
     @Override
     public Void visit(DeclaracionVariable dv) throws ExcepcionDeAlcance{
-        Variable var = new Variable(dv);
+        Variable var = new Variable(dv);    // var : declaracionVariable
         Object result = this.agregarSimbolo(var.getDeclaracion().getId().getNombre(), dv);
-        if(result!=null){
+        System.out.println(alcance_actual.values());
+        System.out.println(alcance_actual.getNombre());
+        System.out.println("\n");
+        if(result!=null){   //repetido
             throw new ExcepcionDeAlcance(
                     String.format("El nombre de la variable %1$s de tipo %2$s fue utilizado previamente\"]\n", 
                             dv.getId().getNombre(), dv.getTipo() ));
@@ -88,12 +95,26 @@ public class GeneradorAlcances extends Visitor<Void> {
         return null;
     }
 
+    @Override
+    public Void visit(DeclaracionFuncion declaracionFuncion) throws ExcepcionDeAlcance{
+        Funcion funcion = new Funcion(declaracionFuncion);    // var : declaracionVariable
+        Object result = this.agregarSimbolo(funcion.getDeclaracionFuncion().getIdentificador().getNombre(), declaracionFuncion);
+        System.out.println(alcance_actual.values());
+        System.out.println(alcance_actual.getNombre());
+        System.out.println("\n");
+        if(result!=null){   //repetido
+            throw new ExcepcionDeAlcance(
+                    String.format("El nombre de la funcion %1$s de tipo retorno %2$s fue utilizado previamente\"]\n",
+                            declaracionFuncion.getIdentificador().getNombre(), declaracionFuncion.getTipoRetorno() ));
+        }
+        return null;
+    }
+
+    // agregarSimbolo(nombre variable, declaracion)
     private Object agregarSimbolo(String nombre, Object s){
-        // agregar un nodo, en este ejemplo declaraciones de variables, al alcance actual, si no estaba
         return this.alcance_actual.putIfAbsent(nombre, s);  //retorna lo que habia previamente, si no habia nada tira null
     }
-    
-     //sobreescribir el visit(declaracionFuncion)
+
 
     @Override
     protected Void procesarPrograma(Programa programa, Void declaraciones, Void sentencias) {

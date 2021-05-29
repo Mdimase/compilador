@@ -5,16 +5,16 @@ graph G {1 [label="Programa"]
 2 -- 3
 4 [label="Ident prueba_Funcion INTEGER"]
 3 -- 4
-25 [label="Ident a FLOAT"]
+23 [label="Ident a FLOAT"]
+3 -- 23
+24 [label="Ident b INTEGER"]
+3 -- 24
+25 [label="Const 21 INTEGER"]
 3 -- 25
-26 [label="Ident b INTEGER"]
+26 [label="Ident c BOOL"]
 3 -- 26
-27 [label="Const 21 INTEGER"]
+27 [label="Const false BOOL"]
 3 -- 27
-28 [label="Ident c BOOL"]
-3 -- 28
-29 [label="Const false BOOL"]
-3 -- 29
 5 [label="BLOQUE_FUNCION"]
 3 -- 5
 6 [label="IF/ELSE"]
@@ -33,84 +33,114 @@ graph G {1 [label="Programa"]
 11 -- 12
 13 [label="Const 5 INTEGER"]
 11 -- 13
-14 [label="="]
+14 [label="DeclaracionVariable"]
 10 -- 14
-15 [label="Ident b UNKNOWN"]
+15 [label="Ident jk INTEGER"]
 14 -- 15
-16 [label="+ UNKNOWN"]
+16 [label="Const 14 INTEGER"]
 14 -- 16
-17 [label="Ident b UNKNOWN"]
-16 -- 17
-18 [label="Const 5 INTEGER"]
-16 -- 18
-19 [label="BLOQUE_ELSE"]
-6 -- 19
-20 [label="WriteLn String"]
+17 [label="BLOQUE_ELSE"]
+6 -- 17
+18 [label="WriteLn String"]
+17 -- 18
+19 [label="Return"]
+5 -- 19
+20 [label="+ UNKNOWN"]
 19 -- 20
-21 [label="Return"]
-5 -- 21
-22 [label="+ UNKNOWN"]
-21 -- 22
-23 [label="Ident a UNKNOWN"]
-22 -- 23
-24 [label="Ident b UNKNOWN"]
-22 -- 24
-30 [label="MAIN"]
-1 -- 30
-31 [label="IF"]
+21 [label="Ident a UNKNOWN"]
+20 -- 21
+22 [label="Ident b UNKNOWN"]
+20 -- 22
+28 [label="MAIN"]
+1 -- 28
+29 [label="IF"]
+28 -- 29
+30 [label="> UNKNOWN"]
+29 -- 30
+31 [label="Ident a UNKNOWN"]
 30 -- 31
-32 [label="== UNKNOWN"]
-31 -- 32
-33 [label="Ident a UNKNOWN"]
-32 -- 33
-34 [label="Const 1 INTEGER"]
-32 -- 34
-35 [label="BLOQUE_THEN"]
-31 -- 35
-36 [label="WHILE"]
-35 -- 36
-37 [label="== UNKNOWN"]
-36 -- 37
-38 [label="Ident a UNKNOWN"]
-37 -- 38
-39 [label="Const 1 INTEGER"]
-37 -- 39
-40 [label="BLOQUE_WHILE"]
-36 -- 40
-41 [label="IF"]
-40 -- 41
-42 [label="> UNKNOWN"]
+32 [label="Const 3 INTEGER"]
+30 -- 32
+33 [label="BLOQUE_THEN"]
+29 -- 33
+34 [label="InvocacionFuncion"]
+33 -- 34
+35 [label="Ident l UNKNOWN"]
+34 -- 35
+36 [label="DeclaracionVariable"]
+28 -- 36
+38 [label="Ident c BOOL"]
+36 -- 38
+39 [label="DeclaracionVariable"]
+28 -- 39
+40 [label="Ident x FLOAT"]
+39 -- 40
+41 [label="+ UNKNOWN"]
+39 -- 41
+42 [label="Ident a UNKNOWN"]
 41 -- 42
-43 [label="Ident a UNKNOWN"]
-42 -- 43
-44 [label="Const 3 INTEGER"]
-42 -- 44
-45 [label="BLOQUE_THEN"]
-41 -- 45
-46 [label="InvocacionFuncion"]
+43 [label="InvocacionFuncion"]
+41 -- 43
+44 [label="Ident pepe UNKNOWN"]
+43 -- 44
+45 [label="InvocacionFuncion"]
+28 -- 45
+46 [label="Ident pepe UNKNOWN"]
 45 -- 46
-47 [label="Ident p UNKNOWN"]
-46 -- 47
-48 [label="InvocacionFuncion"]
-40 -- 48
-49 [label="Ident caca UNKNOWN"]
+47 [label="IF"]
+28 -- 47
+48 [label="== UNKNOWN"]
+47 -- 48
+49 [label="Ident a UNKNOWN"]
 48 -- 49
-50 [label="IF"]
-35 -- 50
-51 [label="== UNKNOWN"]
-50 -- 51
-52 [label="Ident b UNKNOWN"]
+50 [label="Const 1 INTEGER"]
+48 -- 50
+51 [label="BLOQUE_THEN"]
+47 -- 51
+52 [label="WHILE"]
 51 -- 52
-53 [label="Const 4 INTEGER"]
-51 -- 53
-54 [label="BLOQUE_THEN"]
-50 -- 54
-55 [label="InvocacionFuncion"]
-54 -- 55
-56 [label="Ident gol UNKNOWN"]
-55 -- 56
-57 [label="DeclaracionVariable"]
-30 -- 57
-59 [label="Ident a INTEGER"]
-57 -- 59
+53 [label="== UNKNOWN"]
+52 -- 53
+54 [label="Ident a UNKNOWN"]
+53 -- 54
+55 [label="Const 1 INTEGER"]
+53 -- 55
+56 [label="BLOQUE_WHILE"]
+52 -- 56
+57 [label="IF"]
+56 -- 57
+58 [label="> UNKNOWN"]
+57 -- 58
+59 [label="Ident a UNKNOWN"]
+58 -- 59
+60 [label="Const 3 INTEGER"]
+58 -- 60
+61 [label="BLOQUE_THEN"]
+57 -- 61
+62 [label="InvocacionFuncion"]
+61 -- 62
+63 [label="Ident p UNKNOWN"]
+62 -- 63
+64 [label="DeclaracionVariable"]
+56 -- 64
+66 [label="Ident x BOOL"]
+64 -- 66
+67 [label="DeclaracionVariable"]
+56 -- 67
+69 [label="Ident lk FLOAT"]
+67 -- 69
+70 [label="IF"]
+51 -- 70
+71 [label="== UNKNOWN"]
+70 -- 71
+72 [label="Ident b UNKNOWN"]
+71 -- 72
+73 [label="Const 4 INTEGER"]
+71 -- 73
+74 [label="BLOQUE_THEN"]
+70 -- 74
+75 [label="InvocacionFuncion"]
+74 -- 75
+76 [label="Ident gol UNKNOWN"]
+75 -- 76
 }

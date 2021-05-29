@@ -15,7 +15,7 @@ import java.util.Map;
 public class Alcance extends HashMap{
 
     // diccionario
-    // ej clave:valor -> identificador:declaracionVariable
+    // ej clave:valor -> Variable : declaracionVariable
     private String nombre;  //nombre del alcance. si es de una funcion pepe() -> alcance pepe()
     private Alcance padre;  // alcance padre que lo engloba. ej si esta es el alcance de un for, su padre puede ser programa u otro for si estan anidados
 
@@ -44,7 +44,9 @@ public class Alcance extends HashMap{
     public void setPadre(Alcance padre) {
         this.padre = padre;
     }
-    
+
+    //revisar
+    // posible uso para cuando tengamos que buscar un nombre en un alcance, busca primero en actual sino en su padre hasta llegar a null
     public Object resolver(String name){
         Alcance alcance_actual = this;
         Object elemento = null;
