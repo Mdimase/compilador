@@ -25,12 +25,12 @@ public class Main {
             pw.close();
             String cmd = "dot -Tpng arbol.dot -o arbol.png";        //comando consola
             Runtime.getRuntime().exec(cmd); //genero archivos dot y png
-            //GeneradorAlcances ga = new GeneradorAlcances();
-            //ga.procesar(programa);
+            GeneradorAlcances ga = new GeneradorAlcances();
+            ga.procesar(programa);
             System.out.println("Alcances procesados");
             //ValidadorTipos vt = new ValidadorTipos();
             //vt.procesar(programa);
-            System.out.println("Tipos validados");
+            //System.out.println("Tipos validados");
         } catch(Exception e){
             System.out.println(e);
         }    

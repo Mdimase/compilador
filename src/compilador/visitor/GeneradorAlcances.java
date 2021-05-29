@@ -12,24 +12,122 @@ import java.util.List;
 
 // no retorna nada
 // clase que se encargara de recorrer el AST y setear los valores de alcance correspondientes
-public class GeneradorAlcances extends Visitor<Void>{
+public class GeneradorAlcances extends Visitor<Void> {
     
     private Alcance alcance_actual; //alcance actual de un bloque determinado
     private Alcance alcance_global; //alcance al que todos pueden acceder
+    boolean anidamientoFlag = false;
 
     // dispara toda la generacion de alcances del AST
-    // MODIFICARLO XQ SINO SE VA A CHOCAR CON LOS VISIT(BLOQUE)
     public void procesar(Programa programa) throws ExcepcionDeAlcance{
-        programa.getDeclaraciones().setAlcance(new Alcance("global"));  //bloque declaraciones tiene alcance global
-        Alcance padre = programa.getDeclaraciones().getAlcance();
-        programa.getCuerpo().setAlcance(new Alcance("Main",padre)); // seteo alcance de bloque main, que tendra como padre a bloque declaraciones
-        alcance_global = alcance_actual = programa.getCuerpo().getAlcance();
+        /*
+
+            programa.getDeclaraciones().setAlcance(new Alcance("global"));  //bloque declaraciones tiene alcance global
+            Alcance padre = programa.getDeclaraciones().getAlcance();
+            programa.getCuerpo().setAlcance(new Alcance("Main",padre)); // seteo alcance de bloque main, que tendra como padre a bloque declaraciones
+            alcance_global = alcance_actual = programa.getCuerpo().getAlcance();    //REVISAR
+            this.visit(programa);   // como aca no hay visit(programa) usa de la superclase
+
+         */
         this.visit(programa);   // como aca no hay visit(programa) usa de la superclase
     }
     
     private Object agregarSimbolo(String nombre, Object s){
         // agregar un nodo, en este ejemplo declaraciones de variables, al alcance actual, si no estaba
         return this.alcance_actual.putIfAbsent(nombre, s);  //retorna lo que habia previamente, si no habia nada tira null
+    }
+
+    /* aca el primer bloque que venga puede ser de 2 formas posibles:
+        1) venga un bloque declaraciones, el cual sera mi alcance global
+        2) no venga bloque declaraciones, sino,un bloque main,ahora, sera alcance global xq no hay declaraciones encima de el
+         */
+    public Void visit(Bloque bloque) throws ExcepcionDeAlcance {
+        if (alcance_global == null){    //aca entra solo el primer bloque
+            this.declaracionesGlobal(bloque);
+            if (bloque.esProgramaPrincipal()){  // bloque main sin declaraciones
+                this.mainSinDeclaraciones(bloque);
+                System.out.println("bloque: " + bloque.getAlcance().getNombre());
+                System.out.println("actual: " + alcance_actual.getNombre());
+                System.out.println("padre: " + bloque.getAlcance().getPadre());
+            }
+        } else{ //global ya establecido
+            if (bloque.esProgramaPrincipal()){  // bloque main con declaraciones previas
+                this.mainConDeclaraciones(bloque);
+            }
+
+            if(alcance_actual.getNombre().equals("global")){
+                this.anidar(bloque); //anido
+                anidamientoFlag = this.haveAnidamiento(bloque);  //dejo un flag que indica si tiene bloques anidados
+                System.out.println(anidamientoFlag);
+                System.out.println("anido xq estaba en global");
+                System.out.println("bloque: " + bloque.getAlcance().getNombre());
+                System.out.println("padre: " + bloque.getAlcance().getPadre().getNombre());
+                System.out.println("actual: " + alcance_actual.getNombre());
+
+            } else{
+                if(anidamientoFlag){    //debo anidarme
+                    this.anidar(bloque); //anido
+                    anidamientoFlag = this.haveAnidamiento(bloque);
+                    System.out.println("anido");
+                } else{     //no debo anidarme
+                    this.desapilar(bloque);
+                    anidamientoFlag=this.haveAnidamiento(bloque);
+                    System.out.println("no anido");
+                }
+
+                System.out.println("bloque: " + bloque.getAlcance().getNombre());
+                System.out.println("padre: " + bloque.getAlcance().getPadre().getNombre());
+                System.out.println("actual: " + alcance_actual.getNombre());
+            }
+
+        }
+
+            //}
+        //}
+        super.visit(bloque);    //visito a visit(Bloque) de Visitor, para recorrer las sentencias de este bloque
+        return null;
+    }
+
+    // seteo bloque declaraciones como global
+    public void declaracionesGlobal(Bloque bloque){
+        bloque.setAlcance(new Alcance("global"));
+        this.alcance_global = this.alcance_actual = bloque.getAlcance();
+    }
+
+    //seteo main como global
+    public void mainSinDeclaraciones(Bloque bloque){
+        bloque.setAlcance(new Alcance("global"));
+        this.alcance_global = this.alcance_actual = bloque.getAlcance();
+
+    }
+
+    //seteo main como hijo de global
+    public void mainConDeclaraciones (Bloque bloque){
+        bloque.setAlcance(new Alcance("main",alcance_global));  //seteo su padre, que sera el alcance global
+        this.alcance_actual = bloque.getAlcance();
+    }
+
+    // bloques anidados
+    public void anidar (Bloque bloque){
+        bloque.setAlcance(new Alcance(bloque.getNombre(),alcance_actual));   //seteo el alcance con su nombre y padre
+        this.alcance_actual = bloque.getAlcance();  //actualizo alcance actual
+        this.alcance_actual.setPadre(bloque.getAlcance().getPadre());   //actualizo el padre
+    }
+
+    public void desapilar (Bloque bloque){
+        bloque.setAlcance(new Alcance(bloque.getNombre(),alcance_global));   //seteo el alcance con su nombre y padre
+        this.alcance_actual = bloque.getAlcance();  //actualizo alcance actual
+        this.alcance_actual.setPadre(bloque.getAlcance().getPadre());   //actualizo el padre
+    }
+
+    public boolean haveAnidamiento(Bloque bloque){
+        boolean anidamientoFlag = false;
+        for (Sentencia sentencia : bloque.getSentencias()) {
+            if (sentencia.getClass() == While.class || sentencia.getClass() == If.class || sentencia.getClass() == Bloque.class) {
+                anidamientoFlag = true;
+            }
+        }
+        return anidamientoFlag;
     }
 
     // cuando llegue a visit(decaracionVariable) aca si esta, por ende, usa este y no el de la superclase

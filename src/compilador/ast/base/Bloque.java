@@ -77,7 +77,6 @@ public class Bloque extends Sentencia{
     public List<Sentencia> initSentencia(Bloque bloque){
         if(bloque.getSentencias().get(0).getClass() == Bloque.class){   //mi sentencia es un bloque de sentencias
             Bloque aux = (Bloque) bloque.getSentencias().get(0);    //guardo dicho bloque de sentencias
-            System.out.println(aux);
             return aux.getSentencias();
         } else{
             return bloque.getSentencias();

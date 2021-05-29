@@ -23,6 +23,7 @@ import java.util.ArrayList;
  */
 public abstract class Transformer {
 /*
+    // retorna un Programa tranformado
     public Programa transform(Programa p) throws ExcepcionDeTipos{
         p.setCuerpo(p.getCuerpo().accept_transfomer(this));
         return p;

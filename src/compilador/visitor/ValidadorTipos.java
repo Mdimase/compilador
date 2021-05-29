@@ -28,7 +28,7 @@ import compilador.ast.operaciones.unarias.OperacionUnaria;
  */
 public class ValidadorTipos extends Transformer{
     /*
-    private Alcance alcance_actual;
+    private Alcance alcance_actual; //bloque actual, si no esta aca, busco en el padre hasta llegar a null
     
     public Programa procesar(Programa programa) throws ExcepcionDeTipos{
         this.alcance_actual = programa.getCuerpo().getAlcance();
