@@ -27,7 +27,7 @@ public class Main {
             Runtime.getRuntime().exec(cmd); //genero archivos dot y png
             GeneradorAlcances ga = new GeneradorAlcances();
             ga.procesar(programa);
-            System.out.println("Alcances procesados");
+            //System.out.println("Alcances procesados");
             //ValidadorTipos vt = new ValidadorTipos();
             //vt.procesar(programa);
             //System.out.println("Tipos validados");

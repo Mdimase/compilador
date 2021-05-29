@@ -88,8 +88,6 @@ public abstract class Visitor<T> {
         return ou.getExpresion().accept(this);
     }
 
-    //hasta aca bien
-
     public T visit(InvocacionFuncion invocacionFuncion) throws ExcepcionDeAlcance {
         T id = invocacionFuncion.getIdentificador().accept(this);
         if(invocacionFuncion.getParams().isEmpty()){
