@@ -6,9 +6,7 @@
 package compilador.visitor;
 
 import compilador.ast.base.*;
-import compilador.ast.instrucciones.Asignacion;
-import compilador.ast.instrucciones.DeclaracionFuncion;
-import compilador.ast.instrucciones.DeclaracionVariable;
+import compilador.ast.instrucciones.*;
 import compilador.ast.operaciones.binarias.*;
 import compilador.ast.operaciones.unarias.*;
 
@@ -21,12 +19,31 @@ public class ValidadorTipos extends Transformer{
         super.transform(programa);
     }
 
+    @Override
     public Bloque transform(Bloque bloque) throws ExcepcionDeTipos {
         this.alcance_actual = bloque.getAlcance();
         super.transform(bloque);
         return bloque;
     }
-    
+
+    @Override
+    public If transform(If aIf) throws ExcepcionDeTipos {
+        super.transform(aIf);
+        if(aIf.getCondicion().getTipo() != Tipo.BOOL){
+            throw new ExcepcionDeTipos(String.format("El resultado de una condicion debe ser BOOL, y es %1$s", aIf.getCondicion().getTipo()));
+        }
+        return aIf;
+    }
+
+    @Override
+    public While transform(While aWhile) throws ExcepcionDeTipos {
+        super.transform(aWhile);
+        if(aWhile.getCondicion().getTipo() != Tipo.BOOL){
+            throw new ExcepcionDeTipos(String.format("El resultado de una condicion debe ser BOOL, y es %1$s", aWhile.getCondicion().getTipo()));
+        }
+        return aWhile;
+    }
+
     private static Tipo tipo_comun(Tipo tipo_1, Tipo tipo_2) throws ExcepcionDeTipos{
         if (tipo_1 == tipo_2){
             return tipo_1;
@@ -84,43 +101,145 @@ public class ValidadorTipos extends Transformer{
     @Override
     public Division transform(Division d) throws ExcepcionDeTipos {
         Division nueva_op = super.transform(d);
-        nueva_op = (Division) transformarOperacionBinaria(nueva_op);
-        return nueva_op;
+        if (d.getIzquierda().getTipo() != Tipo.BOOL && d.getDerecha().getTipo() != Tipo.BOOL){
+            nueva_op = (Division) transformarOperacionBinaria(nueva_op);
+            return nueva_op;
+        } else {
+            throw new ExcepcionDeTipos("No se puede Dividir operandos logicos");
+        }
     }
 
     @Override
     public Multiplicacion transform(Multiplicacion m) throws ExcepcionDeTipos {
         Multiplicacion nueva_op = super.transform(m);
-        nueva_op = (Multiplicacion) transformarOperacionBinaria(nueva_op);
-        return nueva_op;
+        if (m.getIzquierda().getTipo() != Tipo.BOOL && m.getDerecha().getTipo() != Tipo.BOOL){
+            nueva_op = (Multiplicacion) transformarOperacionBinaria(nueva_op);
+            return nueva_op;
+        } else {
+            throw new ExcepcionDeTipos("No se puede Multiplicar operandos logicos");
+        }
     }
 
     @Override
     public Resta transform(Resta r) throws ExcepcionDeTipos {
         Resta nueva_op = super.transform(r);
-        nueva_op = (Resta) transformarOperacionBinaria(nueva_op);
-        return nueva_op;
+        if (r.getIzquierda().getTipo() != Tipo.BOOL && r.getDerecha().getTipo() != Tipo.BOOL){
+            nueva_op = (Resta) transformarOperacionBinaria(nueva_op);
+            return nueva_op;
+        } else {
+            throw new ExcepcionDeTipos("No se puede Restar operandos logicos");
+        }
     }
 
     @Override
     public Suma transform(Suma s) throws ExcepcionDeTipos {
         Suma nueva_op = super.transform(s);
-        nueva_op = (Suma) transformarOperacionBinaria(nueva_op);
-        return nueva_op;
+        if (s.getIzquierda().getTipo() != Tipo.BOOL && s.getDerecha().getTipo() != Tipo.BOOL){
+            nueva_op = (Suma) transformarOperacionBinaria(nueva_op);
+            return nueva_op;
+        } else {
+            throw new ExcepcionDeTipos("No se puede Sumar operandos logicos");
+        }
     }
 
     @Override
     public And transform(And and) throws ExcepcionDeTipos {
         And nueva_op = super.transform(and);
-        nueva_op = (And) transformarOperacionBinaria(nueva_op);
-        return nueva_op;
+        if(and.getIzquierda().getTipo() == Tipo.BOOL && and.getDerecha().getTipo() == Tipo.BOOL){
+            nueva_op = (And) transformarOperacionBinaria(nueva_op);
+            return nueva_op;
+        } else{
+            throw new ExcepcionDeTipos("No se puede operar un AND con operadores aritmeticos");
+        }
     }
 
     @Override
     public Or transform(Or or) throws ExcepcionDeTipos {
         Or nueva_op = super.transform(or);
-        nueva_op = (Or) transformarOperacionBinaria(nueva_op);
-        return nueva_op;
+        if(or.getIzquierda().getTipo() == Tipo.BOOL && or.getDerecha().getTipo() == Tipo.BOOL){
+            nueva_op = (Or) transformarOperacionBinaria(nueva_op);
+            return nueva_op;
+        } else{
+            throw new ExcepcionDeTipos("No se puede operar un OR con operadores aritmeticos");
+        }
+    }
+
+    @Override
+    public Menor transform(Menor menor) throws ExcepcionDeTipos {
+        Menor nueva_op = super.transform(menor);
+        if(menor.getIzquierda().getTipo() != Tipo.BOOL && menor.getDerecha().getTipo() != Tipo.BOOL){
+            nueva_op = (Menor) transformarOperacionBinaria(nueva_op);
+            nueva_op.setTipo(Tipo.BOOL);
+            return nueva_op;
+        } else{
+            throw new ExcepcionDeTipos("No se puede operar un < con operandos logicos");
+        }
+    }
+
+    @Override
+    public Mayor transform(Mayor mayor) throws ExcepcionDeTipos {
+        Mayor nueva_op = super.transform(mayor);
+        if(mayor.getIzquierda().getTipo() != Tipo.BOOL && mayor.getDerecha().getTipo() != Tipo.BOOL){
+            nueva_op = (Mayor) transformarOperacionBinaria(nueva_op);
+            nueva_op.setTipo(Tipo.BOOL);
+            return nueva_op;
+        } else{
+            throw new ExcepcionDeTipos("No se puede operar un > con operandos logicos");
+        }
+    }
+
+    @Override
+    public MayorIgual transform(MayorIgual mayorIgual) throws ExcepcionDeTipos {
+        MayorIgual nueva_op = super.transform(mayorIgual);
+        if(mayorIgual.getIzquierda().getTipo() != Tipo.BOOL && mayorIgual.getDerecha().getTipo() != Tipo.BOOL){
+            nueva_op = (MayorIgual) transformarOperacionBinaria(nueva_op);
+            nueva_op.setTipo(Tipo.BOOL);
+            return nueva_op;
+        } else{
+            throw new ExcepcionDeTipos("No se puede operar un >= con operandos logicos");
+        }
+    }
+
+    @Override
+    public MenorIgual transform(MenorIgual menorIgual) throws ExcepcionDeTipos {
+        MenorIgual nueva_op = super.transform(menorIgual);
+        if(menorIgual.getIzquierda().getTipo() != Tipo.BOOL && menorIgual.getDerecha().getTipo() != Tipo.BOOL){
+            nueva_op = (MenorIgual) transformarOperacionBinaria(nueva_op);
+            nueva_op.setTipo(Tipo.BOOL);
+            return nueva_op;
+        } else{
+            throw new ExcepcionDeTipos("No se puede operar un <= con operandos logicos");
+        }
+    }
+
+    @Override
+    public IgualIgual transform(IgualIgual igualIgual) throws ExcepcionDeTipos {
+        IgualIgual nueva_op = super.transform(igualIgual);
+        if(igualIgual.getIzquierda().getTipo() != Tipo.FLOAT && igualIgual.getDerecha().getTipo() != Tipo.FLOAT){
+            if(igualIgual.getIzquierda().getTipo() == igualIgual.getDerecha().getTipo()){
+                nueva_op = (IgualIgual) transformarOperacionBinaria(nueva_op);
+                nueva_op.setTipo(Tipo.BOOL);
+                return nueva_op;
+            } else{
+                throw new ExcepcionDeTipos(String.format("No se puede realizar un == con %1$s y %2$s\n",igualIgual.getIzquierda().getTipo(),igualIgual.getDerecha().getTipo())); }
+        } else{
+            throw new ExcepcionDeTipos(String.format("No se puede realizar un == con %1$s y %2$s\n",igualIgual.getIzquierda().getTipo(),igualIgual.getDerecha().getTipo()));
+        }
+    }
+
+    @Override
+    public Distinto transform(Distinto distinto) throws ExcepcionDeTipos {
+        Distinto nueva_op = super.transform(distinto);
+        if(distinto.getIzquierda().getTipo() != Tipo.FLOAT && distinto.getDerecha().getTipo() != Tipo.FLOAT){
+            if(distinto.getIzquierda().getTipo() == distinto.getDerecha().getTipo()){
+                nueva_op = (Distinto) transformarOperacionBinaria(nueva_op);
+                nueva_op.setTipo(Tipo.BOOL);
+                return nueva_op;
+            } else{
+                throw new ExcepcionDeTipos(String.format("No se puede realizar un != con %1$s y %2$s\n",distinto.getIzquierda().getTipo(),distinto.getDerecha().getTipo())); }
+        } else{
+            throw new ExcepcionDeTipos(String.format("No se puede realizar un != con %1$s y %2$s\n",distinto.getIzquierda().getTipo(),distinto.getDerecha().getTipo()));
+        }
     }
 
     @Override

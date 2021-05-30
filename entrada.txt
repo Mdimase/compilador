@@ -74,24 +74,29 @@ while a==1 do pe();}
 variable c is boolean;
 variable x is float = a + pepe();
 pepe();
-#variable prueba_Funcion is integer;
+#variable prueba_Funcion is integer;}
+variable a is integer;
+variable b is integer;
 if a==1 then
     begin
         while a==1 do
             begin
-                if a>3 then p();
+                if a>3 then a=2;
                 #variable x is boolean;
                 variable lk is float;
             end;
-        if b==4 then gol();
-    end;}
+        if b==4 then b=1;
+    end;
+{
 #variable x is integer = pepe();
 variable x is boolean;
 variable b is boolean=true;
 variable fg is integer;
 variable g is integer;
+variable f is float;
 #x = x == b;
-x = -x;
+#x = -x;
 #g = not x;
-
+#g = g and g;
+#x = x + x;}
 end.
