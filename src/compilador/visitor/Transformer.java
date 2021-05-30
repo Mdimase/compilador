@@ -18,8 +18,12 @@ public abstract class Transformer {
 
     // retorna un Programa tranformado
     public Programa transform(Programa p) throws ExcepcionDeTipos{
-        p.setDeclaraciones(p.getDeclaraciones().accept_transfomer(this));
-        p.setCuerpo(p.getCuerpo().accept_transfomer(this));
+        if(p.getDeclaraciones() == null){
+            p.setCuerpo(p.getCuerpo().accept_transfomer(this));
+        } else {
+            p.setDeclaraciones(p.getDeclaraciones().accept_transfomer(this));
+            p.setCuerpo(p.getCuerpo().accept_transfomer(this));
+        }
         return p;
     }
     

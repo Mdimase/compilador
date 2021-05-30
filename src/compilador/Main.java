@@ -28,8 +28,8 @@ public class Main {
             GeneradorAlcances ga = new GeneradorAlcances();
             ga.procesar(programa);
             System.out.println("Alcances procesados");
-            //ValidadorTipos vt = new ValidadorTipos();
-            //vt.procesar(programa);
+            ValidadorTipos vt = new ValidadorTipos();
+            vt.procesar(programa);
             //System.out.println("Tipos validados");
         } catch(Exception e){
             System.out.println(e);

@@ -13,8 +13,7 @@ import compilador.visitor.Transformer;
 import compilador.visitor.Visitor;
 
 public class EnteroAFlotante extends OperacionConversion{
-    
-    
+
     public EnteroAFlotante(Expresion expresion) {
         super("entero a flotante", expresion, Tipo.FLOAT);
     }

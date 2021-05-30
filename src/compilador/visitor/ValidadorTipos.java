@@ -5,13 +5,9 @@
  */
 package compilador.visitor;
 
-import compilador.ast.base.Alcance;
-import compilador.ast.base.ExcepcionDeTipos;
-import compilador.ast.base.Expresion;
-import compilador.ast.base.Identificador;
-import compilador.ast.base.Programa;
-import compilador.ast.base.Tipo;
+import compilador.ast.base.*;
 import compilador.ast.instrucciones.Asignacion;
+import compilador.ast.instrucciones.DeclaracionFuncion;
 import compilador.ast.instrucciones.DeclaracionVariable;
 import compilador.ast.operaciones.binarias.Division;
 import compilador.ast.operaciones.binarias.Multiplicacion;
@@ -22,17 +18,18 @@ import compilador.ast.operaciones.unarias.EnteroAFlotante;
 import compilador.ast.operaciones.unarias.FlotanteAEntero;
 import compilador.ast.operaciones.unarias.OperacionUnaria;
 
-/**
- *
- * @author ITT
- */
+
 public class ValidadorTipos extends Transformer{
-    /*
+
     private Alcance alcance_actual; //bloque actual, si no esta aca, busco en el padre hasta llegar a null
     
-    public Programa procesar(Programa programa) throws ExcepcionDeTipos{
-        this.alcance_actual = programa.getCuerpo().getAlcance();
-        return programa.accept_transfomer(this);
+    public void procesar(Programa programa) throws ExcepcionDeTipos{
+        this.transform(programa);
+    }
+
+    public Bloque transform(Bloque bloque){
+        this.alcance_actual = bloque.getAlcance();
+        return bloque;
     }
     
     private static Tipo tipo_comun(Tipo tipo_1, Tipo tipo_2) throws ExcepcionDeTipos{
@@ -48,7 +45,8 @@ public class ValidadorTipos extends Transformer{
         throw new ExcepcionDeTipos(
                 String.format("No existe un tipo común entre %1$s y %2$s\n", tipo_1, tipo_2 ));
     }    
-    
+
+    // recibe la expresion y el tipo al cual convertirla
     private static Expresion convertir_a_tipo(Expresion expresion, Tipo tipo_destino) throws ExcepcionDeTipos{
         Tipo tipo_origen = expresion.getTipo();
         if(tipo_origen == tipo_destino){
@@ -66,6 +64,7 @@ public class ValidadorTipos extends Transformer{
     
     @Override
     public Asignacion transform(Asignacion a) throws ExcepcionDeTipos{
+        System.out.println("asignacion");
         Asignacion asignacion = super.transform(a);
         asignacion.setExpresion(convertir_a_tipo(asignacion.getExpresion(), asignacion.getIdentificador().getTipo()));
         return asignacion;
@@ -129,21 +128,30 @@ public class ValidadorTipos extends Transformer{
         nueva_op = (EnteroAFlotante) transformarOperacionUnaria(nueva_op);
         return nueva_op;
     }
-    
+
+    // x;
+    // pregunta si esta declarado variable x is boolean;
+    // pregunta si eso que encontro es una instancia de declaracion de variable -> obtengo su tipo
+    // se lo seteo al identificador
+    // x es un boolean
+    // x=2; -> error
+
     @Override
     public Identificador transform(Identificador identificador) throws ExcepcionDeTipos{
-        Object elemento = alcance_actual.resolver(identificador.getNombre());
+        Object elemento = alcance_actual.resolver(identificador.getNombre());   //verifica si el nombre esta declarado
         Tipo tipo = Tipo.UNKNOWN;
         if(elemento instanceof DeclaracionVariable){
             tipo = ((DeclaracionVariable) elemento).getTipo();
         }
-        if (tipo != Tipo.UNKNOWN){
+        if(elemento instanceof DeclaracionFuncion){
+            tipo = ((DeclaracionFuncion) elemento).getTipoRetorno();
+        }
+        if (tipo != Tipo.UNKNOWN){  //se encontro y modifico el tipo, ahora es de lo encontrado
             identificador.setTipo(tipo);
+            System.out.println(identificador.getNombre());
+            System.out.println(identificador.getTipo());
             return identificador;
         }
         throw new ExcepcionDeTipos(String.format("No se declaró el nombre %1$s\n", identificador.getNombre()));
     }
-
-
-     */
 }

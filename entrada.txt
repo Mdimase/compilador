@@ -1,6 +1,6 @@
 ## Testeando compilador de Dimase Matias e Isea Maximiliano ##
-variable a is float = 1 + pepe();
-function prueba_Funcion (a is float, b is integer = 21, c is boolean = false) return integer
+#variable a is float = 1 + pepe();
+{function prueba_Funcion (a is float, b is integer = 21, c is boolean = false) return integer
 begin
     if entero? >= 10 then
         begin
@@ -10,7 +10,7 @@ begin
         else
             writeln("Estoy en el else");
     return a+b;
-end;
+end;}
 {function prueba_Funciones (a is float, b is integer = 21, c is boolean = false) return integer
     a=2;}
 #variable c is float;
@@ -68,7 +68,7 @@ while a==1 do pe();}
             end;
         if b==4 then gol();
     end;}
-if a > 3 then l();
+{if a > 3 then l();
 variable c is boolean;
 variable x is float = a + pepe();
 pepe();
@@ -82,6 +82,7 @@ if a==1 then
                 variable lk is float;
             end;
         if b==4 then gol();
-    end;
-    variable a is float = 5 + 1.0;
+    end;}
+#variable x is integer;
+x=23;
 end.
