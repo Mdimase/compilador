@@ -13,7 +13,8 @@ begin
 end;}
 {function prueba_Funciones (a is float, b is integer = 21, c is boolean = false) return integer
     a=2;}
-#variable c is float;
+variable c is float;
+variable cd is float = 1 + 1 / random();
 main is
 {
  while a==2 do
@@ -83,6 +84,6 @@ if a==1 then
             end;
         if b==4 then gol();
     end;}
-#variable x is integer;
+variable x is integer = pepe();
 x=23;
 end.

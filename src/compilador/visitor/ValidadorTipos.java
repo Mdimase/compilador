@@ -24,11 +24,14 @@ public class ValidadorTipos extends Transformer{
     private Alcance alcance_actual; //bloque actual, si no esta aca, busco en el padre hasta llegar a null
     
     public void procesar(Programa programa) throws ExcepcionDeTipos{
-        this.transform(programa);
+        super.transform(programa);
     }
 
     public Bloque transform(Bloque bloque){
         this.alcance_actual = bloque.getAlcance();
+        System.out.println("Validador: bloque");
+        //aca muere
+        // super.transform(bloque) ?
         return bloque;
     }
     

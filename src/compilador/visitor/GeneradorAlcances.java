@@ -75,20 +75,20 @@ public class GeneradorAlcances extends Visitor<Void> {
     // cuando llegue a visit(decaracionVariable) aca si esta, por ende, usa este y no el de la superclase
     @Override
     public Void visit(DeclaracionVariable dv) throws ExcepcionDeAlcance{
-        /*
-        // EVITAR VARIABLE A IS FLOAT = 1 + PEPE();
-        if(alcance_actual == alcance_global){
-            Expresion exp = dv.getExpresion();
-            while (exp.getClass() != InvocacionFuncion.class){
-                exp =
-            }
-        }*/
+        super.visit(dv);    // invoco al visit(declaracionVariable) de Visitor para recorrer la posible expresion de la declaracion
         Variable var = new Variable(dv);    // var : declaracionVariable
         Object result = this.agregarSimbolo(var.getDeclaracion().getId().getNombre(), dv);
         if(result!=null){   //repetido
-            throw new ExcepcionDeAlcance(
-                    String.format("El nombre de la variable %1$s de tipo %2$s fue utilizado previamente\"]\n", 
+            throw new ExcepcionDeAlcance(String.format("El nombre de la variable %1$s de tipo %2$s fue utilizado previamente\"]\n",
                             dv.getId().getNombre(), dv.getTipo() ));
+        }
+        return null;
+    }
+
+    @Override
+    public Void visit(InvocacionFuncion invocacionFuncion) throws ExcepcionDeAlcance {
+        if(alcance_actual == alcance_global){
+            throw new ExcepcionDeAlcance("No se puede invocar funciones en el bloque declaraciones");
         }
         return null;
     }

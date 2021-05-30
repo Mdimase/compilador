@@ -19,6 +19,7 @@ public abstract class Transformer {
     // retorna un Programa tranformado
     public Programa transform(Programa p) throws ExcepcionDeTipos{
         if(p.getDeclaraciones() == null){
+            System.out.println("Transformer: main");
             p.setCuerpo(p.getCuerpo().accept_transfomer(this));
         } else {
             p.setDeclaraciones(p.getDeclaraciones().accept_transfomer(this));
@@ -28,6 +29,7 @@ public abstract class Transformer {
     }
     
     public Bloque transform(Bloque b) throws ExcepcionDeTipos {
+        System.out.println("tranformer: bloque");
         ArrayList<Sentencia> result = new ArrayList<>();
         for (Sentencia sentencia : b.getSentencias()){
             result.add(sentencia.accept_transfomer(this));
