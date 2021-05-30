@@ -9,14 +9,8 @@ import compilador.ast.base.*;
 import compilador.ast.instrucciones.Asignacion;
 import compilador.ast.instrucciones.DeclaracionFuncion;
 import compilador.ast.instrucciones.DeclaracionVariable;
-import compilador.ast.operaciones.binarias.Division;
-import compilador.ast.operaciones.binarias.Multiplicacion;
-import compilador.ast.operaciones.binarias.OperacionBinaria;
-import compilador.ast.operaciones.binarias.Resta;
-import compilador.ast.operaciones.binarias.Suma;
-import compilador.ast.operaciones.unarias.EnteroAFlotante;
-import compilador.ast.operaciones.unarias.FlotanteAEntero;
-import compilador.ast.operaciones.unarias.OperacionUnaria;
+import compilador.ast.operaciones.binarias.*;
+import compilador.ast.operaciones.unarias.*;
 
 
 public class ValidadorTipos extends Transformer{
@@ -27,11 +21,9 @@ public class ValidadorTipos extends Transformer{
         super.transform(programa);
     }
 
-    public Bloque transform(Bloque bloque){
+    public Bloque transform(Bloque bloque) throws ExcepcionDeTipos {
         this.alcance_actual = bloque.getAlcance();
-        System.out.println("Validador: bloque");
-        //aca muere
-        // super.transform(bloque) ?
+        super.transform(bloque);
         return bloque;
     }
     
@@ -67,12 +59,11 @@ public class ValidadorTipos extends Transformer{
     
     @Override
     public Asignacion transform(Asignacion a) throws ExcepcionDeTipos{
-        System.out.println("asignacion");
         Asignacion asignacion = super.transform(a);
         asignacion.setExpresion(convertir_a_tipo(asignacion.getExpresion(), asignacion.getIdentificador().getTipo()));
         return asignacion;
     }
-    
+
     private OperacionUnaria transformarOperacionUnaria(OperacionUnaria ou) throws ExcepcionDeTipos{
         if(ou.getTipo() == Tipo.UNKNOWN){
             ou.setTipo(ou.getExpresion().getTipo());
@@ -119,6 +110,44 @@ public class ValidadorTipos extends Transformer{
     }
 
     @Override
+    public And transform(And and) throws ExcepcionDeTipos {
+        And nueva_op = super.transform(and);
+        nueva_op = (And) transformarOperacionBinaria(nueva_op);
+        return nueva_op;
+    }
+
+    @Override
+    public Or transform(Or or) throws ExcepcionDeTipos {
+        Or nueva_op = super.transform(or);
+        nueva_op = (Or) transformarOperacionBinaria(nueva_op);
+        return nueva_op;
+    }
+
+    @Override
+    public Not transform(Not not) throws ExcepcionDeTipos {
+        Not nueva_op = super.transform(not);
+        if(not.getExpresion().getTipo() == Tipo.BOOL){
+            nueva_op = (Not) transformarOperacionUnaria(nueva_op);
+            return nueva_op;
+        } else {
+            throw new ExcepcionDeTipos(
+                    String.format("No existe un tipo común entre boolean y %1$s\n",not.getExpresion().getTipo() ));
+        }
+    }
+
+    @Override
+    public MenosUnario transform(MenosUnario menosUnario) throws ExcepcionDeTipos {
+        MenosUnario nueva_op = super.transform(menosUnario);
+        if(menosUnario.getExpresion().getTipo() != Tipo.BOOL){
+            nueva_op = (MenosUnario) transformarOperacionUnaria(nueva_op);
+            return nueva_op;
+        } else {
+            throw new ExcepcionDeTipos(
+                    String.format("No se puede realizar una operacion -%1$s\n",menosUnario.getExpresion().getTipo() ));
+        }
+    }
+
+    @Override
     public FlotanteAEntero transform(FlotanteAEntero fae) throws ExcepcionDeTipos {
         FlotanteAEntero nueva_op = super.transform(fae);
         nueva_op = (FlotanteAEntero) transformarOperacionUnaria(nueva_op);
@@ -139,6 +168,8 @@ public class ValidadorTipos extends Transformer{
     // x es un boolean
     // x=2; -> error
 
+    //PROBLEMA CON LOS PARAMETROS, POSIBLE TRANSFORM(PARAMETROS) ACA ?
+
     @Override
     public Identificador transform(Identificador identificador) throws ExcepcionDeTipos{
         Object elemento = alcance_actual.resolver(identificador.getNombre());   //verifica si el nombre esta declarado
@@ -157,4 +188,5 @@ public class ValidadorTipos extends Transformer{
         }
         throw new ExcepcionDeTipos(String.format("No se declaró el nombre %1$s\n", identificador.getNombre()));
     }
+
 }

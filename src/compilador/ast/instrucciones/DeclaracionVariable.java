@@ -22,6 +22,7 @@ public class DeclaracionVariable extends Declaracion{
     public DeclaracionVariable(Identificador id, Tipo tipo){
         this.id = id;
         this.tipo = tipo;
+        this.setDeafult(tipo);
     }
 
     public DeclaracionVariable(Identificador id, Tipo tipo,Expresion expresion){
@@ -52,6 +53,18 @@ public class DeclaracionVariable extends Declaracion{
 
     public void setExpresion(Expresion expresion) {
         this.expresion = expresion;
+    }
+
+    private void setDeafult(Tipo tipo){
+        if(tipo == Tipo.BOOL){
+            this.setExpresion(new Constante("false",Tipo.BOOL));
+        }
+        if (tipo == Tipo.FLOAT){
+            this.setExpresion(new Constante("0.0",Tipo.FLOAT));
+        }
+        if (tipo == Tipo.INTEGER){
+            this.setExpresion(new Constante("0",Tipo.INTEGER));
+        }
     }
 
     @Override

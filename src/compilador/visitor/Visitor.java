@@ -162,7 +162,7 @@ public abstract class Visitor<T> {
         }
     }
 
-    public T visit(Parametro parametro){
+    public T visit(Parametro parametro) throws ExcepcionDeAlcance {
         T id = parametro.getIdentificador().accept(this);
         T valor_defecto = parametro.getValorDefecto().accept(this);
         return procesarParametro(parametro,id,valor_defecto);

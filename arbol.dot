@@ -1,40 +1,36 @@
 graph G {1 [label="Programa"]
-2 [label="DECLARACIONES"]
+2 [label="MAIN"]
 1 -- 2
 3 [label="DeclaracionVariable"]
 2 -- 3
-5 [label="Ident c FLOAT"]
+4 [label="Ident x BOOL"]
+3 -- 4
+5 [label="Const false BOOL"]
 3 -- 5
 6 [label="DeclaracionVariable"]
 2 -- 6
-7 [label="Ident cd FLOAT"]
+7 [label="Ident b BOOL"]
 6 -- 7
-8 [label="+ UNKNOWN"]
+8 [label="Const true BOOL"]
 6 -- 8
-9 [label="Const 1 INTEGER"]
-8 -- 9
-10 [label="/ UNKNOWN"]
-8 -- 10
-11 [label="Const 1 INTEGER"]
-10 -- 11
-12 [label="InvocacionFuncion"]
-10 -- 12
-13 [label="Ident random UNKNOWN"]
+9 [label="DeclaracionVariable"]
+2 -- 9
+10 [label="Ident fg INTEGER"]
+9 -- 10
+11 [label="Const 0 INTEGER"]
+9 -- 11
+12 [label="DeclaracionVariable"]
+2 -- 12
+13 [label="Ident g INTEGER"]
 12 -- 13
-14 [label="MAIN"]
-1 -- 14
-15 [label="DeclaracionVariable"]
-14 -- 15
-16 [label="Ident x INTEGER"]
+14 [label="Const 0 INTEGER"]
+12 -- 14
+15 [label="="]
+2 -- 15
+16 [label="Ident x UNKNOWN"]
 15 -- 16
-17 [label="InvocacionFuncion"]
+17 [label="-"]
 15 -- 17
-18 [label="Ident pepe UNKNOWN"]
+18 [label="Ident x UNKNOWN"]
 17 -- 18
-19 [label="="]
-14 -- 19
-20 [label="Ident x UNKNOWN"]
-19 -- 20
-21 [label="Const 23 INTEGER"]
-19 -- 21
 }

@@ -19,7 +19,6 @@ public abstract class Transformer {
     // retorna un Programa tranformado
     public Programa transform(Programa p) throws ExcepcionDeTipos{
         if(p.getDeclaraciones() == null){
-            System.out.println("Transformer: main");
             p.setCuerpo(p.getCuerpo().accept_transfomer(this));
         } else {
             p.setDeclaraciones(p.getDeclaraciones().accept_transfomer(this));
@@ -29,7 +28,6 @@ public abstract class Transformer {
     }
     
     public Bloque transform(Bloque b) throws ExcepcionDeTipos {
-        System.out.println("tranformer: bloque");
         ArrayList<Sentencia> result = new ArrayList<>();
         for (Sentencia sentencia : b.getSentencias()){
             result.add(sentencia.accept_transfomer(this));
@@ -174,9 +172,11 @@ public abstract class Transformer {
 
     public Parametro transform(Parametro parametro) throws ExcepcionDeTipos {
         Identificador id = parametro.getIdentificador().accept_transfomer(this);
-        Constante valor_defecto = parametro.getValorDefecto().accept_transfomer(this);
+        if(parametro.getValorDefecto() != null ){
+            Constante valor_defecto = parametro.getValorDefecto().accept_transfomer(this);
+            parametro.setValorDefecto(valor_defecto);
+        }
         parametro.setIdentificador(id);
-        parametro.setValorDefecto(valor_defecto);
         return parametro;
     }
 
@@ -185,6 +185,7 @@ public abstract class Transformer {
         if(!declaracionFuncion.getParametros().isEmpty()){
             List<Parametro> parametros = declaracionFuncion.getParametros();
             for (Parametro parametro : parametros){
+                System.out.println(parametro);
                 parametros.add(parametro.accept_transfomer(this));
             }
             declaracionFuncion.setParametros(parametros);

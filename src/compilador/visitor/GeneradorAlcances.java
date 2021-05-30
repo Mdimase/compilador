@@ -93,7 +93,6 @@ public class GeneradorAlcances extends Visitor<Void> {
         return null;
     }
 
-
     @Override
     public Void visit(DeclaracionFuncion declaracionFuncion) throws ExcepcionDeAlcance{
         Funcion funcion = new Funcion(declaracionFuncion);    // var : declaracionVariable
@@ -103,6 +102,16 @@ public class GeneradorAlcances extends Visitor<Void> {
                     String.format("El nombre de la funcion %1$s de tipo retorno %2$s fue utilizado previamente\"]\n",
                             declaracionFuncion.getIdentificador().getNombre(), declaracionFuncion.getTipoRetorno() ));
         }
+        /*
+        if(!declaracionFuncion.getParametros().isEmpty()){
+            for (Parametro parametro:declaracionFuncion.getParametros()){
+                Object resultP = this.agregarSimbolo(parametro.getIdentificador().getNombre(), declaracionFuncion);
+                if(resultP!=null){   //repetido
+                    throw new ExcepcionDeAlcance(String.format("El nombre del parametro %1$s de tipo %2$s fue utilizado previamente\"]\n",
+                                    parametro.getIdentificador().getNombre(), parametro.getTipo()));
+                }
+            }
+        }*/
         super.visit(declaracionFuncion);    //visito el bloque de la funcion
         return null;
     }
