@@ -183,9 +183,8 @@ public abstract class Transformer {
     public DeclaracionFuncion transform(DeclaracionFuncion declaracionFuncion) throws ExcepcionDeTipos {
         Identificador id = declaracionFuncion.getIdentificador().accept_transfomer(this);
         if(!declaracionFuncion.getParametros().isEmpty()){
-            List<Parametro> parametros = declaracionFuncion.getParametros();
-            for (Parametro parametro : parametros){
-                System.out.println(parametro);
+            ArrayList<Parametro> parametros = new ArrayList<>();
+            for (Parametro parametro : declaracionFuncion.getParametros()){
                 parametros.add(parametro.accept_transfomer(this));
             }
             declaracionFuncion.setParametros(parametros);

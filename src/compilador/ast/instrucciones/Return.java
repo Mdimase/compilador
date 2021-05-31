@@ -15,6 +15,9 @@ public class Return extends Sentencia{
         this.expresion = expresion;
     }
 
+    public Return() {
+    }
+
     public Return(Expresion expresion) {
         this.expresion = expresion;
     }

@@ -1,5 +1,6 @@
 ## Testeando compilador de Dimase Matias e Isea Maximiliano ##
 #variable a is float = 1 + pepe();
+
 {function prueba_Funcion (a is float, b is integer = 21, sdf is boolean = false) return integer
 begin
     if entero? >= 10 then
@@ -12,71 +13,27 @@ begin
             writeln("Estoy en el else");
     return a+b;
 end;}
-{function prueba_Funciones () return integer
-    c=c+2;}
-#variable c is float;
+
+function prueba_Funciones (c is integer, j is boolean) return float
+    begin
+        c=c+2;
+        if j == true then c=c+5;
+        return c;
+    end;
+
+function pepe (a is float) return boolean
+    begin
+        variable b is boolean;
+            if b == false then a=2 else a=4;
+        return b;
+    end;
+
+variable c is integer;
 #variable cd is float = 1 + 1 / random();
+
+
 main is
 {
- while a==2 do
-         begin
-             while b > 1 do a=2;
-             f=f+1;
-         end;
-
-for i from 1 to 6 do
-    begin
-        v=99;
-        variable e is float;
-    end;
-for i from 4 to 89 by 4 do
-    a=2+2;
-prueba_Funcion(a,b);
-if entero? >= 10 then
-        begin
-            a=5;
-            b=b+5;
-        end
-        else
-            writeln("Estoy en el else");
-a = 1 + pepe();
-b = pagar(1,true);
-c = saltar(impulsar());
-while a==2 do
-           begin
-               a=2;
-               if a>2 then c=c-1 else pepe();
-               f=f+1;
-           end;
-while a==2 do
-           begin
-               break;
-               continue;
-               f=1;
-           end;
-}
-{
-if b != 4 then zz=-4;
-while a>3 do if a==true then fun();
-if a==1 then a=4 else while g>34 do sa();
-while a==1 do pe();}
-{if a==1 then
-    begin
-        while a==1 do
-            begin
-                if a>3 then
-                    while v==true do a();
-                caca();
-            end;
-        if b==4 then gol();
-    end;}
-{if a > 3 then l();
-variable c is boolean;
-variable x is float = a + pepe();
-pepe();
-#variable prueba_Funcion is integer;}
-variable a is integer;
-variable b is integer;
 if a==1 then
     begin
         while a==1 do
@@ -87,9 +44,10 @@ if a==1 then
             end;
         if b==4 then b=1;
     end;
-{
-#variable x is integer = pepe();
+}
+
 variable x is boolean;
+{
 variable b is boolean=true;
 variable fg is integer;
 variable g is integer;
@@ -98,5 +56,7 @@ variable f is float;
 #x = -x;
 #g = not x;
 #g = g and g;
-#x = x + x;}
+#x = x + x;
+g = g + prueba_Funciones(c);}
+variable j is integer;
 end.

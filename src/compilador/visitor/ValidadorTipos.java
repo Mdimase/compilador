@@ -14,6 +14,8 @@ import compilador.ast.operaciones.unarias.*;
 public class ValidadorTipos extends Transformer{
 
     private Alcance alcance_actual; //bloque actual, si no esta aca, busco en el padre hasta llegar a null
+    private Tipo tipoRetorno;
+
     
     public void procesar(Programa programa) throws ExcepcionDeTipos{
         super.transform(programa);
@@ -76,6 +78,7 @@ public class ValidadorTipos extends Transformer{
     
     @Override
     public Asignacion transform(Asignacion a) throws ExcepcionDeTipos{
+        System.out.println("asig");
         Asignacion asignacion = super.transform(a);
         asignacion.setExpresion(convertir_a_tipo(asignacion.getExpresion(), asignacion.getIdentificador().getTipo()));
         return asignacion;
@@ -290,7 +293,63 @@ public class ValidadorTipos extends Transformer{
     //PROBLEMA CON LOS PARAMETROS, POSIBLE TRANSFORM(PARAMETROS) ACA ?
 
     @Override
+    public DeclaracionFuncion transform(DeclaracionFuncion declaracionFuncion) throws ExcepcionDeTipos {
+        super.transform(declaracionFuncion);
+        boolean hayReturn = false;
+        for (Sentencia sentencia:declaracionFuncion.getBloque().getSentencias()){
+            if(sentencia.getClass() == Return.class){
+                hayReturn =true;
+            }
+        }
+        if(!hayReturn){
+            Return r = new Return(new Constante("unknown",Tipo.UNKNOWN));
+            if (tipoRetorno == Tipo.BOOL){
+                r = new Return(new Constante("false",Tipo.BOOL));
+            }
+            if (tipoRetorno == Tipo.INTEGER){
+                r = new Return(new Constante("0",Tipo.INTEGER));
+            }
+            if (tipoRetorno == Tipo.FLOAT){
+                r = new Return(new Constante("0.0",Tipo.FLOAT));
+            }
+            declaracionFuncion.getBloque().getSentencias().add(r);
+            System.out.println("Tipo r: " + r.getExpresion().getTipo());
+        }
+        return declaracionFuncion;
+    }
+
+    @Override
+    public InvocacionFuncion transform(InvocacionFuncion invocacionFuncion) throws ExcepcionDeTipos {
+        super.transform(invocacionFuncion);
+        invocacionFuncion.setTipo(invocacionFuncion.getIdentificador().getTipo());
+        DeclaracionFuncion declaracionFuncion = (DeclaracionFuncion) alcance_actual.resolver(invocacionFuncion.getIdentificador().getNombre());
+        /*
+        for(int i=0;i<declaracionFuncion.getParametros().size();i++){
+            if(declaracionFuncion.getParametros().get(i).getTipo() == invocacionFuncion.getParams().get(i).getTipo() ){
+
+            }
+        }*/
+        return invocacionFuncion;
+    }
+
+    @Override
+    public Return transform(Return aReturn) throws ExcepcionDeTipos {
+        super.transform(aReturn);
+        if(aReturn.getExpresion().getTipo() != tipoRetorno){
+            if(aReturn.getExpresion().getTipo() == Tipo.FLOAT || aReturn.getExpresion().getTipo() == Tipo.INTEGER){
+                aReturn.setExpresion(convertir_a_tipo(aReturn.getExpresion(),tipoRetorno));
+            } else {
+                throw new ExcepcionDeTipos(
+                        String.format("Tipo de retorno %1$s incompatible %2$s\n",aReturn.getExpresion().getTipo(), tipoRetorno));
+            }
+        }
+        //System.out.println("return: " + aReturn.getExpresion().getTipo());
+        return aReturn;
+    }
+
+    @Override
     public Identificador transform(Identificador identificador) throws ExcepcionDeTipos{
+        //System.out.println(alcance_actual.getNombre());
         Object elemento = alcance_actual.resolver(identificador.getNombre());   //verifica si el nombre esta declarado
         Tipo tipo = Tipo.UNKNOWN;
         if(elemento instanceof DeclaracionVariable){
@@ -298,6 +357,11 @@ public class ValidadorTipos extends Transformer{
         }
         if(elemento instanceof DeclaracionFuncion){
             tipo = ((DeclaracionFuncion) elemento).getTipoRetorno();
+            tipoRetorno = identificador.getTipo();
+            alcance_actual = ((DeclaracionFuncion) elemento).getBloque().getAlcance();
+        }
+        if(elemento instanceof Parametro){
+            tipo = ((Parametro) elemento).getTipo();
         }
         if (tipo != Tipo.UNKNOWN){  //se encontro y modifico el tipo, ahora es de lo encontrado
             identificador.setTipo(tipo);
