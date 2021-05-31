@@ -10,6 +10,9 @@ import compilador.ast.instrucciones.*;
 import compilador.ast.operaciones.binarias.*;
 import compilador.ast.operaciones.unarias.*;
 
+import java.util.Collections;
+import java.util.List;
+
 
 public class ValidadorTipos extends Transformer{
 
@@ -322,13 +325,28 @@ public class ValidadorTipos extends Transformer{
     public InvocacionFuncion transform(InvocacionFuncion invocacionFuncion) throws ExcepcionDeTipos {
         super.transform(invocacionFuncion);
         invocacionFuncion.setTipo(invocacionFuncion.getIdentificador().getTipo());
+        System.out.println("alc:" + alcance_actual.getNombre());
         DeclaracionFuncion declaracionFuncion = (DeclaracionFuncion) alcance_actual.resolver(invocacionFuncion.getIdentificador().getNombre());
-        /*
-        for(int i=0;i<declaracionFuncion.getParametros().size();i++){
-            if(declaracionFuncion.getParametros().get(i).getTipo() == invocacionFuncion.getParams().get(i).getTipo() ){
-
+        List<Parametro> aux = declaracionFuncion.getParametros();
+        Collections.reverse(aux);
+        declaracionFuncion.setParametros(aux);
+        for(int i=0;i<invocacionFuncion.getParams().size();i++){
+            if(declaracionFuncion.getParametros().get(i).getTipo() != invocacionFuncion.getParams().get(i).getTipo() ){
+                throw new ExcepcionDeTipos(("Tipo de Parametro incorrecto"));
             }
-        }*/
+            if(i > declaracionFuncion.getParametros().size()){
+                throw new ExcepcionDeTipos("la cantidad de parametros invocados es superior a los declarados ");
+            }
+        }
+        int cont =0;
+        for (Parametro parametro:declaracionFuncion.getParametros()){
+            if(parametro.getValorDefecto() != null){
+                cont++;
+            }
+        }
+        if(invocacionFuncion.getParams().size() < declaracionFuncion.getParametros().size() - cont){
+            throw new ExcepcionDeTipos("la cantidad de parametros invocados es inferior a los declarados ");
+        }
         return invocacionFuncion;
     }
 
@@ -349,7 +367,8 @@ public class ValidadorTipos extends Transformer{
 
     @Override
     public Identificador transform(Identificador identificador) throws ExcepcionDeTipos{
-        //System.out.println(alcance_actual.getNombre());
+        // CONFLICTO ALCANCE ACTUAL SE CAMBIA A BLOQUE_FUNCION Y DEBERIA SER MAIN
+        System.out.println(alcance_actual.getNombre());
         Object elemento = alcance_actual.resolver(identificador.getNombre());   //verifica si el nombre esta declarado
         Tipo tipo = Tipo.UNKNOWN;
         if(elemento instanceof DeclaracionVariable){
@@ -358,7 +377,7 @@ public class ValidadorTipos extends Transformer{
         if(elemento instanceof DeclaracionFuncion){
             tipo = ((DeclaracionFuncion) elemento).getTipoRetorno();
             tipoRetorno = identificador.getTipo();
-            alcance_actual = ((DeclaracionFuncion) elemento).getBloque().getAlcance();
+            alcance_actual = ((DeclaracionFuncion) elemento).getBloque().getAlcance();  //ACA SE VA TODO A LA MIERDA
         }
         if(elemento instanceof Parametro){
             tipo = ((Parametro) elemento).getTipo();

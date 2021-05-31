@@ -55,10 +55,11 @@ public class GeneradorAlcances extends Visitor<Void> {
             if (bloque.esProgramaPrincipal()){  // bloque main con declaraciones previas
                 this.mainConDeclaraciones(bloque);
             } else {
+                // cuando llegue el bloque funcion va a entrar aca
                 if(alcance_actual.getNombre().equals("BLOQUE_FUNCION") && !bloqueF){
                     bloque.setAlcance(alcance_actual);
                     alcance_actual = bloque.getAlcance();
-                    bloqueF=true;
+                    bloqueF=true;   // seteo flag para que el proximo bloque no entre aca, ya que seran if o while
                 } else{
                     bloque.setAlcance(new Alcance(bloque.getNombre(),alcances.peek().getAlcance()));
                     alcance_actual = bloque.getAlcance();
@@ -75,7 +76,7 @@ public class GeneradorAlcances extends Visitor<Void> {
         super.visit(bloque);    //visito a visit(Bloque) de Visitor, para recorrer las sentencias de este bloque
         if(!alcances.peek().getAlcance().getNombre().equals("global")){
             alcances.pop();
-            bloqueF=false;
+            bloqueF=false;  // despues de sacar el bloque funcion, vuelvo a setear el flag por si viene otra funcion
             this.alcance_actual = alcances.peek().getAlcance();
         }
         return null;
@@ -111,7 +112,7 @@ public class GeneradorAlcances extends Visitor<Void> {
                     String.format("El nombre de la funcion %1$s de tipo retorno %2$s fue utilizado previamente\"]\n",
                             declaracionFuncion.getIdentificador().getNombre(), declaracionFuncion.getTipoRetorno() ));
         }
-        alcance_actual = new Alcance("BLOQUE_FUNCION",alcance_global);
+        alcance_actual = new Alcance("BLOQUE_FUNCION",alcance_global);  //esto para que meta los parametros en un diccionario perteneciente al bloque funcion como pedia el enunciado que los parametros tengan la misma validez que una variable local al bloque
         System.out.println(alcance_actual.getNombre());
         if(!declaracionFuncion.getParametros().isEmpty()){
             for (Parametro parametro:declaracionFuncion.getParametros()){

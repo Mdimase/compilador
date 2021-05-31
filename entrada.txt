@@ -14,7 +14,7 @@ begin
     return a+b;
 end;}
 
-function prueba_Funciones (c is integer, j is boolean) return float
+function prueba_Funciones (c is integer, j is boolean=false) return float
     begin
         c=c+2;
         if j == true then c=c+5;
@@ -46,8 +46,6 @@ if a==1 then
     end;
 }
 
-variable x is boolean;
-{
 variable b is boolean=true;
 variable fg is integer;
 variable g is integer;
@@ -57,6 +55,6 @@ variable f is float;
 #g = not x;
 #g = g and g;
 #x = x + x;
-g = g + prueba_Funciones(c);}
-variable j is integer;
+g = prueba_Funciones(c);
+
 end.
