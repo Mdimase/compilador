@@ -5,6 +5,7 @@ import compilador.visitor.Transformer;
 import compilador.visitor.Visitor;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class DeclaracionFuncion extends Declaracion{
@@ -16,7 +17,8 @@ public class DeclaracionFuncion extends Declaracion{
     public DeclaracionFuncion(Identificador identificador, Tipo tipoRetorno, List<Parametro> parametros, Bloque bloque) {
         this.identificador = identificador;
         this.tipoRetorno = tipoRetorno;
-        this.parametros = parametros;
+        acomodar(parametros);   // nose xq el sintactico me los genera al reves, por eso invierto el orden
+        this.parametros =  parametros;
         this.bloque = new Bloque(bloque.initSentencia(bloque),"BLOQUE_FUNCION",false);
     }
 
@@ -71,6 +73,10 @@ public class DeclaracionFuncion extends Declaracion{
 
     public void setBloque(Bloque bloque) {
         this.bloque = bloque;
+    }
+
+    private void acomodar (List<Parametro> parametros){
+        Collections.reverse(parametros);
     }
 
     @Override

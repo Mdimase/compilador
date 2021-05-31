@@ -20,8 +20,9 @@ public class ValidadorTipos extends Transformer{
     private Tipo tipoRetorno;
     private boolean masFunciones = true;
     
-    public void procesar(Programa programa) throws ExcepcionDeTipos{
-        super.transform(programa);
+    public Programa procesar(Programa programa) throws ExcepcionDeTipos{
+        //super.transform(programa);
+        return programa.accept_transfomer(this);
     }
 
     @Override
@@ -289,12 +290,20 @@ public class ValidadorTipos extends Transformer{
         return nueva_op;
     }
 
-    // x;
-    // pregunta si esta declarado variable x is boolean;
-    // pregunta si eso que encontro es una instancia de declaracion de variable -> obtengo su tipo
-    // se lo seteo al identificador
-    // x es un boolean
-    // x=2; -> error
+    @Override
+    public DeclaracionVariable transform(DeclaracionVariable declaracionVariable) throws ExcepcionDeTipos {
+        super.transform(declaracionVariable);
+        if(declaracionVariable.getId().getTipo() != declaracionVariable.getExpresion().getTipo()){
+            if(declaracionVariable.getId().getTipo() != Tipo.BOOL && declaracionVariable.getExpresion().getTipo() != Tipo.BOOL){ //convierto los numericos
+                Tipo destino = declaracionVariable.getId().getTipo();
+                declaracionVariable.setExpresion(convertir_a_tipo(declaracionVariable.getExpresion(),destino));
+            } else{
+                throw new ExcepcionDeTipos(String.format
+                        ("el tipo declarado %1$s no es compatible con el de la expresion %2$s",declaracionVariable.getId().getTipo(),declaracionVariable.getExpresion().getTipo()));
+            }
+        }
+        return declaracionVariable;
+    }
 
     @Override
     public DeclaracionFuncion transform(DeclaracionFuncion declaracionFuncion) throws ExcepcionDeTipos {
@@ -326,10 +335,8 @@ public class ValidadorTipos extends Transformer{
     public InvocacionFuncion transform(InvocacionFuncion invocacionFuncion) throws ExcepcionDeTipos {
         super.transform(invocacionFuncion);
         invocacionFuncion.setTipo(invocacionFuncion.getIdentificador().getTipo());
+        System.out.println("tipo  de iv: " + invocacionFuncion.getTipo() );
         DeclaracionFuncion declaracionFuncion = (DeclaracionFuncion) alcance_actual.resolver(invocacionFuncion.getIdentificador().getNombre());
-        List<Parametro> aux = declaracionFuncion.getParametros();
-        Collections.reverse(aux);
-        declaracionFuncion.setParametros(aux);
         int cont =0;
         for (Parametro parametro:declaracionFuncion.getParametros()){
             if(parametro.getValorDefecto() != null){
@@ -344,7 +351,7 @@ public class ValidadorTipos extends Transformer{
         }
         for(int i=0;i<invocacionFuncion.getParams().size();i++){
             if(declaracionFuncion.getParametros().get(i).getTipo() != invocacionFuncion.getParams().get(i).getTipo() ){
-                if(invocacionFuncion.getParams().get(i).getTipo() == Tipo.FLOAT || invocacionFuncion.getParams().get(i).getTipo() == Tipo.INTEGER){
+                if(invocacionFuncion.getParams().get(i).getTipo() != Tipo.BOOL && invocacionFuncion.getParams().get(i).getTipo() != Tipo.BOOL){
                     Tipo destino = declaracionFuncion.getParametros().get(i).getTipo();
                     invocacionFuncion.getParams().set(i,convertir_a_tipo(invocacionFuncion.getParams().get(i),destino));
                 } else {

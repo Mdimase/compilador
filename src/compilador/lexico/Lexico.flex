@@ -95,6 +95,9 @@ Identificador= [^\W\d]\w*\??
   "else"                     { return token("ELSE", yytext());}
   "write"                    { return token("WRITE", yytext());}
   "writeln"                  { return token("WRITELN", yytext());}
+  "read_integer"             { return token("READ_INTEGER", yytext());}
+  "read_float"               { return token("READ_FLOAT", yytext());}
+  "read_boolean"             { return token("READ_BOOLEAN", yytext());}
   "break"                    { return token("BREAK" , yytext());}
   "continue"                 { return token("CONTINUE", yytext());}
   "while"                    { return token("WHILE", yytext());}

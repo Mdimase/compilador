@@ -230,8 +230,14 @@ public abstract class Transformer {
     }
 
     public Write transform(Write write) throws ExcepcionDeTipos {
-        Expresion e = write.getExpresion().accept_transfomer(this);
-        write.setExpresion(e);
+        if(write.getExpresion() != null){
+            Expresion e = write.getExpresion().accept_transfomer(this);
+            write.setExpresion(e);
+        }
         return write;
+    }
+
+    public Read transform(Read read){
+        return read;
     }
 }

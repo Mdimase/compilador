@@ -26,25 +26,35 @@ function pepe (a is float) return integer
 variable d is boolean;
 
 main is
+
 #x =  not x; no se puede hacer un not integer
 #g = g and g; no se puede hacer un and entre aritmeticos
 #x = x + x; no se puede sumar entre tipos bool
+#pepe(b); tipo de parametro incorrecto
 variable b is boolean=true;
 variable fg is integer;
 variable g is integer= 10/2;
 variable f is float= 0.45;
-variable x is integer = pepe(f) + 45.0; #el 45.0 lo convierte a integer
-writeln(37.5 / prueba_Funciones(pepe(f)));
+read_float();
 
 if g==1 and b!= false then
     begin
-        while a==1 do
+        while fg<12 do
             begin
-                if a>3 then a=2;
-                #variable x is boolean;
+                #variable x is boolean; no puede pisar la x ya declarada en main
                 variable lk is float;
+                writeln(37.5 / prueba_Funciones(pepe(f)));
+                fg=fg+1;
             end;
-        if b==4 then b=1;
+        #if 2+2 then b=false; #error porque la condicion no es booleana
+        if fg == 12 then writeln("funciono bien");
     end;
 
+# tranforma el for a su while equivalente
+for g from 1 to 5 do
+    begin
+        write(g);
+    end;
+prueba_Funciones(g);
+variable x is float = 1 + pepe(2);
 end.

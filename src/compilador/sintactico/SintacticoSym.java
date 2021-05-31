@@ -8,56 +8,59 @@ package compilador.sintactico;
 /** CUP generated class containing symbol constants. */
 public class SintacticoSym {
   /* terminals */
-  public static final int WHEN = 32;
+  public static final int WHEN = 35;
   public static final int DISTINTO = 15;
   public static final int MULTIPLICAR = 6;
-  public static final int STRING_LITERAL = 50;
-  public static final int FUNCTION = 35;
-  public static final int INTEGER = 47;
-  public static final int CONTINUE = 34;
-  public static final int FOR = 38;
+  public static final int STRING_LITERAL = 53;
+  public static final int FUNCTION = 38;
+  public static final int INTEGER = 50;
+  public static final int CONTINUE = 37;
+  public static final int FOR = 41;
   public static final int WRITE = 30;
   public static final int APERTURA_PARENTESIS = 8;
   public static final int CIERRE_PARENTESIS = 9;
-  public static final int IDENTIFICADOR = 42;
+  public static final int IDENTIFICADOR = 45;
   public static final int NOT = 19;
   public static final int IS = 21;
   public static final int AND = 18;
   public static final int IGUAL = 22;
   public static final int OR = 17;
+  public static final int READ_INTEGER = 32;
   public static final int BEGIN = 28;
   public static final int MAIN = 2;
   public static final int IF = 25;
   public static final int WRITELN = 31;
   public static final int PUNTO_COMA = 16;
   public static final int IGUAL_IGUAL = 14;
-  public static final int BOOLEAN = 49;
+  public static final int BOOLEAN = 52;
   public static final int EOF = 0;
-  public static final int RETURN = 36;
-  public static final int TRUE = 45;
-  public static final int BY = 39;
+  public static final int RETURN = 39;
+  public static final int READ_FLOAT = 34;
+  public static final int TRUE = 48;
+  public static final int BY = 42;
   public static final int error = 1;
-  public static final int COMA = 37;
+  public static final int COMA = 40;
   public static final int MENOS = 5;
   public static final int MENOR = 11;
-  public static final int BREAK = 33;
-  public static final int FROM = 41;
+  public static final int BREAK = 36;
+  public static final int FROM = 44;
   public static final int MAYOR = 10;
+  public static final int READ_BOOLEAN = 33;
   public static final int ELSE = 27;
   public static final int PUNTO = 3;
   public static final int DIVIDIR = 7;
   public static final int VARIABLE = 20;
-  public static final int TO = 40;
+  public static final int TO = 43;
   public static final int WHILE = 23;
   public static final int MAYOR_IGUAL = 12;
-  public static final int FLOAT = 48;
+  public static final int FLOAT = 51;
   public static final int THEN = 26;
   public static final int END = 29;
   public static final int MENOR_IGUAL = 13;
-  public static final int FALSE = 46;
-  public static final int FLOAT_LITERAL = 44;
+  public static final int FALSE = 49;
+  public static final int FLOAT_LITERAL = 47;
   public static final int DO = 24;
-  public static final int INTEGER_LITERAL = 43;
+  public static final int INTEGER_LITERAL = 46;
   public static final int MAS = 4;
   public static final String[] terminalNames = new String[] {
   "EOF",
@@ -92,6 +95,9 @@ public class SintacticoSym {
   "END",
   "WRITE",
   "WRITELN",
+  "READ_INTEGER",
+  "READ_BOOLEAN",
+  "READ_FLOAT",
   "WHEN",
   "BREAK",
   "CONTINUE",

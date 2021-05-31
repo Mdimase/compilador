@@ -50,6 +50,10 @@ public abstract class Visitor<T> {
             return procesarNodo(w);
         }
     }
+
+    public T visit(Read read){
+        return procesarNodo(read);
+    }
     
     public T visit(Identificador i) {
         return procesarNodo(i); //identificador no tiene ningun nodo como atributo, tonce lo imprimo xq es un nodo hoja
@@ -147,16 +151,9 @@ public abstract class Visitor<T> {
         if(declaracionFuncion.getParametros().isEmpty()){
             return procesarDeclaracionFuncion(declaracionFuncion,id,bloque);
         } else{
-            List<T> parametros = new ArrayList<>();
-            List<Parametro> list= declaracionFuncion.getParametros();
-            Collections.reverse(list);
-            for (Parametro parametro : list){
-                if(parametro.getValorDefecto() != null){
-                    parametros.add(parametro.getIdentificador().accept(this));
-                    parametros.add(parametro.getValorDefecto().accept(this));
-                }else{
-                    parametros.add(parametro.getIdentificador().accept(this));
-                }
+            ArrayList<T> parametros = new ArrayList<>();
+            for (Parametro parametro : declaracionFuncion.getParametros()){
+                   parametros.add(parametro.accept(this));
             }
             return procesarDeclaracionFuncion(declaracionFuncion,id,parametros,bloque);
         }
@@ -164,11 +161,16 @@ public abstract class Visitor<T> {
 
     public T visit(Parametro parametro) throws ExcepcionDeAlcance {
         T id = parametro.getIdentificador().accept(this);
-        T valor_defecto = parametro.getValorDefecto().accept(this);
-        return procesarParametro(parametro,id,valor_defecto);
+        if(parametro.getValorDefecto() != null){
+            T valor_defecto = parametro.getValorDefecto().accept(this);
+            return procesarParametro(parametro,id,valor_defecto);
+        }
+        return procesarParametro(parametro,id);
     }
 
     protected abstract T procesarParametro(Parametro parametro, T identificador, T valor_defecto);
+
+    protected abstract T procesarParametro(Parametro parametro, T identificador);
 
     protected abstract T procesarPrograma (Programa programa,T declaraciones,T sentencias);
 

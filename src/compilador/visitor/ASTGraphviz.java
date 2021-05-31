@@ -125,6 +125,16 @@ public class ASTGraphviz extends Visitor<String>{
         return resultado.toString();
     }
 
+    @Override
+    public String visit(Read read){
+        StringBuilder resultado = new StringBuilder();
+        current_id = this.getID();
+        resultado.append(this.procesarNodo(read));
+        parents.push(current_id);
+        parents.pop();
+        return resultado.toString();
+    }
+
     //graficar nodo while
     @Override
     public String visit(While aWhile) throws ExcepcionDeAlcance{
@@ -198,6 +208,17 @@ public class ASTGraphviz extends Visitor<String>{
     }
 
     @Override
+    public String visit(Parametro parametro) throws ExcepcionDeAlcance {
+        StringBuilder resultado = new StringBuilder();
+        current_id = this.getID();
+        resultado.append(this.procesarNodo(parametro));
+        parents.push(current_id);
+        resultado.append(super.visit(parametro));
+        parents.pop();
+        return resultado.toString();
+    }
+
+    @Override
     public String visit(Continue c) throws ExcepcionDeAlcance {
         if (cont == 0){ //logica para que el continue este en un while si o si
             throw new ExcepcionDeAlcance("CONINUE en lugar inapropiado");
@@ -241,6 +262,11 @@ public class ASTGraphviz extends Visitor<String>{
     @Override
     protected String procesarParametro(Parametro parametro, String identificador, String valor_defecto) {
         return identificador+valor_defecto;
+    }
+
+    @Override
+    protected String procesarParametro(Parametro parametro, String identificador) {
+        return identificador;
     }
 
     @Override
