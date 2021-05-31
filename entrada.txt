@@ -1,40 +1,42 @@
 ## Testeando compilador de Dimase Matias e Isea Maximiliano ##
-#variable a is float = 1 + pepe();
 
-{function prueba_Funcion (a is float, b is integer = 21, sdf is boolean = false) return integer
-begin
-    if entero? >= 10 then
-        begin
-            a=5;
-            variable jk is integer=14;
-            pepe();
-        end
-        else
-            writeln("Estoy en el else");
-    return a+b;
-end;}
+#variable a is float = 1 + pepe();  esto genera un error, dado que no se puede invocar funciones en el ambito global "aclarado por german"
+#variable cd is float = 1 + 1 / random();  esto genera un error, dado que no se puede invocar funciones en el ambito global "aclarado por german"
 
 function prueba_Funciones (c is integer, j is boolean=false) return float
     begin
         c=c+2;
-        if j == true then c=c+5;
-        return c;
+        if j == true then
+            begin
+                c=c+5;
+                j = j or d;
+            end;
+        return c; # se convierte c de integer a float para que coincida con el tipo de retorno de la funcion
     end;
 
-function pepe (a is float) return boolean
+function pepe (a is float) return integer
     begin
         variable b is boolean;
-            if b == false then a=2 else a=4;
-        return b;
+            if b == false and a > 10 then
+                a=-2*a
+                else
+                    write(a+a);
     end;
 
-variable c is integer;
-#variable cd is float = 1 + 1 / random();
-
+variable d is boolean;
 
 main is
-{
-if a==1 then
+#x =  not x; no se puede hacer un not integer
+#g = g and g; no se puede hacer un and entre aritmeticos
+#x = x + x; no se puede sumar entre tipos bool
+variable b is boolean=true;
+variable fg is integer;
+variable g is integer= 10/2;
+variable f is float= 0.45;
+variable x is integer = pepe(f) + 45.0; #el 45.0 lo convierte a integer
+writeln(37.5 / prueba_Funciones(pepe(f)));
+
+if g==1 and b!= false then
     begin
         while a==1 do
             begin
@@ -44,17 +46,5 @@ if a==1 then
             end;
         if b==4 then b=1;
     end;
-}
-
-variable b is boolean=true;
-variable fg is integer;
-variable g is integer;
-variable f is float;
-#x = x == b;
-#x = -x;
-#g = not x;
-#g = g and g;
-#x = x + x;
-g = prueba_Funciones(c);
 
 end.

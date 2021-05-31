@@ -18,7 +18,7 @@ public class ValidadorTipos extends Transformer{
 
     private Alcance alcance_actual; //bloque actual, si no esta aca, busco en el padre hasta llegar a null
     private Tipo tipoRetorno;
-
+    private boolean masFunciones = true;
     
     public void procesar(Programa programa) throws ExcepcionDeTipos{
         super.transform(programa);
@@ -27,6 +27,9 @@ public class ValidadorTipos extends Transformer{
     @Override
     public Bloque transform(Bloque bloque) throws ExcepcionDeTipos {
         this.alcance_actual = bloque.getAlcance();
+        if(alcance_actual.getNombre().equals("main")){
+            masFunciones=false;
+        }
         super.transform(bloque);
         return bloque;
     }
@@ -293,8 +296,6 @@ public class ValidadorTipos extends Transformer{
     // x es un boolean
     // x=2; -> error
 
-    //PROBLEMA CON LOS PARAMETROS, POSIBLE TRANSFORM(PARAMETROS) ACA ?
-
     @Override
     public DeclaracionFuncion transform(DeclaracionFuncion declaracionFuncion) throws ExcepcionDeTipos {
         super.transform(declaracionFuncion);
@@ -325,19 +326,10 @@ public class ValidadorTipos extends Transformer{
     public InvocacionFuncion transform(InvocacionFuncion invocacionFuncion) throws ExcepcionDeTipos {
         super.transform(invocacionFuncion);
         invocacionFuncion.setTipo(invocacionFuncion.getIdentificador().getTipo());
-        System.out.println("alc:" + alcance_actual.getNombre());
         DeclaracionFuncion declaracionFuncion = (DeclaracionFuncion) alcance_actual.resolver(invocacionFuncion.getIdentificador().getNombre());
         List<Parametro> aux = declaracionFuncion.getParametros();
         Collections.reverse(aux);
         declaracionFuncion.setParametros(aux);
-        for(int i=0;i<invocacionFuncion.getParams().size();i++){
-            if(declaracionFuncion.getParametros().get(i).getTipo() != invocacionFuncion.getParams().get(i).getTipo() ){
-                throw new ExcepcionDeTipos(("Tipo de Parametro incorrecto"));
-            }
-            if(i > declaracionFuncion.getParametros().size()){
-                throw new ExcepcionDeTipos("la cantidad de parametros invocados es superior a los declarados ");
-            }
-        }
         int cont =0;
         for (Parametro parametro:declaracionFuncion.getParametros()){
             if(parametro.getValorDefecto() != null){
@@ -346,6 +338,19 @@ public class ValidadorTipos extends Transformer{
         }
         if(invocacionFuncion.getParams().size() < declaracionFuncion.getParametros().size() - cont){
             throw new ExcepcionDeTipos("la cantidad de parametros invocados es inferior a los declarados ");
+        }
+        if(invocacionFuncion.getParams().size() > declaracionFuncion.getParametros().size()){
+            throw new ExcepcionDeTipos("la cantidad de parametros invocados es superior a los declarados ");
+        }
+        for(int i=0;i<invocacionFuncion.getParams().size();i++){
+            if(declaracionFuncion.getParametros().get(i).getTipo() != invocacionFuncion.getParams().get(i).getTipo() ){
+                if(invocacionFuncion.getParams().get(i).getTipo() == Tipo.FLOAT || invocacionFuncion.getParams().get(i).getTipo() == Tipo.INTEGER){
+                    Tipo destino = declaracionFuncion.getParametros().get(i).getTipo();
+                    invocacionFuncion.getParams().set(i,convertir_a_tipo(invocacionFuncion.getParams().get(i),destino));
+                } else {
+                    throw new ExcepcionDeTipos(("Tipo de Parametro incorrecto"));
+                }
+            }
         }
         return invocacionFuncion;
     }
@@ -367,17 +372,24 @@ public class ValidadorTipos extends Transformer{
 
     @Override
     public Identificador transform(Identificador identificador) throws ExcepcionDeTipos{
-        // CONFLICTO ALCANCE ACTUAL SE CAMBIA A BLOQUE_FUNCION Y DEBERIA SER MAIN
-        System.out.println(alcance_actual.getNombre());
         Object elemento = alcance_actual.resolver(identificador.getNombre());   //verifica si el nombre esta declarado
         Tipo tipo = Tipo.UNKNOWN;
         if(elemento instanceof DeclaracionVariable){
             tipo = ((DeclaracionVariable) elemento).getTipo();
         }
         if(elemento instanceof DeclaracionFuncion){
+            if(masFunciones){
+                tipo = ((DeclaracionFuncion) elemento).getTipoRetorno();
+                tipoRetorno = identificador.getTipo();
+                alcance_actual = ((DeclaracionFuncion) elemento).getBloque().getAlcance();
+            } else {
+                tipo = ((DeclaracionFuncion) elemento).getTipoRetorno();
+                tipoRetorno = identificador.getTipo();
+            }
+            /*
             tipo = ((DeclaracionFuncion) elemento).getTipoRetorno();
             tipoRetorno = identificador.getTipo();
-            alcance_actual = ((DeclaracionFuncion) elemento).getBloque().getAlcance();  //ACA SE VA TODO A LA MIERDA
+            alcance_actual = ((DeclaracionFuncion) elemento).getBloque().getAlcance(); */
         }
         if(elemento instanceof Parametro){
             tipo = ((Parametro) elemento).getTipo();
