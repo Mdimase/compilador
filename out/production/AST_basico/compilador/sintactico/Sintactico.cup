@@ -31,7 +31,7 @@ action code
 
 :}
 
-terminal MAIN,PUNTO,MAS, MENOS, MULTIPLICAR, DIVIDIR, APERTURA_PARENTESIS, CIERRE_PARENTESIS, MAYOR, MENOR, MAYOR_IGUAL, MENOR_IGUAL, IGUAL_IGUAL, DISTINTO, PUNTO_COMA, OR, AND, NOT, VARIABLE, IS, IGUAL,WHILE,DO,IF,THEN,ELSE,BEGIN,END,WRITE, WRITELN,WHEN, BREAK,CONTINUE,FUNCTION,RETURN,COMA,FOR,BY,TO,FROM;
+terminal MAIN,PUNTO,MAS, MENOS, MULTIPLICAR, DIVIDIR, APERTURA_PARENTESIS, CIERRE_PARENTESIS, MAYOR, MENOR, MAYOR_IGUAL, MENOR_IGUAL, IGUAL_IGUAL, DISTINTO, PUNTO_COMA, OR, AND, NOT, VARIABLE, IS, IGUAL,WHILE,DO,IF,THEN,ELSE,BEGIN,END,WRITE, WRITELN,READ_INTEGER,READ_BOOLEAN,READ_FLOAT,WHEN, BREAK,CONTINUE,FUNCTION,RETURN,COMA,FOR,BY,TO,FROM;
 terminal String IDENTIFICADOR, INTEGER_LITERAL, FLOAT_LITERAL,TRUE,FALSE,INTEGER,FLOAT,BOOLEAN, STRING_LITERAL;
 
 non terminal Expresion invocacion_funciones,condicion,comparacion,expresion,exp_arit,exp_or,exp_and,exp_not, termino, factor;
@@ -227,7 +227,19 @@ instruccion ::= write:w {:
 instruccion ::= writeln:wln {:
             RESULT=wln;
         :};
+/*
+instruccion ::= READ_INTEGER APERTURA_PARENTESIS CIERRE_PARENTESIS {:
+            RESULT= new Read("READ_INTEGER",Tipo.INTEGER);
+        :};
 
+instruccion ::= READ_BOOLEAN APERTURA_PARENTESIS CIERRE_PARENTESIS {:
+            RESULT= new Read("READ_BOOLEAN",Tipo.BOOL);
+        :};
+
+instruccion ::= READ_FLOAT APERTURA_PARENTESIS CIERRE_PARENTESIS {:
+            RESULT= new Read("READ_FLOAT",Tipo.FLOAT);
+        :};
+*/
 instruccion ::= bloque:b {:
             RESULT=b;
         :};
@@ -538,6 +550,18 @@ factor ::= FALSE:f {:
 factor ::= invocacion_funciones:i {:
             RESULT = i;
             :};
+
+factor ::= READ_INTEGER APERTURA_PARENTESIS CIERRE_PARENTESIS {:
+            RESULT= new Read("READ_INTEGER",Tipo.INTEGER);
+        :};
+
+factor ::= READ_BOOLEAN APERTURA_PARENTESIS CIERRE_PARENTESIS {:
+            RESULT= new Read("READ_BOOLEAN",Tipo.BOOL);
+        :};
+
+factor ::= READ_FLOAT APERTURA_PARENTESIS CIERRE_PARENTESIS {:
+            RESULT= new Read("READ_FLOAT",Tipo.FLOAT);
+        :};
 
 factor ::= MENOS factor:f {:
             RESULT = new MenosUnario(f);

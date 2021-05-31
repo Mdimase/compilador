@@ -153,116 +153,124 @@ graph G {1 [label="Programa"]
 76 -- 77
 78 [label="Const 0.45 FLOAT"]
 76 -- 78
-79 [label="READ_FLOAT"]
+79 [label="="]
 64 -- 79
-80 [label="IF"]
-64 -- 80
-81 [label="AND UNKNOWN"]
-80 -- 81
-82 [label="== UNKNOWN"]
-81 -- 82
-83 [label="Ident g UNKNOWN"]
+80 [label="Ident f UNKNOWN"]
+79 -- 80
+81 [label="READ_FLOAT"]
+79 -- 81
+82 [label="IF"]
+64 -- 82
+83 [label="AND UNKNOWN"]
 82 -- 83
-84 [label="Const 1 INTEGER"]
-82 -- 84
-85 [label="!= UNKNOWN"]
-81 -- 85
-86 [label="Ident b UNKNOWN"]
-85 -- 86
-87 [label="Const false BOOL"]
-85 -- 87
-88 [label="BLOQUE_THEN"]
-80 -- 88
-89 [label="WHILE"]
-88 -- 89
-90 [label="< UNKNOWN"]
-89 -- 90
-91 [label="Ident fg UNKNOWN"]
+84 [label="== UNKNOWN"]
+83 -- 84
+85 [label="Ident g UNKNOWN"]
+84 -- 85
+86 [label="Const 1 INTEGER"]
+84 -- 86
+87 [label="!= UNKNOWN"]
+83 -- 87
+88 [label="Ident b UNKNOWN"]
+87 -- 88
+89 [label="Const false BOOL"]
+87 -- 89
+90 [label="BLOQUE_THEN"]
+82 -- 90
+91 [label="WHILE"]
 90 -- 91
-92 [label="Const 12 INTEGER"]
-90 -- 92
-93 [label="BLOQUE_WHILE"]
-89 -- 93
-94 [label="DeclaracionVariable"]
-93 -- 94
-95 [label="Ident lk FLOAT"]
-94 -- 95
-96 [label="Const 0.0 FLOAT"]
-94 -- 96
-97 [label="WriteLn"]
-93 -- 97
-98 [label="/ UNKNOWN"]
-97 -- 98
-99 [label="Const 37.5 FLOAT"]
-98 -- 99
-100 [label="InvocacionFuncion"]
-98 -- 100
-101 [label="Ident prueba_Funciones UNKNOWN"]
+92 [label="< UNKNOWN"]
+91 -- 92
+93 [label="Ident fg UNKNOWN"]
+92 -- 93
+94 [label="Const 12 INTEGER"]
+92 -- 94
+95 [label="BLOQUE_WHILE"]
+91 -- 95
+96 [label="DeclaracionVariable"]
+95 -- 96
+97 [label="Ident lk FLOAT"]
+96 -- 97
+98 [label="Const 0.0 FLOAT"]
+96 -- 98
+99 [label="WriteLn"]
+95 -- 99
+100 [label="/ UNKNOWN"]
+99 -- 100
+101 [label="Const 37.5 FLOAT"]
 100 -- 101
 102 [label="InvocacionFuncion"]
 100 -- 102
-103 [label="Ident pepe UNKNOWN"]
+103 [label="Ident prueba_Funciones UNKNOWN"]
 102 -- 103
-104 [label="Ident f UNKNOWN"]
+104 [label="InvocacionFuncion"]
 102 -- 104
-105 [label="="]
-93 -- 105
-106 [label="Ident fg UNKNOWN"]
-105 -- 106
-107 [label="+ UNKNOWN"]
-105 -- 107
+105 [label="Ident pepe UNKNOWN"]
+104 -- 105
+106 [label="Ident f UNKNOWN"]
+104 -- 106
+107 [label="="]
+95 -- 107
 108 [label="Ident fg UNKNOWN"]
 107 -- 108
-109 [label="Const 1 INTEGER"]
+109 [label="+ UNKNOWN"]
 107 -- 109
-110 [label="IF"]
-88 -- 110
-111 [label="== UNKNOWN"]
-110 -- 111
-112 [label="Ident fg UNKNOWN"]
-111 -- 112
-113 [label="Const 12 INTEGER"]
-111 -- 113
-114 [label="BLOQUE_THEN"]
-110 -- 114
-115 [label="WriteLn String"]
-114 -- 115
-116 [label="BLOQUE_FOR to WHILE"]
-64 -- 116
-117 [label="="]
+110 [label="Ident fg UNKNOWN"]
+109 -- 110
+111 [label="Const 1 INTEGER"]
+109 -- 111
+112 [label="IF"]
+90 -- 112
+113 [label="== UNKNOWN"]
+112 -- 113
+114 [label="Ident fg UNKNOWN"]
+113 -- 114
+115 [label="Const 12 INTEGER"]
+113 -- 115
+116 [label="BLOQUE_THEN"]
+112 -- 116
+117 [label="WriteLn String"]
 116 -- 117
-118 [label="Ident g UNKNOWN"]
-117 -- 118
-119 [label="Const 1 INTEGER"]
-117 -- 119
-120 [label="WHILE"]
-116 -- 120
-121 [label="<= UNKNOWN"]
-120 -- 121
-122 [label="Ident g UNKNOWN"]
-121 -- 122
-123 [label="Const 5 INTEGER"]
-121 -- 123
-124 [label="BLOQUE_WHILE"]
-120 -- 124
-125 [label="Write"]
-124 -- 125
-126 [label="Ident g UNKNOWN"]
-125 -- 126
-127 [label="InvocacionFuncion"]
-64 -- 127
-128 [label="Ident prueba_Funciones UNKNOWN"]
+118 [label="BLOQUE_FOR to WHILE"]
+64 -- 118
+119 [label="="]
+118 -- 119
+120 [label="Ident g UNKNOWN"]
+119 -- 120
+121 [label="Const 1 INTEGER"]
+119 -- 121
+122 [label="WHILE"]
+118 -- 122
+123 [label="<= UNKNOWN"]
+122 -- 123
+124 [label="Ident g UNKNOWN"]
+123 -- 124
+125 [label="Const 5 INTEGER"]
+123 -- 125
+126 [label="BLOQUE_WHILE"]
+122 -- 126
+127 [label="Write"]
+126 -- 127
+128 [label="Ident g UNKNOWN"]
 127 -- 128
-129 [label="Ident g UNKNOWN"]
-127 -- 129
-130 [label="DeclaracionVariable"]
-64 -- 130
-131 [label="Ident x FLOAT"]
-130 -- 131
-132 [label="InvocacionFuncion"]
-130 -- 132
-133 [label="Ident pepe UNKNOWN"]
+129 [label="InvocacionFuncion"]
+64 -- 129
+130 [label="Ident prueba_Funciones UNKNOWN"]
+129 -- 130
+131 [label="Ident g UNKNOWN"]
+129 -- 131
+132 [label="DeclaracionVariable"]
+64 -- 132
+133 [label="Ident x FLOAT"]
 132 -- 133
-134 [label="Const 2 INTEGER"]
+134 [label="+ UNKNOWN"]
 132 -- 134
+135 [label="Const 1 INTEGER"]
+134 -- 135
+136 [label="InvocacionFuncion"]
+134 -- 136
+137 [label="Ident pepe UNKNOWN"]
+136 -- 137
+138 [label="Const 2 INTEGER"]
+136 -- 138
 }

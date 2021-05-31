@@ -85,10 +85,15 @@ public class ValidadorTipos extends Transformer{
     
     @Override
     public Asignacion transform(Asignacion a) throws ExcepcionDeTipos{
-        System.out.println("asig");
         Asignacion asignacion = super.transform(a);
         asignacion.setExpresion(convertir_a_tipo(asignacion.getExpresion(), asignacion.getIdentificador().getTipo()));
         return asignacion;
+    }
+
+    @Override
+    public Read transform(Read read){
+        System.out.println(read.getTipo());
+        return read;
     }
 
     private OperacionUnaria transformarOperacionUnaria(OperacionUnaria ou) throws ExcepcionDeTipos{

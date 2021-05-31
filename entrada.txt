@@ -35,7 +35,7 @@ variable b is boolean=true;
 variable fg is integer;
 variable g is integer= 10/2;
 variable f is float= 0.45;
-read_float();
+f = read_float();
 
 if g==1 and b!= false then
     begin

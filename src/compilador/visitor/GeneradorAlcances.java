@@ -72,7 +72,6 @@ public class GeneradorAlcances extends Visitor<Void> {
             }
         }
         alcances.push(bloque);
-        System.out.println("actual: " + alcance_actual.getNombre());
         super.visit(bloque);    //visito a visit(Bloque) de Visitor, para recorrer las sentencias de este bloque
         if(!alcances.peek().getAlcance().getNombre().equals("global")){
             alcances.pop();
@@ -113,7 +112,6 @@ public class GeneradorAlcances extends Visitor<Void> {
                             declaracionFuncion.getIdentificador().getNombre(), declaracionFuncion.getTipoRetorno() ));
         }
         alcance_actual = new Alcance("BLOQUE_FUNCION",alcance_global);  //esto para que meta los parametros en un diccionario perteneciente al bloque funcion como pedia el enunciado que los parametros tengan la misma validez que una variable local al bloque
-        System.out.println(alcance_actual.getNombre());
         if(!declaracionFuncion.getParametros().isEmpty()){
             for (Parametro parametro:declaracionFuncion.getParametros()){
                 Object resultP = this.agregarParametro(parametro.getIdentificador().getNombre(), parametro);
