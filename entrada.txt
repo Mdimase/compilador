@@ -2,10 +2,11 @@
 
 #variable a is float = 1 + pepe();  esto genera un error, dado que no se puede invocar funciones en el ambito global "aclarado por german"
 #variable cd is float = 1 + 1 / random();  esto genera un error, dado que no se puede invocar funciones en el ambito global "aclarado por german"
+variable d is boolean;
 
 function prueba_Funciones (c is integer, j is boolean=false) return float
     begin
-        c=c+2;
+        #variable x is integer;
         if j == true then
             begin
                 c=c+5;
@@ -14,6 +15,9 @@ function prueba_Funciones (c is integer, j is boolean=false) return float
         return c; # se convierte c de integer a float para que coincida con el tipo de retorno de la funcion
     end;
 
+variable x is integer;
+
+{
 function pepe (a is float) return integer
     begin
         variable b is boolean;
@@ -23,17 +27,22 @@ function pepe (a is float) return integer
                     write(a+a);
     end;
 
-variable d is boolean;
+function salamin() return boolean
+    begin
+        write("hola");
+    end;
+}
 
 main is
-
+{
 #x =  not x; no se puede hacer un not integer
 #g = g and g; no se puede hacer un and entre aritmeticos
 #x = x + x; no se puede sumar entre tipos bool
 #pepe(b); tipo de parametro incorrecto
-variable b is boolean=true;
+variable b is boolean=true;}
 variable fg is integer;
 variable g is integer= 10/2;
+{
 variable f is float= 0.45;
 f = read_float();
 
@@ -55,6 +64,8 @@ for g from 1 to 5 do
     begin
         write(g);
     end;
-prueba_Funciones(g);
-variable x is float = 1 + pepe(2);
+variable x is float = 1 + pepe(2);}
+{
+when g is < fg then g=1;
+prueba_Funciones(g);}
 end.

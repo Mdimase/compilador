@@ -17,11 +17,11 @@ import java.util.List;
 public class ValidadorTipos extends Transformer{
 
     private Alcance alcance_actual; //bloque actual, si no esta aca, busco en el padre hasta llegar a null
-    private Tipo tipoRetorno;
-    private boolean masFunciones = true;
-    
+    private Tipo tipoRetorno;   //tipo de retorno de una funcion
+    private boolean masFunciones = true;    //flag que indica si es posible que vengan mas declaraciones de funciones
+
+    //inicio de ejecucion del validador de tipos
     public Programa procesar(Programa programa) throws ExcepcionDeTipos{
-        //super.transform(programa);
         return programa.accept_transfomer(this);
     }
 
@@ -29,7 +29,7 @@ public class ValidadorTipos extends Transformer{
     public Bloque transform(Bloque bloque) throws ExcepcionDeTipos {
         this.alcance_actual = bloque.getAlcance();
         if(alcance_actual.getNombre().equals("main")){
-            masFunciones=false;
+            masFunciones=false; //a partir de aca no habra mas declaraciones de funciones
         }
         super.transform(bloque);
         return bloque;
@@ -65,7 +65,7 @@ public class ValidadorTipos extends Transformer{
         }
         throw new ExcepcionDeTipos(
                 String.format("No existe un tipo común entre %1$s y %2$s\n", tipo_1, tipo_2 ));
-    }    
+    }
 
     // recibe la expresion y el tipo al cual convertirla
     private static Expresion convertir_a_tipo(Expresion expresion, Tipo tipo_destino) throws ExcepcionDeTipos{
@@ -82,7 +82,7 @@ public class ValidadorTipos extends Transformer{
         throw new ExcepcionDeTipos(
                 String.format("No existe un tipo común entre %1$s y %2$s\n", tipo_origen, tipo_destino ));
     }
-    
+
     @Override
     public Asignacion transform(Asignacion a) throws ExcepcionDeTipos{
         Asignacion asignacion = super.transform(a);
@@ -92,7 +92,6 @@ public class ValidadorTipos extends Transformer{
 
     @Override
     public Read transform(Read read){
-        System.out.println(read.getTipo());
         return read;
     }
 
@@ -104,7 +103,7 @@ public class ValidadorTipos extends Transformer{
         }
         return ou;
     }
-    
+
     private OperacionBinaria transformarOperacionBinaria(OperacionBinaria ob) throws ExcepcionDeTipos{
         Tipo tipo_en_comun = tipo_comun(ob.getIzquierda().getTipo(), ob.getDerecha().getTipo());
         ob.setIzquierda(convertir_a_tipo(ob.getIzquierda(),tipo_en_comun));
@@ -398,10 +397,6 @@ public class ValidadorTipos extends Transformer{
                 tipo = ((DeclaracionFuncion) elemento).getTipoRetorno();
                 tipoRetorno = identificador.getTipo();
             }
-            /*
-            tipo = ((DeclaracionFuncion) elemento).getTipoRetorno();
-            tipoRetorno = identificador.getTipo();
-            alcance_actual = ((DeclaracionFuncion) elemento).getBloque().getAlcance(); */
         }
         if(elemento instanceof Parametro){
             tipo = ((Parametro) elemento).getTipo();

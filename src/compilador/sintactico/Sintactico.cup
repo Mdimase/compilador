@@ -52,7 +52,10 @@ non terminal While while;
 non terminal If if;
 non terminal Constante valor_defecto;
 //non terminal InvocacionFuncion invocacion_funciones; TUVIMOS QUE HACER QUE SEA EXPRESION Y QUE EXPRESION EXTIENDA DE SENTENCIA PARA SOLUCIONAR PROBLEMAS DE TIPOS ENEL PARSING
-//non terminal When when;
+non terminal When when;
+non terminal List<WhenIs> comparaciones_is;
+non terminal WhenIs comparacion_is;
+non terminal Comparador comparador;
 
 precedence left IS; //para evitar shift/reduce en el when sin else
 precedence left ELSE; // para evitar shift/reduce en el if
@@ -189,12 +192,10 @@ instruccion ::= for:f {:
 instruccion ::= if:i {:
             RESULT=i;
         :};
-/*
-//pendiente
+
 instruccion ::= when:w{:
             RESULT=w;
         :};
-*/
 
 instruccion ::= invocacion_funciones:i {:
             RESULT=(Sentencia) i;
@@ -227,19 +228,7 @@ instruccion ::= write:w {:
 instruccion ::= writeln:wln {:
             RESULT=wln;
         :};
-/*
-instruccion ::= READ_INTEGER APERTURA_PARENTESIS CIERRE_PARENTESIS {:
-            RESULT= new Read("READ_INTEGER",Tipo.INTEGER);
-        :};
 
-instruccion ::= READ_BOOLEAN APERTURA_PARENTESIS CIERRE_PARENTESIS {:
-            RESULT= new Read("READ_BOOLEAN",Tipo.BOOL);
-        :};
-
-instruccion ::= READ_FLOAT APERTURA_PARENTESIS CIERRE_PARENTESIS {:
-            RESULT= new Read("READ_FLOAT",Tipo.FLOAT);
-        :};
-*/
 instruccion ::= bloque:b {:
             RESULT=b;
         :};
@@ -248,7 +237,6 @@ bloque ::= BEGIN sentencias:ss END{:
             RESULT = new Bloque (ss,"BLOQUE",false);
             :};
 
-//sacarlo cuando hagamos las declaraciones fuera de main is
 declaracion_variable ::= VARIABLE IDENTIFICADOR:id IS tipo:t{:
             Identificador identificador = new Identificador(id,t);
             RESULT= new DeclaracionVariable(identificador,t);
@@ -398,27 +386,39 @@ tipo::= BOOLEAN:b {:
             RESULT= Tipo.BOOL;
         :};
 
-/*
 when::= WHEN expresion:e comparaciones_is:ci ELSE instruccion:i{:
-            System.out.println("REGLA 20.1: when -> WHEN expresion comparaciones_is ELSE instruccion");
-            RESULT="WHEN"+e+ci+"ELSE"+i;
+            List<Sentencia> sentenciasWhenElse = new ArrayList<Sentencia>();
+            sentenciasWhenElse.add(i);
+            Bloque bloque = new Bloque(sentenciasWhenElse,"WhenElse",false);
+            RESULT= new When("When/else",e,ci,bloque);
         :};
 
 when::= WHEN expresion:e comparaciones_is:ci {:
-            System.out.println("REGLA 20.2: when -> WHEN expresion comparaciones_is");
-            RESULT="WHEN"+e+ci;
+            RESULT= new When("When",e,ci);
         :};
 
-comparaciones_is::= comparaciones_is:ci1 IS comparador:c expresion:e THEN instruccion:i{:
-            System.out.println("REGLA 21.1: comparaciones_is -> comparaciones_is IS comparador expresion THEN instruccion");
-            RESULT=ci1+"IS"+c+e+"THEN"+i;
+comparaciones_is::= comparaciones_is:cc comparacion_is:c{:
+            cc.add(c);
+            RESULT= cc;
         :};
 
-comparaciones_is::= IS comparador:c expresion:e THEN instruccion:i{:
-            System.out.println("REGLA 21.2: comparaciones_is -> IS comparador expresion THEN instruccion ");
-            RESULT="IS"+c+e+"THEN"+i;
+comparaciones_is ::= comparacion_is:c {:
+            List<WhenIs> cs = new ArrayList<>();
+            cs.add(c);
+            RESULT= cs;
         :};
-*/
+
+comparacion_is::= IS comparador:c expresion:e THEN instruccion:i{:
+            List<Sentencia> sentenciasWhenIs = new ArrayList<Sentencia>();
+            sentenciasWhenIs.add(i);
+            Bloque bloque = new Bloque(sentenciasWhenIs,"WhenIs",false);
+            RESULT= new WhenIs(c,e,bloque);
+        :};
+
+
+comparador::= MENOR {:
+            RESULT= Comparador.MENOR;
+        :};
 
 // if una instruccion sin; + else una instruccion con ; al final(lo agrega la sentencia que engloba al if)
 if ::= IF condicion:c THEN instruccion:i1 ELSE instruccion:i2 {:

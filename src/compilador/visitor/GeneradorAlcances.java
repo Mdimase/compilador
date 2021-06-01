@@ -42,6 +42,7 @@ public class GeneradorAlcances extends Visitor<Void> {
     /* aca el primer bloque que venga puede ser de 2 formas posibles:
         1) venga un bloque declaraciones, el cual sera mi alcance global
         2) no venga bloque declaraciones, sino,un bloque main,ahora, sera alcance global xq no hay declaraciones encima de el */
+    @Override
     public Void visit(Bloque bloque) throws ExcepcionDeAlcance {
         if (alcance_global == null){    //aca entra solo el primer bloque (declaraciones o main)
             if (!bloque.esProgramaPrincipal()){ //es declaraciones
@@ -89,7 +90,7 @@ public class GeneradorAlcances extends Visitor<Void> {
         Object result = this.agregarSimbolo(var.getDeclaracion().getId().getNombre(), dv);
         if(result!=null){   //repetido
             throw new ExcepcionDeAlcance(String.format("El nombre de la variable %1$s de tipo %2$s fue utilizado previamente\"]\n",
-                            dv.getId().getNombre(), dv.getTipo() ));
+                    dv.getId().getNombre(), dv.getTipo() ));
         }
         return null;
     }
@@ -114,20 +115,19 @@ public class GeneradorAlcances extends Visitor<Void> {
         alcance_actual = new Alcance("BLOQUE_FUNCION",alcance_global);  //esto para que meta los parametros en un diccionario perteneciente al bloque funcion como pedia el enunciado que los parametros tengan la misma validez que una variable local al bloque
         if(!declaracionFuncion.getParametros().isEmpty()){
             for (Parametro parametro:declaracionFuncion.getParametros()){
-                Object resultP = this.agregarParametro(parametro.getIdentificador().getNombre(), parametro);
+                Object resultP = this.agregarSimbolo(parametro.getIdentificador().getNombre(), parametro);
                 if(resultP!=null){   //repetido
                     throw new ExcepcionDeAlcance(String.format("El nombre del parametro %1$s de tipo %2$s fue utilizado previamente\"]\n",
-                                    parametro.getIdentificador().getNombre(), parametro.getTipo()));
+                            parametro.getIdentificador().getNombre(), parametro.getTipo()));
                 }
             }
         }
-        super.visit(declaracionFuncion);    //visito el bloque de la funcion
+        super.visit(declaracionFuncion);
         return null;
     }
 
     // agregarSimbolo(nombre variable, declaracion)
     private Object agregarSimbolo(String nombre, Object s) throws ExcepcionDeAlcance {
-        //System.out.println(alcance_actual.getNombre());
         if(alcance_actual.resolver(nombre) != null){    //retorna el repetido, si no esta -> null
             throw new ExcepcionDeAlcance(String.format("El nombre de %2$s %1$s fue utilizado previamente\"]\n",nombre,s.getClass().getSimpleName()));
         }
@@ -137,6 +137,7 @@ public class GeneradorAlcances extends Visitor<Void> {
     // agregarParametro(nombre variable, declaracion)
     private Object agregarParametro(String nombre, Object s) throws ExcepcionDeAlcance {
         //System.out.println("add p: " + alcance_actual.getNombre());
+        //System.out.println("nombre: " + alcance_actual.getNombre() + "  dicc: " + alcance_actual);
         return this.alcance_actual.putIfAbsent(nombre, s);  //retorna lo que habia previamente, si no habia nada tira null
     }
 
@@ -147,6 +148,21 @@ public class GeneradorAlcances extends Visitor<Void> {
 
     @Override
     protected Void procesarDeclaracionFuncion(DeclaracionFuncion declaracionFuncion, Void identificador, Void bloque) {
+        return null;
+    }
+
+    @Override
+    protected Void procesarWhenIs(WhenIs whenIs, Void expresion, Void bloque) {
+        return null;
+    }
+
+    @Override
+    protected Void procesarWhen(When when, Void expresion, List<Void> whenIs, Void bloque) {
+        return null;
+    }
+
+    @Override
+    protected Void procesarWhen(When when, Void expresion, List<Void> whenIs) {
         return null;
     }
 

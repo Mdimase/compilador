@@ -26,7 +26,7 @@ public abstract class Transformer {
         }
         return p;
     }
-    
+
     public Bloque transform(Bloque b) throws ExcepcionDeTipos {
         ArrayList<Sentencia> result = new ArrayList<>();
         for (Sentencia sentencia : b.getSentencias()){
@@ -63,7 +63,7 @@ public abstract class Transformer {
         dv.setExpresion(e);
         return dv;
     }
-    
+
     private OperacionBinaria transformar_operacion_binaria(OperacionBinaria operacion) throws ExcepcionDeTipos{
         operacion.setIzquierda(operacion.getIzquierda().accept_transfomer(this));
         operacion.setDerecha(operacion.getDerecha().accept_transfomer(this));
@@ -239,5 +239,28 @@ public abstract class Transformer {
 
     public Read transform(Read read){
         return read;
+    }
+
+    public WhenIs transform(WhenIs whenIs) throws ExcepcionDeTipos {
+        Expresion e = whenIs.getExpresion().accept_transfomer(this);
+        Bloque bloque = whenIs.getBloque().accept_transfomer(this);
+        whenIs.setExpresion(e);
+        whenIs.setBloque(bloque);
+        return whenIs;
+    }
+
+    public When transform(When when) throws ExcepcionDeTipos {
+        Expresion e = when.getExpresionBase().accept_transfomer(this);
+        ArrayList<WhenIs> list = new ArrayList<>();
+        for (WhenIs whenIs : when.getWhenIs()){
+            list.add(whenIs.accept_transfomer(this));
+        }
+        if(when.getBloqueElse() != null){
+            Bloque bloque = when.getBloqueElse().accept_transfomer(this);
+            when.setBloqueElse(bloque);
+        }
+        when.setExpresionBase(e);
+        when.setWhenIs(list);
+        return when;
     }
 }

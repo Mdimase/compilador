@@ -19,24 +19,24 @@ import java.util.List;
  * @param <T>
  */
 public abstract class Visitor<T> {
-    
+
     private int iden=0;
-    
+
     protected int getID(){
         iden+=1;
         return iden;
     }
-    
+
     public T visit(OperacionBinaria ob) throws ExcepcionDeAlcance{
         T ti = ob.getIzquierda().accept(this); //operando 1
         T td = ob.getDerecha().accept(this);    //operando 2
         return this.procesarOperacionBinaria(ob, ti, td);
     }
-    
+
     public T visit(Constante c) {
         return procesarNodo(c);
     }
-    
+
     public T visit(Asignacion a) throws ExcepcionDeAlcance{
         T identificador = a.getIdentificador().accept(this);
         T expresion = a.getExpresion().accept(this);
@@ -54,7 +54,7 @@ public abstract class Visitor<T> {
     public T visit(Read read){
         return procesarNodo(read);
     }
-    
+
     public T visit(Identificador i) {
         return procesarNodo(i); //identificador no tiene ningun nodo como atributo, tonce lo imprimo xq es un nodo hoja
     }
@@ -85,9 +85,9 @@ public abstract class Visitor<T> {
         for (Sentencia sentencia : b.getSentencias()){  //para cada sentencia dentro del bloque
             result.add(sentencia.accept(this)); //invoco al accept de sentencia, es decir, de alguna de las clases que heredan de ella(xq sentencia es abstract)
         }
-        return procesarBloque(b, result);        
+        return procesarBloque(b, result);
     }
-    
+
     public T visit(OperacionUnaria ou) throws ExcepcionDeAlcance{
         return ou.getExpresion().accept(this);
     }
@@ -136,7 +136,7 @@ public abstract class Visitor<T> {
         T by = aFor.getBy().accept(this);
         T bloque = aFor.getBloque().accept(this);
         return procesarFor(aFor,id,bloque,from,to,by);
-        }
+    }
 
 
     public T visit(While aWhile) throws ExcepcionDeAlcance {
@@ -153,7 +153,7 @@ public abstract class Visitor<T> {
         } else{
             ArrayList<T> parametros = new ArrayList<>();
             for (Parametro parametro : declaracionFuncion.getParametros()){
-                   parametros.add(parametro.accept(this));
+                parametros.add(parametro.accept(this));
             }
             return procesarDeclaracionFuncion(declaracionFuncion,id,parametros,bloque);
         }
@@ -167,6 +167,33 @@ public abstract class Visitor<T> {
         }
         return procesarParametro(parametro,id);
     }
+
+    public T visit(WhenIs whenIs) throws ExcepcionDeAlcance {
+        T exp = whenIs.getExpresion().accept(this);
+        T bloque = whenIs.getBloque().accept(this);
+        return procesarWhenIs(whenIs,exp,bloque);
+    }
+
+    public T visit(When when) throws ExcepcionDeAlcance {
+        T exp = when.getExpresionBase().accept(this);
+        ArrayList<T> list = new ArrayList<>();
+        for(WhenIs whenIs: when.getWhenIs()){
+            list.add(whenIs.accept(this));
+        }
+        if(when.getBloqueElse() != null){
+            T bloque = when.getBloqueElse().accept(this);
+            return procesarWhen(when,exp,list,bloque);
+        } else {
+            return procesarWhen(when,exp,list);
+        }
+
+    }
+
+    protected abstract T procesarWhenIs (WhenIs whenIs,T expresion, T bloque);
+
+    protected abstract T procesarWhen(When when,T expresion,List<T> whenIs,T bloque);
+
+    protected abstract T procesarWhen(When when,T expresion,List<T> whenIs);
 
     protected abstract T procesarParametro(Parametro parametro, T identificador, T valor_defecto);
 
@@ -189,9 +216,9 @@ public abstract class Visitor<T> {
     protected abstract T procesarFor(For aFor, T identificador,T bloque , T from, T to,T by);
 
     protected abstract T procesarBloque(Bloque bloque, List<T> sentencias);
-    
+
     protected abstract T procesarOperacionBinaria(OperacionBinaria ob, T ei, T ed);
-    
+
     protected abstract T procesarNodo(Nodo n);
 
     protected abstract T procesarAsignacion(Asignacion a, T identificador, T expresion);

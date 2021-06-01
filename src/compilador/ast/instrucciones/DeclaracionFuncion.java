@@ -11,7 +11,7 @@ import java.util.List;
 public class DeclaracionFuncion extends Declaracion{
     private Identificador identificador;
     private Tipo tipoRetorno;
-    private List<Parametro> parametros = new ArrayList<Parametro>();
+    private List<Parametro> parametros = new ArrayList<>();
     private Bloque bloque;
 
     public DeclaracionFuncion(Identificador identificador, Tipo tipoRetorno, List<Parametro> parametros, Bloque bloque) {

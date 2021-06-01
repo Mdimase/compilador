@@ -4,6 +4,7 @@ import compilador.ast.base.Programa;
 import compilador.lexico.Lexico;
 import compilador.sintactico.Sintactico;
 import compilador.visitor.ASTGraphviz;
+import compilador.visitor.GeneradorAlcanceGlobal;
 import compilador.visitor.GeneradorAlcances;
 import compilador.visitor.ValidadorTipos;
 
@@ -25,17 +26,19 @@ public class Main {
             pw.close();
             String cmd = "dot -Tpng arbol.dot -o arbol.png";        //comando consola
             Runtime.getRuntime().exec(cmd); //genero archivos dot y png
+            GeneradorAlcanceGlobal gb = new GeneradorAlcanceGlobal();
+            gb.procesar(programa);
             GeneradorAlcances ga = new GeneradorAlcances();
-            ga.procesar(programa);
-            System.out.println("Alcances procesados");
-            ValidadorTipos vt = new ValidadorTipos();
+            //ga.procesar(programa);
+            //System.out.println("Alcances procesados");
+            //ValidadorTipos vt = new ValidadorTipos();
             //vt.procesar(programa);
-            pw = new PrintWriter(new FileWriter("arbol_tp.dot"));
-            pw.println(graficador.visit(vt.procesar(programa)));
-            pw.close();
-            cmd = "dot -Tpng arbol_tp.dot -o arbol_tp.png";
-            Runtime.getRuntime().exec(cmd);
-            System.out.println("Tipos validados");
+            //pw = new PrintWriter(new FileWriter("arbol_tp.dot"));
+            //pw.println(graficador.visit(vt.procesar(programa)));
+            //pw.close();
+            //cmd = "dot -Tpng arbol_tp.dot -o arbol_tp.png";
+            //Runtime.getRuntime().exec(cmd);
+           //System.out.println("Tipos validados");
         } catch(Exception e){
             System.out.println(e);
         }    

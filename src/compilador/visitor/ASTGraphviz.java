@@ -19,7 +19,7 @@ public class ASTGraphviz extends Visitor<String>{
 
     private final Deque<Integer> parents;   //pila de IDs de los nodos
     /* cuando un nodo se grafique ,antes de que llame al graficado de sus hijos, va a apilar su ID
-    * para que los hijos miren esa pila y sepan a quien engancharse dentro del grafico (lenguaje DOT) */
+     * para que los hijos miren esa pila y sepan a quien engancharse dentro del grafico (lenguaje DOT) */
     private int current_id = 0; // id del nodo actual
     private int cont = 0;   //contador para los break y continue, no utilizo un flag booleano x situaciones de while anidados
     private boolean isFunc = false; //logica para validar el return
@@ -196,7 +196,7 @@ public class ASTGraphviz extends Visitor<String>{
         parents.pop();
         return resultado.toString();
     }
-    
+
     @Override
     public String visit(Identificador i) {
         StringBuilder resultado = new StringBuilder();
@@ -260,6 +260,43 @@ public class ASTGraphviz extends Visitor<String>{
     }
 
     @Override
+    public String visit(When when) throws ExcepcionDeAlcance{
+        StringBuilder resultado = new StringBuilder();
+        current_id = this.getID();
+        resultado.append(this.procesarNodo(when));
+        parents.push(current_id);
+        resultado.append(super.visit(when)); //invoco los visit de sus nodos atributos
+        parents.pop();
+        return resultado.toString();
+    }
+
+    @Override
+    protected String procesarWhenIs(WhenIs whenIs, String expresion, String bloque) {
+        return expresion+bloque;
+    }
+
+    @Override
+    protected String procesarWhen(When when, String expresion, List<String> whenIs, String bloque) {
+        StringBuilder resultado = new StringBuilder();
+        resultado.append(expresion);
+        whenIs.forEach((WhenIs) -> {
+            resultado.append(whenIs);
+        });
+        resultado.append(bloque);
+        return resultado.toString();
+    }
+
+    @Override
+    protected String procesarWhen(When when, String expresion, List<String> whenIs) {
+        StringBuilder resultado = new StringBuilder();
+        resultado.append(expresion);
+        whenIs.forEach((when_is) -> {
+            resultado.append(when_is);
+        });
+        return resultado.toString();
+    }
+
+    @Override
     protected String procesarParametro(Parametro parametro, String identificador, String valor_defecto) {
         return identificador+valor_defecto;
     }
@@ -312,7 +349,7 @@ public class ASTGraphviz extends Visitor<String>{
     protected String procesarInvocacionFuncion(InvocacionFuncion invocacionFuncion, String identificador) {
         return identificador;
     }
-    
+
     @Override
     protected String procesarWhile(While aWhile, String expresion, String bloqueWhile) {
         StringBuilder resultado = new StringBuilder();
