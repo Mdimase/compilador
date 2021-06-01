@@ -28,8 +28,8 @@ public class Main {
             Runtime.getRuntime().exec(cmd); //genero archivos dot y png
             GeneradorAlcanceGlobal gb = new GeneradorAlcanceGlobal();
             gb.procesar(programa);
-            GeneradorAlcances ga = new GeneradorAlcances();
-            //ga.procesar(programa);
+            GeneradorAlcances ga = new GeneradorAlcances(gb.getAlcance_global());
+            ga.procesar(programa);
             //System.out.println("Alcances procesados");
             //ValidadorTipos vt = new ValidadorTipos();
             //vt.procesar(programa);

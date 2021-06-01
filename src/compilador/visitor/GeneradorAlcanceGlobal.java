@@ -33,10 +33,10 @@ public class GeneradorAlcanceGlobal extends Visitor<Void>{
 
     @Override
     public Void visit(Bloque bloque) throws ExcepcionDeAlcance {
-        this.setGlobal(bloque);
         if (bloque.getNombre().equals("MAIN")) {
             return null;
         }
+        this.setGlobal(bloque);
         super.visit(bloque);
         return null;
     }

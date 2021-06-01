@@ -22,14 +22,19 @@ public class GeneradorAlcances extends Visitor<Void> {
     private Alcance alcance_actual; //alcance actual de un bloque determinado
     private Alcance alcance_global; //alcance al que todos pueden acceder
 
-    // seteo el alcance global, que puede ser declaraciones o main(en caso de que no haya declaraciones)
-    private void setGlobal(Bloque bloque){
-        bloque.setAlcance(new Alcance("global"));
-        this.alcance_global = this.alcance_actual = bloque.getAlcance();
+    public GeneradorAlcances(Alcance alcance_global) {
+        this.alcance_global = alcance_global;
     }
 
     //seteo main como hijo de global
     private void mainConDeclaraciones (Bloque bloque){
+        bloque.setAlcance(new Alcance("main",alcance_global));  //seteo su padre, que sera el alcance global
+        this.alcance_actual = bloque.getAlcance();
+    }
+
+    //seteo main como hijo de global
+    private void mainSinDeclaraciones (Bloque bloque){
+        alcance_global = new Alcance("global");
         bloque.setAlcance(new Alcance("main",alcance_global));  //seteo su padre, que sera el alcance global
         this.alcance_actual = bloque.getAlcance();
     }
@@ -39,39 +44,50 @@ public class GeneradorAlcances extends Visitor<Void> {
         this.visit(programa);   // como aca no hay visit(programa) usa de la superclase
     }
 
-    /* aca el primer bloque que venga puede ser de 2 formas posibles:
-        1) venga un bloque declaraciones, el cual sera mi alcance global
-        2) no venga bloque declaraciones, sino,un bloque main,ahora, sera alcance global xq no hay declaraciones encima de el */
     @Override
     public Void visit(Bloque bloque) throws ExcepcionDeAlcance {
-        if (alcance_global == null){    //aca entra solo el primer bloque (declaraciones o main)
-            if (!bloque.esProgramaPrincipal()){ //es declaraciones
-                this.setGlobal(bloque);
-            } else {  // bloque main sin declaraciones
-                this.setGlobal(bloque);
-                alcances.push(bloque);
-                this.mainConDeclaraciones(bloque);
-            }
-        } else{ //global ya establecido
+        if(bloque.getNombre().equals("DECLARACIONES")){
+            alcance_actual = alcance_global;
+            alcances.push(bloque);
+            System.out.println("bloque: " + bloque.getAlcance().getNombre());
+            System.out.println("actual: " + alcance_actual.getNombre());
+            System.out.println("padre: " + bloque.getAlcance().getPadre());
+            System.out.println("\n");
+            super.visit(bloque);
+            return null;
+        }
+        if (alcance_global == null){    //no hay declaraciones de funciones ni variables globales
+            this.mainSinDeclaraciones(bloque);
+        } else{ // si hay declaraciones
             if (bloque.esProgramaPrincipal()){  // bloque main con declaraciones previas
                 this.mainConDeclaraciones(bloque);
-            } else {
-                // cuando llegue el bloque funcion va a entrar aca
-                if(alcance_actual.getNombre().equals("BLOQUE_FUNCION") && !bloqueF){
-                    bloque.setAlcance(alcance_actual);
-                    alcance_actual = bloque.getAlcance();
-                    bloqueF=true;   // seteo flag para que el proximo bloque no entre aca, ya que seran if o while
-                } else{
+            }
+            if(alcance_actual.getNombre().equals("BLOQUE_FUNCION") && !bloqueF){ // cuando llegue el bloque funcion va a entrar aca
+                if(bloque.getNombre().equals("BLOQUE_ELSE")){
                     bloque.setAlcance(new Alcance(bloque.getNombre(),alcances.peek().getAlcance()));
                     alcance_actual = bloque.getAlcance();
-
+                    System.out.println("bloque: " + bloque.getAlcance().getNombre());
+                    System.out.println("actual: " + alcance_actual.getNombre());
+                    System.out.println("padre: " + bloque.getAlcance().getPadre().getNombre());
+                    System.out.println("\n");
+                } else {
+                    bloque.setAlcance(alcance_actual);
+                    alcance_actual = bloque.getAlcance();
+                    bloqueF=true;   // seteo flag para que el proximo bloque no entre aca, ya que seran if o while. si no hay if o while internos, lo soluciona el flag en el pop()
+                    System.out.println("bloque: " + bloque.getAlcance().getNombre());
+                    System.out.println("actual: " + alcance_actual.getNombre());
+                    System.out.println("padre: " + bloque.getAlcance().getPadre().getNombre());
+                    System.out.println("\n");
+                }
+            } else{
+                bloque.setAlcance(new Alcance(bloque.getNombre(),alcances.peek().getAlcance()));
+                alcance_actual = bloque.getAlcance();
                     System.out.println("bloque: " + bloque.getAlcance().getNombre());
                     System.out.println("actual: " + alcance_actual.getNombre());
                     System.out.println("padre: " + bloque.getAlcance().getPadre().getNombre());
                     System.out.println("\n");
                 }
             }
-        }
         alcances.push(bloque);
         super.visit(bloque);    //visito a visit(Bloque) de Visitor, para recorrer las sentencias de este bloque
         if(!alcances.peek().getAlcance().getNombre().equals("global")){
@@ -85,6 +101,9 @@ public class GeneradorAlcances extends Visitor<Void> {
     // cuando llegue a visit(decaracionVariable) aca si esta, por ende, usa este y no el de la superclase
     @Override
     public Void visit(DeclaracionVariable dv) throws ExcepcionDeAlcance{
+        if(alcance_actual == alcance_global){
+            return null;
+        }
         super.visit(dv);    // invoco al visit(declaracionVariable) de Visitor para recorrer la posible expresion de la declaracion
         Variable var = new Variable(dv);    // var : declaracionVariable
         Object result = this.agregarSimbolo(var.getDeclaracion().getId().getNombre(), dv);
@@ -96,22 +115,7 @@ public class GeneradorAlcances extends Visitor<Void> {
     }
 
     @Override
-    public Void visit(InvocacionFuncion invocacionFuncion) throws ExcepcionDeAlcance {
-        if(alcance_actual == alcance_global){
-            throw new ExcepcionDeAlcance("No se puede invocar funciones en el bloque declaraciones");
-        }
-        return null;
-    }
-
-    @Override
     public Void visit(DeclaracionFuncion declaracionFuncion) throws ExcepcionDeAlcance{
-        Funcion funcion = new Funcion(declaracionFuncion);    // var : declaracionVariable
-        Object result = this.agregarSimbolo(funcion.getDeclaracionFuncion().getIdentificador().getNombre(), declaracionFuncion);
-        if(result!=null){   //repetido
-            throw new ExcepcionDeAlcance(
-                    String.format("El nombre de la funcion %1$s de tipo retorno %2$s fue utilizado previamente\"]\n",
-                            declaracionFuncion.getIdentificador().getNombre(), declaracionFuncion.getTipoRetorno() ));
-        }
         alcance_actual = new Alcance("BLOQUE_FUNCION",alcance_global);  //esto para que meta los parametros en un diccionario perteneciente al bloque funcion como pedia el enunciado que los parametros tengan la misma validez que una variable local al bloque
         if(!declaracionFuncion.getParametros().isEmpty()){
             for (Parametro parametro:declaracionFuncion.getParametros()){
