@@ -279,8 +279,8 @@ public class ASTGraphviz extends Visitor<String>{
     protected String procesarWhen(When when, String expresion, List<String> whenIs, String bloque) {
         StringBuilder resultado = new StringBuilder();
         resultado.append(expresion);
-        whenIs.forEach((WhenIs) -> {
-            resultado.append(whenIs);
+        whenIs.forEach((when_is) -> {
+            resultado.append(when_is);
         });
         resultado.append(bloque);
         return resultado.toString();

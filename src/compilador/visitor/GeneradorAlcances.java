@@ -138,13 +138,6 @@ public class GeneradorAlcances extends Visitor<Void> {
         return this.alcance_actual.putIfAbsent(nombre, s);  //retorna lo que habia previamente, si no habia nada tira null
     }
 
-    // agregarParametro(nombre variable, declaracion)
-    private Object agregarParametro(String nombre, Object s) throws ExcepcionDeAlcance {
-        //System.out.println("add p: " + alcance_actual.getNombre());
-        //System.out.println("nombre: " + alcance_actual.getNombre() + "  dicc: " + alcance_actual);
-        return this.alcance_actual.putIfAbsent(nombre, s);  //retorna lo que habia previamente, si no habia nada tira null
-    }
-
     @Override
     protected Void procesarPrograma(Programa programa, Void declaraciones, Void sentencias) {
         return null;

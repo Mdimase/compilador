@@ -30,15 +30,15 @@ public class Main {
             gb.procesar(programa);
             GeneradorAlcances ga = new GeneradorAlcances(gb.getAlcance_global());
             ga.procesar(programa);
-            //System.out.println("Alcances procesados");
-            //ValidadorTipos vt = new ValidadorTipos();
-            //vt.procesar(programa);
-            //pw = new PrintWriter(new FileWriter("arbol_tp.dot"));
-            //pw.println(graficador.visit(vt.procesar(programa)));
-            //pw.close();
-            //cmd = "dot -Tpng arbol_tp.dot -o arbol_tp.png";
-            //Runtime.getRuntime().exec(cmd);
-           //System.out.println("Tipos validados");
+            System.out.println("Alcances procesados");
+            ValidadorTipos vt = new ValidadorTipos();
+            vt.procesar(programa);
+            pw = new PrintWriter(new FileWriter("arbol_tp.dot"));
+            pw.println(graficador.visit(vt.procesar(programa)));
+            pw.close();
+            cmd = "dot -Tpng arbol_tp.dot -o arbol_tp.png";
+            Runtime.getRuntime().exec(cmd);
+            System.out.println("Tipos validados");
         } catch(Exception e){
             System.out.println(e);
         }    

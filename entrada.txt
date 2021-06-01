@@ -20,18 +20,20 @@ variable x is integer;
 
 function pepe (a is float) return integer
     begin
-        variable b is boolean;
+        #salamin(1);
+        variable m is boolean;
             if b == false and a > 10 then
                 a=-2*a
                 else
-                    write(a+a);
+                    write("bugg");
     end;
 
-function salamin() return boolean
+function salamin(z is integer) return float
     begin
         write("hola");
     end;
-
+variable t is float;
+variable b is boolean=false;
 
 main is
 {
@@ -40,8 +42,6 @@ main is
 #x = x + x; no se puede sumar entre tipos bool
 #pepe(b); tipo de parametro incorrecto
 variable b is boolean=true;}
-variable fg is integer;
-variable g is integer= 10/2;
 {
 variable f is float= 0.45;
 f = read_float();
@@ -66,7 +66,12 @@ for g from 1 to 5 do
     end;
 variable x is float = 1 + pepe(2);}
 {
-when g is < fg then g=1;
 prueba_Funciones(g);}
-if g == 10 then g=1 else g=0;
+variable g is integer= 10/2;
+variable fg is integer;
+variable zz is boolean=false;
+when g
+    is < fg then g=1
+    #is == zz then g=23
+    else zz =true;
 end.

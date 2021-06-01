@@ -415,9 +415,28 @@ comparacion_is::= IS comparador:c expresion:e THEN instruccion:i{:
             RESULT= new WhenIs(c,e,bloque);
         :};
 
-
 comparador::= MENOR {:
             RESULT= Comparador.MENOR;
+        :};
+
+comparador::= MENOR_IGUAL {:
+            RESULT= Comparador.MENORIGUAL;
+        :};
+
+comparador::= MAYOR {:
+            RESULT= Comparador.MAYOR;
+        :};
+
+comparador::= MAYOR_IGUAL {:
+            RESULT= Comparador.MAYORIGUAL;
+        :};
+
+comparador::= IGUAL_IGUAL {:
+            RESULT= Comparador.IGUALIGUAL;
+        :};
+
+comparador::= DISTINTO {:
+            RESULT= Comparador.DISTINTO;
         :};
 
 // if una instruccion sin; + else una instruccion con ; al final(lo agrega la sentencia que engloba al if)

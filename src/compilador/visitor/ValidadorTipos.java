@@ -19,6 +19,7 @@ public class ValidadorTipos extends Transformer{
     private Alcance alcance_actual; //bloque actual, si no esta aca, busco en el padre hasta llegar a null
     private Tipo tipoRetorno;   //tipo de retorno de una funcion
     private boolean masFunciones = true;    //flag que indica si es posible que vengan mas declaraciones de funciones
+    private boolean hayInvocaciones = false;
 
     //inicio de ejecucion del validador de tipos
     public Programa procesar(Programa programa) throws ExcepcionDeTipos{
@@ -51,6 +52,38 @@ public class ValidadorTipos extends Transformer{
             throw new ExcepcionDeTipos(String.format("El resultado de una condicion debe ser BOOL, y es %1$s", aWhile.getCondicion().getTipo()));
         }
         return aWhile;
+    }
+
+    @Override
+    public When transform(When aWhen) throws ExcepcionDeTipos {
+        super.transform(aWhen);
+        for (WhenIs whenIs: aWhen.getWhenIs()){
+            if(whenIs.getComparador() == Comparador.MENOR){
+                Menor menor = new Menor(aWhen.getExpresionBase(),whenIs.getExpresion());
+                this.transform(menor);
+            }
+            if(whenIs.getComparador() == Comparador.MAYOR){
+                Mayor mayor = new Mayor(aWhen.getExpresionBase(),whenIs.getExpresion());
+                this.transform(mayor);
+            }
+            if(whenIs.getComparador() == Comparador.MENORIGUAL){
+                MenorIgual menorIgual = new MenorIgual(aWhen.getExpresionBase(),whenIs.getExpresion());
+                this.transform(menorIgual);
+            }
+            if(whenIs.getComparador() == Comparador.MAYORIGUAL){
+                MayorIgual mayorIgual = new MayorIgual(aWhen.getExpresionBase(),whenIs.getExpresion());
+                this.transform(mayorIgual);
+            }
+            if(whenIs.getComparador() == Comparador.IGUALIGUAL){
+                IgualIgual igualIgual = new IgualIgual(aWhen.getExpresionBase(),whenIs.getExpresion());
+                this.transform(igualIgual);
+            }
+            if(whenIs.getComparador() == Comparador.DISTINTO){
+                Distinto distinto = new Distinto(aWhen.getExpresionBase(),whenIs.getExpresion());
+                this.transform(distinto);
+            }
+        }
+        return aWhen;
     }
 
     private static Tipo tipo_comun(Tipo tipo_1, Tipo tipo_2) throws ExcepcionDeTipos{
@@ -311,6 +344,12 @@ public class ValidadorTipos extends Transformer{
 
     @Override
     public DeclaracionFuncion transform(DeclaracionFuncion declaracionFuncion) throws ExcepcionDeTipos {
+        /*
+        for(Sentencia sentencia :declaracionFuncion.getBloque().getSentencias()){
+            if(sentencia.getClass() == InvocacionFuncion.class){
+                hayInvocaciones=true;
+            }
+        }*/
         super.transform(declaracionFuncion);
         boolean hayReturn = false;
         for (Sentencia sentencia:declaracionFuncion.getBloque().getSentencias()){
@@ -339,7 +378,6 @@ public class ValidadorTipos extends Transformer{
     public InvocacionFuncion transform(InvocacionFuncion invocacionFuncion) throws ExcepcionDeTipos {
         super.transform(invocacionFuncion);
         invocacionFuncion.setTipo(invocacionFuncion.getIdentificador().getTipo());
-        System.out.println("tipo  de iv: " + invocacionFuncion.getTipo() );
         DeclaracionFuncion declaracionFuncion = (DeclaracionFuncion) alcance_actual.resolver(invocacionFuncion.getIdentificador().getNombre());
         int cont =0;
         for (Parametro parametro:declaracionFuncion.getParametros()){
@@ -389,14 +427,14 @@ public class ValidadorTipos extends Transformer{
             tipo = ((DeclaracionVariable) elemento).getTipo();
         }
         if(elemento instanceof DeclaracionFuncion){
-            if(masFunciones){
-                tipo = ((DeclaracionFuncion) elemento).getTipoRetorno();
-                tipoRetorno = identificador.getTipo();
-                alcance_actual = ((DeclaracionFuncion) elemento).getBloque().getAlcance();
-            } else {
-                tipo = ((DeclaracionFuncion) elemento).getTipoRetorno();
-                tipoRetorno = identificador.getTipo();
-            }
+                if(masFunciones){
+                    tipo = ((DeclaracionFuncion) elemento).getTipoRetorno();
+                    tipoRetorno = tipo;
+                    alcance_actual = ((DeclaracionFuncion) elemento).getBloque().getAlcance();
+                } else{ //invocaciones objetivo
+                    tipo = ((DeclaracionFuncion) elemento).getTipoRetorno();
+                    tipoRetorno = identificador.getTipo();
+                }
         }
         if(elemento instanceof Parametro){
             tipo = ((Parametro) elemento).getTipo();
