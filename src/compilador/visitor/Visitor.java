@@ -55,7 +55,7 @@ public abstract class Visitor<T> {
         return procesarNodo(read);
     }
 
-    public T visit(Identificador i) {
+    public T visit(Identificador i) throws ExcepcionDeAlcance {
         return procesarNodo(i); //identificador no tiene ningun nodo como atributo, tonce lo imprimo xq es un nodo hoja
     }
 

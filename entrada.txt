@@ -3,7 +3,7 @@
 #variable a is float = 1 + pepe();  esto genera un error, dado que no se puede invocar funciones en el ambito global "aclarado por german"
 #variable cd is float = 1 + 1 / random();  esto genera un error, dado que no se puede invocar funciones en el ambito global "aclarado por german"
 {variable d is boolean;
-
+variable x is integer=j;
 function prueba_Funciones (c is integer, j is boolean=false) return float
     begin
         #variable x is integer;
@@ -14,10 +14,7 @@ function prueba_Funciones (c is integer, j is boolean=false) return float
             end;
         return c; # se convierte c de integer a float para que coincida con el tipo de retorno de la funcion
     end;
-
-variable x is integer;
 }
-
 function pepe (a is float) return integer
     begin
         #salamin(1);
@@ -67,11 +64,13 @@ for g from 1 to 5 do
 variable x is float = 1 + pepe(2);}
 {
 prueba_Funciones(g);}
-variable g is integer= 10/2;
+variable j is integer;
+variable g is integer= 10 / fg;
 variable fg is integer;
 variable zz is boolean=false;
 when g
     is < fg then g=1
     #is == zz then g=23
     else zz =true;
+
 end.

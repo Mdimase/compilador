@@ -9,6 +9,7 @@ import compilador.ast.base.*;
 import compilador.ast.instrucciones.*;
 import compilador.ast.operaciones.binarias.OperacionBinaria;
 
+import javax.print.attribute.standard.Fidelity;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
@@ -104,14 +105,28 @@ public class GeneradorAlcances extends Visitor<Void> {
         if(alcance_actual == alcance_global){
             return null;
         }
-        super.visit(dv);    // invoco al visit(declaracionVariable) de Visitor para recorrer la posible expresion de la declaracion
+        super.visit(dv);
         Variable var = new Variable(dv);    // var : declaracionVariable
         Object result = this.agregarSimbolo(var.getDeclaracion().getId().getNombre(), dv);
         if(result!=null){   //repetido
             throw new ExcepcionDeAlcance(String.format("El nombre de la variable %1$s de tipo %2$s fue utilizado previamente\"]\n",
                     dv.getId().getNombre(), dv.getTipo() ));
         }
+        /*
+        if(dv.getExpresion().getClass() == Identificador.class){
+            if (!estaDeclarado((Identificador) dv.getExpresion())){
+                throw new ExcepcionDeAlcance(String.format("%1$s NO esta declarado previamente\"]\n",dv.getExpresion().getNombre()));
+            }
+        }*/
         return null;
+    }
+
+    public boolean estaDeclarado(Identificador identificador){
+        boolean esta=true;
+        if(alcance_actual.resolver(identificador.getNombre()) == null){
+            esta=false;
+        }
+        return esta;
     }
 
     @Override

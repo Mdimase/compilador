@@ -79,46 +79,52 @@ graph G {1 [label="Programa"]
 1 -- 40
 41 [label="DeclaracionVariable"]
 40 -- 41
-42 [label="Ident g INTEGER"]
+42 [label="Ident j INTEGER"]
 41 -- 42
-43 [label="/ UNKNOWN"]
+43 [label="Const 0 INTEGER"]
 41 -- 43
-44 [label="Const 10 INTEGER"]
-43 -- 44
-45 [label="Const 2 INTEGER"]
-43 -- 45
-46 [label="DeclaracionVariable"]
-40 -- 46
-47 [label="Ident fg INTEGER"]
+44 [label="DeclaracionVariable"]
+40 -- 44
+45 [label="Ident g INTEGER"]
+44 -- 45
+46 [label="/ UNKNOWN"]
+44 -- 46
+47 [label="Const 10 INTEGER"]
 46 -- 47
-48 [label="Const 0 INTEGER"]
+48 [label="Ident fg UNKNOWN"]
 46 -- 48
 49 [label="DeclaracionVariable"]
 40 -- 49
-50 [label="Ident zz BOOL"]
+50 [label="Ident fg INTEGER"]
 49 -- 50
-51 [label="Const false BOOL"]
+51 [label="Const 0 INTEGER"]
 49 -- 51
-52 [label="When/else"]
+52 [label="DeclaracionVariable"]
 40 -- 52
-53 [label="Ident g UNKNOWN"]
+53 [label="Ident zz BOOL"]
 52 -- 53
-54 [label="Ident fg UNKNOWN"]
+54 [label="Const false BOOL"]
 52 -- 54
-55 [label="WhenIs"]
-52 -- 55
-56 [label="="]
+55 [label="When/else"]
+40 -- 55
+56 [label="Ident g UNKNOWN"]
 55 -- 56
-57 [label="Ident g UNKNOWN"]
-56 -- 57
-58 [label="Const 1 INTEGER"]
-56 -- 58
-59 [label="WhenElse"]
-52 -- 59
-60 [label="="]
+57 [label="Ident fg UNKNOWN"]
+55 -- 57
+58 [label="WhenIs"]
+55 -- 58
+59 [label="="]
+58 -- 59
+60 [label="Ident g UNKNOWN"]
 59 -- 60
-61 [label="Ident zz UNKNOWN"]
-60 -- 61
-62 [label="Const true BOOL"]
-60 -- 62
+61 [label="Const 1 INTEGER"]
+59 -- 61
+62 [label="WhenElse"]
+55 -- 62
+63 [label="="]
+62 -- 63
+64 [label="Ident zz UNKNOWN"]
+63 -- 64
+65 [label="Const true BOOL"]
+63 -- 65
 }

@@ -30,7 +30,7 @@ public class Identificador extends Expresion{
     }
     
     @Override
-    public <T> T accept(Visitor<T> v) {
+    public <T> T accept(Visitor<T> v) throws ExcepcionDeAlcance {
         return v.visit(this);   //invoca el visit(identificador) en visitor o el visit(identificador) de cualquier subclase de Visitor, va a depender de <T>
     }
 
