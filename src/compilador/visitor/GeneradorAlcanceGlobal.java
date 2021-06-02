@@ -23,6 +23,15 @@ public class GeneradorAlcanceGlobal extends Visitor<Void>{
         this.alcance_global =  bloque.getAlcance();
     }
 
+    public boolean estaDeclarado(Identificador identificador){
+        boolean esta=true;
+        Object elemento = alcance_global.resolver(identificador.getNombre());
+        if(elemento == null || elemento instanceof DeclaracionFuncion){
+            esta=false;
+        }
+        return esta;
+    }
+
     // agregarSimbolo(nombre variable, declaracion)
     private Object agregarSimbolo(String nombre, Object s) throws ExcepcionDeAlcance {
         if(alcance_global.resolver(nombre) != null){    //retorna el repetido, si no esta -> null
@@ -55,12 +64,20 @@ public class GeneradorAlcanceGlobal extends Visitor<Void>{
 
     @Override
     public Void visit(DeclaracionVariable dv) throws ExcepcionDeAlcance{
-        super.visit(dv);    // invoco al visit(declaracionVariable) de Visitor para recorrer la posible expresion de la declaracion
-        Variable var = new Variable(dv);    // var : declaracionVariable
+        Variable var = new Variable(dv);
         Object result = this.agregarSimbolo(var.getDeclaracion().getId().getNombre(), dv);
         if(result!=null){   //repetido
             throw new ExcepcionDeAlcance(String.format("El nombre de la variable %1$s de tipo %2$s fue utilizado previamente\"]\n",
                     dv.getId().getNombre(), dv.getTipo() ));
+        }
+        super.visit(dv);
+        return null;
+    }
+
+    @Override
+    public Void visit(Identificador identificador) throws ExcepcionDeAlcance {
+        if(!estaDeclarado(identificador)){
+            throw new ExcepcionDeAlcance(String.format("%1$s NO esta declarado previamente\"]\n",identificador.getNombre()));
         }
         return null;
     }

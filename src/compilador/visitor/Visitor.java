@@ -147,14 +147,15 @@ public abstract class Visitor<T> {
 
     public T visit(DeclaracionFuncion declaracionFuncion) throws ExcepcionDeAlcance {
         T id = declaracionFuncion.getIdentificador().accept(this);
-        T bloque = declaracionFuncion.getBloque().accept(this);
         if(declaracionFuncion.getParametros().isEmpty()){
+            T bloque = declaracionFuncion.getBloque().accept(this);
             return procesarDeclaracionFuncion(declaracionFuncion,id,bloque);
         } else{
             ArrayList<T> parametros = new ArrayList<>();
             for (Parametro parametro : declaracionFuncion.getParametros()){
                 parametros.add(parametro.accept(this));
             }
+            T bloque = declaracionFuncion.getBloque().accept(this);
             return procesarDeclaracionFuncion(declaracionFuncion,id,parametros,bloque);
         }
     }

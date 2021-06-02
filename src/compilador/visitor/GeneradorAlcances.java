@@ -105,28 +105,31 @@ public class GeneradorAlcances extends Visitor<Void> {
         if(alcance_actual == alcance_global){
             return null;
         }
-        super.visit(dv);
         Variable var = new Variable(dv);    // var : declaracionVariable
         Object result = this.agregarSimbolo(var.getDeclaracion().getId().getNombre(), dv);
         if(result!=null){   //repetido
             throw new ExcepcionDeAlcance(String.format("El nombre de la variable %1$s de tipo %2$s fue utilizado previamente\"]\n",
                     dv.getId().getNombre(), dv.getTipo() ));
         }
-        /*
-        if(dv.getExpresion().getClass() == Identificador.class){
-            if (!estaDeclarado((Identificador) dv.getExpresion())){
-                throw new ExcepcionDeAlcance(String.format("%1$s NO esta declarado previamente\"]\n",dv.getExpresion().getNombre()));
-            }
-        }*/
+        super.visit(dv);
         return null;
     }
 
     public boolean estaDeclarado(Identificador identificador){
         boolean esta=true;
-        if(alcance_actual.resolver(identificador.getNombre()) == null){
+        Object elemento = alcance_actual.resolver(identificador.getNombre());
+        if(elemento == null){
             esta=false;
         }
         return esta;
+    }
+
+    @Override
+    public Void visit(Identificador identificador) throws ExcepcionDeAlcance {
+        if(!estaDeclarado(identificador)){
+            throw new ExcepcionDeAlcance(String.format("%1$s NO esta declarado previamente\"]\n",identificador.getNombre()));
+        }
+        return null;
     }
 
     @Override

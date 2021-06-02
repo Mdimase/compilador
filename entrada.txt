@@ -2,7 +2,7 @@
 
 #variable a is float = 1 + pepe();  esto genera un error, dado que no se puede invocar funciones en el ambito global "aclarado por german"
 #variable cd is float = 1 + 1 / random();  esto genera un error, dado que no se puede invocar funciones en el ambito global "aclarado por german"
-#variable d is boolean;
+variable d is float;
 {
 function prueba_Funciones (c is integer, j is boolean=false) return float
     begin
@@ -19,20 +19,20 @@ function prueba_Funciones (c is integer, j is boolean=false) return float
 function pepe (a is float) return integer
     begin
         salamin(a);
-        salamin(a);
-        variable m is boolean;
-            if b == false and a > 10 then
-                salamin(a)
-                else
-                    write(6);
+        variable aux is integer= t + a;
+            if b == false then
+                write(4)
+            else
+                salamin(a);
     end;
 
 function salamin(z is integer) return float
     begin
         write("hola");
     end;
-variable t is float;
-variable b is boolean=false;
+variable t is float=2+6*d;
+variable l is boolean=true;
+variable b is boolean=l;
 
 main is
 {
@@ -66,12 +66,13 @@ variable x is float = 1 + pepe(2);}
 {
 prueba_Funciones(g);}
 variable j is integer;
-variable g is integer= 10 / fg;
 variable fg is integer;
+variable g is integer= 10 / fg;
 variable zz is boolean=false;
 when g
     is < fg then g=1
     #is == zz then g=23
     else zz =true;
 g =salamin(g);
+if j > 23 then l = true;
 end.
