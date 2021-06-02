@@ -376,6 +376,7 @@ public class ValidadorTipos extends Transformer{
 
     @Override
     public InvocacionFuncion transform(InvocacionFuncion invocacionFuncion) throws ExcepcionDeTipos {
+        hayInvocaciones=true;
         super.transform(invocacionFuncion);
         invocacionFuncion.setTipo(invocacionFuncion.getIdentificador().getTipo());
         DeclaracionFuncion declaracionFuncion = (DeclaracionFuncion) alcance_actual.resolver(invocacionFuncion.getIdentificador().getNombre());
@@ -427,13 +428,14 @@ public class ValidadorTipos extends Transformer{
             tipo = ((DeclaracionVariable) elemento).getTipo();
         }
         if(elemento instanceof DeclaracionFuncion){
-                if(masFunciones){
+                if(masFunciones && !hayInvocaciones){
                     tipo = ((DeclaracionFuncion) elemento).getTipoRetorno();
                     tipoRetorno = tipo;
                     alcance_actual = ((DeclaracionFuncion) elemento).getBloque().getAlcance();
                 } else{ //invocaciones objetivo
                     tipo = ((DeclaracionFuncion) elemento).getTipoRetorno();
-                    tipoRetorno = identificador.getTipo();
+                    //tipoRetorno = tipo;
+                    hayInvocaciones=false;
                 }
         }
         if(elemento instanceof Parametro){
