@@ -270,29 +270,39 @@ for::= FOR IDENTIFICADOR:id FROM INTEGER_LITERAL:f TO INTEGER_LITERAL:t BY INTEG
             Bloque bloque = new Bloque(aux,"FOR",false);
             RESULT= new For(identificador,from,to,by,bloque);
 */
-            //FOR -> WHILE esta bien aca, no me grafica BLOQUE en el while interno
+
             List<Sentencia> cuerpoFor = new ArrayList<Sentencia>(); //lista de sentencias del bloque principal
             Expresion from = new Constante(f, Tipo.INTEGER);    //constante from
             Identificador identificador = new Identificador(id);    //identificador
             Sentencia as = new Asignacion(identificador,from);  //primera asignacion id=f;
             cuerpoFor.add(as);  //agrego esa sentencia al bloque principal
-
             List<Sentencia> aux = new ArrayList<Sentencia>();   //lista de sentencias del bloque while interno
             aux.add(i); //agrego todas las sentencias que eran del for original
             Expresion by = new Constante(b, Tipo.INTEGER);  //constante by
-            Expresion exp = new Suma(identificador,by); //expresion usada en la asignacion id+by;
-            Sentencia asig = new Asignacion(identificador,exp); // asignacion id=id+by;
-            aux.add(asig);  //agrego la asignacion a la lista de sentencias del bloque while interno
-
             Expresion to = new Constante(t,Tipo.INTEGER);   //constante to
-            Expresion condicion = new MenorIgual(identificador,to); //condicion del while interno
 
-            Bloque bloque = new Bloque(aux,"BLOQUE",false);  //bloque de sentencias del while interno
+            if (Integer.valueOf(f) < Integer.valueOf(t)){
+                Expresion exp = new Suma(identificador,by); //expresion usada en la asignacion id+by;
+                Sentencia asig = new Asignacion(identificador,exp); // asignacion id=id+by;
+                aux.add(asig);  //agrego la asignacion a la lista de sentencias del bloque while interno
+                Expresion condicion = new MenorIgual(identificador,to); //condicion del while interno
 
-            While w = new While("WHILE",condicion,bloque);  // while interno completo
-            cuerpoFor.add(w);   //agrego el while completo a la lista de sentencias del cuerpo de mi for original
+                Bloque bloque = new Bloque(aux,"BLOQUEAUX",false);  //bloque de sentencias del while interno
+
+                While w = new While("WHILE",condicion,bloque);  // while interno completo
+                cuerpoFor.add(w);   //agrego el while completo a la lista de sentencias del cuerpo de mi for original
+            } else {
+                Expresion exp = new Resta(identificador,by); //expresion usada en la asignacion id+by;
+                Sentencia asig = new Asignacion(identificador,exp); // asignacion id=id+by;
+                aux.add(asig);  //agrego la asignacion a la lista de sentencias del bloque while interno
+                Expresion condicion = new MenorIgual(to,identificador); //condicion del while interno
+
+                Bloque bloque = new Bloque(aux,"BLOQUE",false);  //bloque de sentencias del while interno
+
+                While w = new While("WHILE",condicion,bloque);  // while interno completo
+                cuerpoFor.add(w);   //agrego el while completo a la lista de sentencias del cuerpo de mi for original
+            }
             RESULT = new Bloque (cuerpoFor,"FOR->WHILE",false);
-
         :};
 
 for::= FOR IDENTIFICADOR:id FROM INTEGER_LITERAL:f TO INTEGER_LITERAL:t DO instruccion:i{:
@@ -306,7 +316,7 @@ for::= FOR IDENTIFICADOR:id FROM INTEGER_LITERAL:f TO INTEGER_LITERAL:t DO instr
             Bloque bloque = new Bloque(aux,"FOR",false);
             RESULT= new For(identificador,from,to,by,bloque);
 */
-            //FOR -> WHILE esta bien aca, no me grafica BLOQUE en el while interno
+
             List<Sentencia> cuerpoFor = new ArrayList<Sentencia>(); //lista de sentencias del bloque principal
             Expresion from = new Constante(f, Tipo.INTEGER);    //constante from
             Identificador identificador = new Identificador(id);    //identificador
@@ -316,19 +326,31 @@ for::= FOR IDENTIFICADOR:id FROM INTEGER_LITERAL:f TO INTEGER_LITERAL:t DO instr
             List<Sentencia> aux = new ArrayList<Sentencia>();   //lista de sentencias del bloque while interno
             aux.add(i); //agrego todas las sentencias que eran del for original
             Expresion by = new Constante(String.valueOf(1), Tipo.INTEGER);  //constante by
-            Expresion exp = new Suma(identificador,by); //expresion usada en la asignacion id+by;
-            Sentencia asig = new Asignacion(identificador,exp); // asignacion id=id+by;
-            aux.add(asig);  //agrego la asignacion a la lista de sentencias del bloque while interno
-
             Expresion to = new Constante(t,Tipo.INTEGER);   //constante to
-            Expresion condicion = new MenorIgual(identificador,to); //condicion del while interno
 
-            Bloque bloque = new Bloque(aux,"BLOQUE",false);  //bloque de sentencias del while interno
+            if (Integer.valueOf(f) < Integer.valueOf(t)){
+                Expresion exp = new Suma(identificador,by); //expresion usada en la asignacion id+by;
+                Sentencia asig = new Asignacion(identificador,exp); // asignacion id=id+by;
+                aux.add(asig);  //agrego la asignacion a la lista de sentencias del bloque while interno
+                Expresion condicion = new MenorIgual(identificador,to); //condicion del while interno
 
-            While w = new While("WHILE",condicion,bloque);  // while interno completo
-            cuerpoFor.add(w);   //agrego el while completo a la lista de sentencias del cuerpo de mi for original
-            RESULT = new Bloque (cuerpoFor,"BLOQUE_FOR to WHILE",false);
+                Bloque bloque = new Bloque(aux,"BLOQUEAUX",false);  //bloque de sentencias del while interno
 
+                While w = new While("WHILE",condicion,bloque);  // while interno completo
+                cuerpoFor.add(w);   //agrego el while completo a la lista de sentencias del cuerpo de mi for original
+            } else {
+                    Expresion exp = new Resta(identificador,by); //expresion usada en la asignacion id+by;
+                    Sentencia asig = new Asignacion(identificador,exp); // asignacion id=id+by;
+                    aux.add(asig);  //agrego la asignacion a la lista de sentencias del bloque while interno
+                    Expresion condicion = new MenorIgual(to,identificador); //condicion del while interno
+
+                    Bloque bloque = new Bloque(aux,"BLOQUE",false);  //bloque de sentencias del while interno
+
+                    While w = new While("WHILE",condicion,bloque);  // while interno completo
+                    cuerpoFor.add(w);   //agrego el while completo a la lista de sentencias del cuerpo de mi for original
+            }
+
+            RESULT = new Bloque (cuerpoFor,"FOR->WHILE",false);
         :};
 
 // falla en una expresion

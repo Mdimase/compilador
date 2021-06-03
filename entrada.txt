@@ -35,6 +35,7 @@ function salamin(z is integer) return float
                 writeln(z);
                 z=z+1;
             end;
+            # como no tiene un return, le agregamos uno implicitamente que retorna un valor por defecto segun el tipo de retorno de la funcion.
     end;
 
 #variable t is float=2+3.56/p; dispara un error dado que p en este punto todavia no esta declarado
@@ -43,6 +44,7 @@ variable p is integer = 1;
 variable b is boolean;
 
 main is
+
 variable x is integer;
 #x =  not x; no se puede hacer un not integer
 #g = g and g; no se puede hacer un and entre aritmeticos y ademas, g todavia no esta declarada
@@ -68,9 +70,14 @@ if g==1 and b!= false then
     end;
 
 # tranforma el for a su while equivalente
-for g from 1 to 5 do
+for g from 6 to 1 by 2 do
     begin
         write(g);
+    end;
+
+while 2 == 3 do
+    begin
+        write(5);
     end;
 variable inv is float = 1 + pepe(2);
 
@@ -82,5 +89,5 @@ when g
     is < fg then g=1
     #is == zz then g=23
     else zz =true;
-g =salamin(g);
+#g =salamin(g);
 end.

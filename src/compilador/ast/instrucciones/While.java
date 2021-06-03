@@ -21,6 +21,11 @@ public class While extends Sentencia{
         super(nombre);
         this.condicion = condicion;
         this.bloque = new Bloque(bloque.initSentencia(bloque),"BLOQUE_WHILE",false);
+        if(bloque.getSentencias().size() > 1){ //bloque es el del parametro(no el atributo), ademas solamente tendra mas de una sentencia en caso de la tranformacion
+            Asignacion asignacion = (Asignacion) bloque.getSentencias().get(1); //esto ocurre solamente cuando instancio la transformacion de for a while
+            this.bloque.getSentencias().add(asignacion);
+        }
+
     }
 
     public Expresion getCondicion() {
