@@ -1,12 +1,15 @@
 ## Testeando compilador de Dimase Matias e Isea Maximiliano ##
 
-#variable a is float = 1 + pepe();  esto genera un error, dado que no se puede invocar funciones en el ambito global "aclarado por german"
+#variable a is float = 1 + pepe();  #esto genera un error, dado que no se puede invocar funciones en el ambito global "aclarado por german"
 #variable cd is float = 1 + 1 / random();  esto genera un error, dado que no se puede invocar funciones en el ambito global "aclarado por german"
-variable d is float;
-{
+variable d is boolean = not false;
+variable hj is integer = 1.023;
+# si invocara un parametro con nombre d,t, o cualquier otra variable declarada en el ambito global dispara una excepcion de nombre repetidos
+
 function prueba_Funciones (c is integer, j is boolean=false) return float
     begin
-        #variable x is integer;
+        #puedo declarar variables locales a la funcion, siempre y cuando no pisen algun nombre de variables globales
+        variable x is integer;
         if j == true then
             begin
                 c=c+5;
@@ -14,13 +17,12 @@ function prueba_Funciones (c is integer, j is boolean=false) return float
             end;
         return c; # se convierte c de integer a float para que coincida con el tipo de retorno de la funcion
     end;
-}
 
 function pepe (a is float) return integer
     begin
         salamin(a);
-        variable aux is integer= t + a;
-            if b == false then
+        variable aux is integer= -p / a + salamin(prueba_Funciones(a)); # en esta invocacion ocurren varias conversiones de tipos
+            if b == false and aux < 10 then
                 write(4)
             else
                 salamin(a);
@@ -28,33 +30,41 @@ function pepe (a is float) return integer
 
 function salamin(z is integer) return float
     begin
-        write("hola");
+        while z < 12 do # las condiciones siempre evaluan que su resultado sea un bool
+            begin
+                writeln(z);
+                z=z+1;
+            end;
     end;
-variable t is float=2+6*d;
+
+#variable t is float=2+3.56/p; dispara un error dado que p en este punto todavia no esta declarado
 variable l is boolean=true;
-variable b is boolean=l;
+variable p is integer = 1;
+variable b is boolean;
 
 main is
-{
+variable x is integer;
 #x =  not x; no se puede hacer un not integer
-#g = g and g; no se puede hacer un and entre aritmeticos
-#x = x + x; no se puede sumar entre tipos bool
-variable b is boolean=true;}
-{
+#g = g and g; no se puede hacer un and entre aritmeticos y ademas, g todavia no esta declarada
+#l = l + l; no se puede sumar entre tipos bool
+#variable b is boolean=true;    # b ya esta declarada en global, no puede pisar su nombre
+
 variable f is float= 0.45;
 f = read_float();
-
+variable fg is integer;
+variable g is integer= 10 / fg;
 if g==1 and b!= false then
     begin
-        while fg<12 do
+        while fg<pepe(f) do
             begin
-                #variable x is boolean; no puede pisar la x ya declarada en main
+                #variable x is boolean; no puede pisar la x ya declarada
                 variable lk is float;
                 writeln(37.5 / prueba_Funciones(pepe(f)));
                 fg=fg+1;
             end;
         #if 2+2 then b=false; #error porque la condicion no es booleana
-        if fg == 12 then writeln("funciono bien");
+        if fg == 12 then
+            writeln("funciono bien");
     end;
 
 # tranforma el for a su while equivalente
@@ -62,17 +72,15 @@ for g from 1 to 5 do
     begin
         write(g);
     end;
-variable x is float = 1 + pepe(2);}
-{
-prueba_Funciones(g);}
+variable inv is float = 1 + pepe(2);
+
+prueba_Funciones(g);
 variable j is integer;
-variable fg is integer;
-variable g is integer= 10 / fg;
+
 variable zz is boolean=false;
 when g
     is < fg then g=1
     #is == zz then g=23
     else zz =true;
 g =salamin(g);
-if j > 23 then l = true;
 end.

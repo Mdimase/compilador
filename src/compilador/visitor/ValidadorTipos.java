@@ -316,20 +316,23 @@ public class ValidadorTipos extends Transformer{
     @Override
     public FlotanteAEntero transform(FlotanteAEntero fae) throws ExcepcionDeTipos {
         FlotanteAEntero nueva_op = super.transform(fae);
-        nueva_op = (FlotanteAEntero) transformarOperacionUnaria(nueva_op);
+        //nueva_op = (FlotanteAEntero) transformarOperacionUnaria(nueva_op);
         return nueva_op;
     }
 
     @Override
     public EnteroAFlotante transform(EnteroAFlotante eaf) throws ExcepcionDeTipos {
         EnteroAFlotante nueva_op = super.transform(eaf);
-        nueva_op = (EnteroAFlotante) transformarOperacionUnaria(nueva_op);
+        //nueva_op = (EnteroAFlotante) transformarOperacionUnaria(nueva_op);
         return nueva_op;
     }
 
     @Override
     public DeclaracionVariable transform(DeclaracionVariable declaracionVariable) throws ExcepcionDeTipos {
         super.transform(declaracionVariable);
+        if(declaracionVariable.getExpresion().getClass() == FlotanteAEntero.class || declaracionVariable.getExpresion().getClass() == EnteroAFlotante.class){
+            return declaracionVariable;
+        }
         if(declaracionVariable.getId().getTipo() != declaracionVariable.getExpresion().getTipo()){
             if(declaracionVariable.getId().getTipo() != Tipo.BOOL && declaracionVariable.getExpresion().getTipo() != Tipo.BOOL){ //convierto los numericos
                 Tipo destino = declaracionVariable.getId().getTipo();
@@ -344,12 +347,6 @@ public class ValidadorTipos extends Transformer{
 
     @Override
     public DeclaracionFuncion transform(DeclaracionFuncion declaracionFuncion) throws ExcepcionDeTipos {
-        /*
-        for(Sentencia sentencia :declaracionFuncion.getBloque().getSentencias()){
-            if(sentencia.getClass() == InvocacionFuncion.class){
-                hayInvocaciones=true;
-            }
-        }*/
         super.transform(declaracionFuncion);
         boolean hayReturn = false;
         for (Sentencia sentencia:declaracionFuncion.getBloque().getSentencias()){

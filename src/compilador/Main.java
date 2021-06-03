@@ -28,6 +28,7 @@ public class Main {
             Runtime.getRuntime().exec(cmd); //genero archivos dot y png
             GeneradorAlcanceGlobal gb = new GeneradorAlcanceGlobal();
             gb.procesar(programa);
+            System.out.println("Alcance global procesado");
             GeneradorAlcances ga = new GeneradorAlcances(gb.getAlcance_global());
             ga.procesar(programa);
             System.out.println("Alcances procesados");
