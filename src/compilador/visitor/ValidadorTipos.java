@@ -13,7 +13,6 @@ import compilador.ast.operaciones.unarias.*;
 import java.util.Collections;
 import java.util.List;
 
-
 public class ValidadorTipos extends Transformer{
 
     private Alcance alcance_actual; //bloque actual, si no esta aca, busco en el padre hasta llegar a null
@@ -366,7 +365,6 @@ public class ValidadorTipos extends Transformer{
                 r = new Return(new Constante("0.0",Tipo.FLOAT));
             }
             declaracionFuncion.getBloque().getSentencias().add(r);
-            System.out.println("Tipo r: " + r.getExpresion().getTipo());
         }
         return declaracionFuncion;
     }
@@ -413,7 +411,6 @@ public class ValidadorTipos extends Transformer{
                         String.format("Tipo de retorno %1$s incompatible %2$s\n",aReturn.getExpresion().getTipo(), tipoRetorno));
             }
         }
-        //System.out.println("return: " + aReturn.getExpresion().getTipo());
         return aReturn;
     }
 
@@ -440,8 +437,6 @@ public class ValidadorTipos extends Transformer{
         }
         if (tipo != Tipo.UNKNOWN){  //se encontro y modifico el tipo, ahora es de lo encontrado
             identificador.setTipo(tipo);
-            System.out.println(identificador.getNombre());
-            System.out.println(identificador.getTipo());
             return identificador;
         }
         throw new ExcepcionDeTipos(String.format("No se declaró el nombre %1$s\n", identificador.getNombre()));

@@ -5,10 +5,6 @@
  */
 package compilador.ast.base;
 
-/**
- *
- * @author ITT
- */
 public class ExcepcionDeTipos extends Exception{
     
     public ExcepcionDeTipos(String mensaje){

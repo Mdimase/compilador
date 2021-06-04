@@ -9,10 +9,6 @@ import compilador.ast.instrucciones.DeclaracionVariable;
 import compilador.visitor.Transformer;
 import compilador.visitor.Visitor;
 
-/**
- *
- * @author ITT
- */
 public class Variable extends Expresion{
     
     private DeclaracionVariable declaracion;

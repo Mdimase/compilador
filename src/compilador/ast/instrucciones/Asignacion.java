@@ -12,10 +12,6 @@ import compilador.ast.base.Identificador;
 import compilador.visitor.Transformer;
 import compilador.visitor.Visitor;
 
-/**
- *
- * @author ITT
- */
 public class Asignacion extends Sentencia{
     
     private Identificador identificador;    //nombre y tipo de la variable a la que le quiero asignar una expresion

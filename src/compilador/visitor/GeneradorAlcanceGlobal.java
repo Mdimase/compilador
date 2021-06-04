@@ -32,7 +32,7 @@ public class GeneradorAlcanceGlobal extends Visitor<Void>{
         return esta;
     }
 
-    // agregarSimbolo(nombre variable, declaracion)
+    // agregarSimbolo(nombre , declaracion)
     private Object agregarSimbolo(String nombre, Object s) throws ExcepcionDeAlcance {
         if(alcance_global.resolver(nombre) != null){    //retorna el repetido, si no esta -> null
             throw new ExcepcionDeAlcance(String.format("El nombre de %2$s %1$s fue utilizado previamente\"]\n",nombre,s.getClass().getSimpleName()));

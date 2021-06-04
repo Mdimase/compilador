@@ -10,10 +10,6 @@ import compilador.visitor.Transformer;
 import compilador.visitor.Visitor;
 import java.util.List;
 
-/**
- *
- * @author ITT
- */
 public class Bloque extends Sentencia{
     
     private Alcance alcance;    //alcance del bloque
@@ -22,12 +18,12 @@ public class Bloque extends Sentencia{
 
 
     public Bloque(List<Sentencia> sentencias, String nombre) {
-        super(nombre);  // setter de nodo
+        super(nombre);
         this.sentencias = sentencias;
     }
     
     public Bloque(List<Sentencia> sentencias, String nombre, Alcance alcance) {
-        super(nombre);  //setter de nodo
+        super(nombre);
         this.alcance = alcance;
         this.sentencias = sentencias;
     }
@@ -80,7 +76,6 @@ public class Bloque extends Sentencia{
             Bloque aux = (Bloque) bloque.getSentencias().get(0);    //guardo dicho bloque de sentencias
             return aux.getSentencias();
         } else{
-            //System.out.println(bloque.getSentencias());
             return bloque.getSentencias();
         }
     }

@@ -4,6 +4,7 @@ import compilador.ast.instrucciones.Sentencia;
 import compilador.visitor.Transformer;
 import compilador.visitor.Visitor;
 
+// tuvimos que hacer que extienda de sentencia por problemas de tipos en el .cup
 public class Parametro extends Sentencia {
     private Tipo tipo;
     private Identificador identificador;

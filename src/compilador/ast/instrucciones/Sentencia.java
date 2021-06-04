@@ -7,10 +7,6 @@ package compilador.ast.instrucciones;
 
 import compilador.ast.base.Nodo;
 
-/**
- *
- * @author ITT
- */
 public abstract class Sentencia extends Nodo{
 
     public Sentencia() {

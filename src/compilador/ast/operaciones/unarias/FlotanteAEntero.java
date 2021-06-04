@@ -12,10 +12,6 @@ import compilador.ast.base.Tipo;
 import compilador.visitor.Transformer;
 import compilador.visitor.Visitor;
 
-/**
- *
- * @author ITT
- */
 public class FlotanteAEntero extends OperacionConversion{
 
     public FlotanteAEntero(Expresion expresion) {

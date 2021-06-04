@@ -5,10 +5,6 @@
  */
 package compilador.ast.base;
 
-/**
- *
- * @author ITT
- */
 public class ExcepcionDeAlcance extends Exception{
     
     public ExcepcionDeAlcance(String mensaje){

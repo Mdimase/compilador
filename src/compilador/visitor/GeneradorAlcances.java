@@ -50,10 +50,6 @@ public class GeneradorAlcances extends Visitor<Void> {
         if(bloque.getNombre().equals("DECLARACIONES")){
             alcance_actual = alcance_global;
             alcances.push(bloque);
-            System.out.println("bloque: " + bloque.getAlcance().getNombre());
-            System.out.println("actual: " + alcance_actual.getNombre());
-            System.out.println("padre: " + bloque.getAlcance().getPadre());
-            System.out.println("\n");
             super.visit(bloque);
             return null;
         }
@@ -67,26 +63,14 @@ public class GeneradorAlcances extends Visitor<Void> {
                 if(bloque.getNombre().equals("BLOQUE_ELSE")){
                     bloque.setAlcance(new Alcance(bloque.getNombre(),alcances.peek().getAlcance()));
                     alcance_actual = bloque.getAlcance();
-                    System.out.println("bloque: " + bloque.getAlcance().getNombre());
-                    System.out.println("actual: " + alcance_actual.getNombre());
-                    System.out.println("padre: " + bloque.getAlcance().getPadre().getNombre());
-                    System.out.println("\n");
                 } else {
                     bloque.setAlcance(alcance_actual);
                     alcance_actual = bloque.getAlcance();
                     bloqueF=true;   // seteo flag para que el proximo bloque no entre aca, ya que seran if o while. si no hay if o while internos, lo soluciona el flag en el pop()
-                    System.out.println("bloque: " + bloque.getAlcance().getNombre());
-                    System.out.println("actual: " + alcance_actual.getNombre());
-                    System.out.println("padre: " + bloque.getAlcance().getPadre().getNombre());
-                    System.out.println("\n");
                 }
             } else{
                 bloque.setAlcance(new Alcance(bloque.getNombre(),alcances.peek().getAlcance()));
                 alcance_actual = bloque.getAlcance();
-                    System.out.println("bloque: " + bloque.getAlcance().getNombre());
-                    System.out.println("actual: " + alcance_actual.getNombre());
-                    System.out.println("padre: " + bloque.getAlcance().getPadre().getNombre());
-                    System.out.println("\n");
                 }
             }
         alcances.push(bloque);

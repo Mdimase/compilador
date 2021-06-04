@@ -8,10 +8,6 @@ package compilador.ast.base;
 import compilador.visitor.Transformer;
 import compilador.visitor.Visitor;
 
-/**
- *
- * @author ITT
- */
 public class Identificador extends Expresion{
 
     //nombre es de nodo y tipo es de expresion

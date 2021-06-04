@@ -5,10 +5,6 @@
  */
 package compilador.ast.base;
 
-/**
- *
- * @author ITT
- */
 public enum Tipo {
     BOOL,
     INTEGER,

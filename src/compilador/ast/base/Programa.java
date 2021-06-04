@@ -12,10 +12,6 @@ import compilador.visitor.Visitor;
 import java.util.ArrayList;
 import java.util.List;
 
-    /**
- *
- * @author ITT
- */
 // raiz del AST
 public class Programa extends Nodo{
     private Bloque declaraciones; //declaraciones de funciones y variables

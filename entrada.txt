@@ -1,12 +1,10 @@
-## Testeando compilador de Dimase Matias e Isea Maximiliano ##
-
 #variable a is float = 1 + pepe();  #esto genera un error, dado que no se puede invocar funciones en el ambito global "aclarado por german"
 #variable cd is float = 1 + 1 / random();  esto genera un error, dado que no se puede invocar funciones en el ambito global "aclarado por german"
 variable d is boolean = not false;
 variable hj is integer = 1.023;
 # si invocara un parametro con nombre d,t, o cualquier otra variable declarada en el ambito global dispara una excepcion de nombre repetidos
 
-function prueba_Funciones (c is integer, j is boolean=false) return float
+function prueba_Funciones (c is integer, j is boolean=false) return float #a partir de la variable j, los demas parametros deben ser con valor por defecto, caso contrario, da error
     begin
         #puedo declarar variables locales a la funcion, siempre y cuando no pisen algun nombre de variables globales
         variable x is integer;
@@ -46,6 +44,8 @@ variable b is boolean;
 main is
 
 variable x is integer;
+variable mj is float = .9999;
+variable mk is float = 99.;
 #x =  not x; no se puede hacer un not integer
 #g = g and g; no se puede hacer un and entre aritmeticos y ademas, g todavia no esta declarada
 #l = l + l; no se puede sumar entre tipos bool
@@ -55,6 +55,7 @@ variable f is float= 0.45;
 f = read_float();
 variable fg is integer;
 variable g is integer= 10 / fg;
+
 if g==1 and b!= false then
     begin
         while fg<pepe(f) do
@@ -69,7 +70,7 @@ if g==1 and b!= false then
             writeln("funciono bien");
     end;
 
-# tranforma el for a su while equivalente
+#tranforma el for a su while equivalente
 for g from 6 to 1 by 2 do
     begin
         write(g);
@@ -83,11 +84,16 @@ variable inv is float = 1 + pepe(2);
 
 prueba_Funciones(g);
 variable j is integer;
-
 variable zz is boolean=false;
+
 when g
     is < fg then g=1
-    #is == zz then g=23
+    #is == zz then g=23 #esto no se puede realizar porque comparamos un integer con un bool
     else zz =true;
-#g =salamin(g);
+
+g = salamin(g);
+#salamin es una funcion que retorna un float, en este caso el return no se encuentra entonces devolvera un float por defecto (0.0), posteriormente se realiza una transformacion
+#de bool a integer, quedando g con valor integer igual a 0
+
+write("Fin \"del\" programa\n");
 end.

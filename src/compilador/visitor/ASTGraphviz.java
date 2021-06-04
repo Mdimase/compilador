@@ -149,7 +149,7 @@ public class ASTGraphviz extends Visitor<String>{
         return resultado.toString();
     }
 
-    //graficar nodo for
+    //DESUSO
     @Override
     public String visit(For aFor) throws ExcepcionDeAlcance{
         StringBuilder resultado = new StringBuilder();
@@ -161,7 +161,6 @@ public class ASTGraphviz extends Visitor<String>{
         return resultado.toString();
     }
 
-    //graficar nodo if
     @Override
     public String visit(If i) throws ExcepcionDeAlcance{
         StringBuilder resultado = new StringBuilder();

@@ -8,7 +8,7 @@ import compilador.visitor.Visitor;
 
 public class Write extends Sentencia{
     private Expresion expresion;
-    private Boolean esString=false;// POSIBLE BORRADA
+    private Boolean esString=false;
     private Boolean esLn=false;
 
     public Write(Expresion expresion) {

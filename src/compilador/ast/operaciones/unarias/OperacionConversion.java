@@ -8,10 +8,6 @@ package compilador.ast.operaciones.unarias;
 import compilador.ast.base.Expresion;
 import compilador.ast.base.Tipo;
 
-/**
- *
- * @author ITT
- */
 public abstract class OperacionConversion extends OperacionUnaria{
     
     public OperacionConversion(Expresion expresion) {

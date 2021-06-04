@@ -7,10 +7,8 @@ import compilador.visitor.Visitor;
 public abstract class Nodo{
     private String nombre;
 
-    //nodo sin nombre
     public Nodo() {}
 
-    //nodo con nombre
     public Nodo(String nombre) {
         this.nombre = nombre;
     }

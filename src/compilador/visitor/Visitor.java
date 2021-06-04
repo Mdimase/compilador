@@ -13,11 +13,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- *
- * @author ITT
- * @param <T>
- */
 public abstract class Visitor<T> {
 
     private int iden=0;
