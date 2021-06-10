@@ -249,7 +249,7 @@ public abstract class Transformer {
         return whenIs;
     }
 
-    public When transform(When when) throws ExcepcionDeTipos {
+    public Sentencia transform(When when) throws ExcepcionDeTipos {
         Expresion e = when.getExpresionBase().accept_transfomer(this);
         ArrayList<WhenIs> list = new ArrayList<>();
         for (WhenIs whenIs : when.getWhenIs()){

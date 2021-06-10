@@ -409,24 +409,22 @@ graph G {1 [label="Programa"]
 204 -- 205
 206 [label="Const 1 INTEGER"]
 204 -- 206
-207 [label="WhenElse"]
+207 [label="Const 15 INTEGER"]
 200 -- 207
-208 [label="="]
-207 -- 208
-209 [label="Ident zz UNKNOWN"]
+208 [label="WhenIs"]
+200 -- 208
+209 [label="="]
 208 -- 209
-210 [label="Const true BOOL"]
-208 -- 210
-211 [label="="]
-99 -- 211
-212 [label="Ident g UNKNOWN"]
-211 -- 212
-213 [label="InvocacionFuncion"]
-211 -- 213
-214 [label="Ident salamin UNKNOWN"]
+210 [label="Ident g UNKNOWN"]
+209 -- 210
+211 [label="Const 3 INTEGER"]
+209 -- 211
+212 [label="WhenElse"]
+200 -- 212
+213 [label="="]
+212 -- 213
+214 [label="Ident zz UNKNOWN"]
 213 -- 214
-215 [label="Ident g UNKNOWN"]
+215 [label="Const true BOOL"]
 213 -- 215
-216 [label="Write String"]
-99 -- 216
 }

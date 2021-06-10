@@ -3,10 +3,7 @@ package compilador;
 import compilador.ast.base.Programa;
 import compilador.lexico.Lexico;
 import compilador.sintactico.Sintactico;
-import compilador.visitor.ASTGraphviz;
-import compilador.visitor.GeneradorAlcanceGlobal;
-import compilador.visitor.GeneradorAlcances;
-import compilador.visitor.ValidadorTipos;
+import compilador.visitor.*;
 
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -34,12 +31,15 @@ public class Main {
             System.out.println("Alcances procesados");
             ValidadorTipos vt = new ValidadorTipos();
             vt.procesar(programa);
+            System.out.println("Tipos validados");
+            Rewriter rw = new Rewriter();
+            rw.procesar(programa);
+            System.out.println("When transformado");
             pw = new PrintWriter(new FileWriter("arbol_tp.dot"));
-            pw.println(graficador.visit(vt.procesar(programa)));
+            pw.println(graficador.visit(rw.procesar(programa)));
             pw.close();
             cmd = "dot -Tpng arbol_tp.dot -o arbol_tp.png";
             Runtime.getRuntime().exec(cmd);
-            System.out.println("Tipos validados");
         } catch(Exception e){
             System.out.println(e);
         }    

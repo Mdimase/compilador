@@ -89,11 +89,12 @@ variable zz is boolean=false;
 when g
     is < fg then g=1
     #is == zz then g=23 #esto no se puede realizar porque comparamos un integer con un bool
+    is != 15 then g=3
     else zz =true;
 
-g = salamin(g);
+#g = salamin(g);
 #salamin es una funcion que retorna un float, en este caso el return no se encuentra entonces devolvera un float por defecto (0.0), posteriormente se realiza una transformacion
 #de bool a integer, quedando g con valor integer igual a 0
 
-write("Fin \"del\" programa\n");
+#write("Fin \"del\" programa\n");
 end.
