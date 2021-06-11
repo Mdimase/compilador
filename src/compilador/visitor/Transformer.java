@@ -70,20 +70,20 @@ public abstract class Transformer {
         return operacion;
     }
 
-    public Division transform(Division d) throws ExcepcionDeTipos {
-        return (Division) transformar_operacion_binaria(d);
+    public Expresion transform(Division d) throws ExcepcionDeTipos {
+        return transformar_operacion_binaria(d);
     }
 
-    public Multiplicacion transform(Multiplicacion m) throws ExcepcionDeTipos {
-        return (Multiplicacion) transformar_operacion_binaria(m);
+    public Expresion transform(Multiplicacion m) throws ExcepcionDeTipos {
+        return transformar_operacion_binaria(m);
     }
 
     public Expresion transform(Resta r) throws ExcepcionDeTipos {
         return transformar_operacion_binaria(r);
     }
 
-    public Suma transform(Suma s) throws ExcepcionDeTipos {
-        return (Suma) transformar_operacion_binaria(s);
+    public Expresion transform(Suma s) throws ExcepcionDeTipos {
+        return transformar_operacion_binaria(s);
     }
 
     public Mayor transform(Mayor mayor) throws ExcepcionDeTipos {

@@ -455,10 +455,22 @@ graph G {1 [label="Programa"]
 107 -- 228
 229 [label="Ident inv UNKNOWN"]
 228 -- 229
-230 [label="- UNKNOWN"]
+230 [label="/ UNKNOWN"]
 228 -- 230
-231 [label="Const 9 INTEGER"]
+231 [label="+ UNKNOWN"]
 230 -- 231
-232 [label="Const 5.5 FLOAT"]
-230 -- 232
+232 [label="* UNKNOWN"]
+231 -- 232
+233 [label="Const 1 INTEGER"]
+232 -- 233
+234 [label="Const 2 INTEGER"]
+232 -- 234
+235 [label="* UNKNOWN"]
+231 -- 235
+236 [label="Const 3.5 FLOAT"]
+235 -- 236
+237 [label="Const 2 INTEGER"]
+235 -- 237
+238 [label="Const 2 INTEGER"]
+230 -- 238
 }

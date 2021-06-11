@@ -145,8 +145,8 @@ public class ValidadorTipos extends Transformer{
     }
 
     @Override
-    public Division transform(Division d) throws ExcepcionDeTipos {
-        Division nueva_op = super.transform(d);
+    public Expresion transform(Division d) throws ExcepcionDeTipos {
+        Division nueva_op = (Division) super.transform(d);
         if (d.getIzquierda().getTipo() != Tipo.BOOL && d.getDerecha().getTipo() != Tipo.BOOL){
             nueva_op = (Division) transformarOperacionBinaria(nueva_op);
             return nueva_op;
@@ -156,8 +156,8 @@ public class ValidadorTipos extends Transformer{
     }
 
     @Override
-    public Multiplicacion transform(Multiplicacion m) throws ExcepcionDeTipos {
-        Multiplicacion nueva_op = super.transform(m);
+    public Expresion transform(Multiplicacion m) throws ExcepcionDeTipos {
+        Multiplicacion nueva_op = (Multiplicacion) super.transform(m);
         if (m.getIzquierda().getTipo() != Tipo.BOOL && m.getDerecha().getTipo() != Tipo.BOOL){
             nueva_op = (Multiplicacion) transformarOperacionBinaria(nueva_op);
             return nueva_op;
@@ -178,8 +178,8 @@ public class ValidadorTipos extends Transformer{
     }
 
     @Override
-    public Suma transform(Suma s) throws ExcepcionDeTipos {
-        Suma nueva_op = super.transform(s);
+    public Expresion transform(Suma s) throws ExcepcionDeTipos {
+        Suma nueva_op = (Suma) super.transform(s);
         if (s.getIzquierda().getTipo() != Tipo.BOOL && s.getDerecha().getTipo() != Tipo.BOOL){
             nueva_op = (Suma) transformarOperacionBinaria(nueva_op);
             return nueva_op;

@@ -83,7 +83,7 @@ public class Rewriter extends Transformer{
         return new Bloque(sentencias,"When -> If",false);
     }
 
-    //a partir de aca son constant folding
+    //a partir de aca son constant folding de exp arit con conversiones implicitas entre int y float
 
     @Override
     public Expresion transform(EnteroAFlotante eaf) throws ExcepcionDeTipos {
@@ -129,6 +129,72 @@ public class Rewriter extends Transformer{
             }
         } else { //no constantes
             return resta;
+        }
+    }
+
+    @Override
+    public Expresion transform(Suma suma) throws ExcepcionDeTipos {
+        super.transform(suma);
+        if(suma.getIzquierda().getClass() == Constante.class && suma.getDerecha().getClass() == Constante.class){
+            Constante constanteIz = (Constante) suma.getIzquierda();
+            Constante constanteDer = (Constante) suma.getDerecha();
+            if(constanteIz.getTipo().equals(Tipo.INTEGER) && constanteDer.getTipo().equals(Tipo.INTEGER)){
+                Integer valorIz = Integer.parseInt((String) constanteIz.getValor());
+                Integer valorDer = Integer.parseInt((String) constanteDer.getValor());
+                String result = String.valueOf(valorIz+valorDer);
+                return new Constante(result,Tipo.INTEGER);
+            } else {    //son float
+                Float valorIz = Float.parseFloat((String) constanteIz.getValor());
+                Float valorDer = Float.parseFloat((String) constanteDer.getValor());
+                String result = String.valueOf(valorIz+valorDer);
+                return new Constante(result,Tipo.FLOAT);
+            }
+        } else { //no constantes
+            return suma;
+        }
+    }
+
+    @Override
+    public Expresion transform(Multiplicacion multiplicacion) throws ExcepcionDeTipos {
+        super.transform(multiplicacion);
+        if(multiplicacion.getIzquierda().getClass() == Constante.class && multiplicacion.getDerecha().getClass() == Constante.class){
+            Constante constanteIz = (Constante) multiplicacion.getIzquierda();
+            Constante constanteDer = (Constante) multiplicacion.getDerecha();
+            if(constanteIz.getTipo().equals(Tipo.INTEGER) && constanteDer.getTipo().equals(Tipo.INTEGER)){
+                Integer valorIz = Integer.parseInt((String) constanteIz.getValor());
+                Integer valorDer = Integer.parseInt((String) constanteDer.getValor());
+                String result = String.valueOf(valorIz*valorDer);
+                return new Constante(result,Tipo.INTEGER);
+            } else {    //son float
+                Float valorIz = Float.parseFloat((String) constanteIz.getValor());
+                Float valorDer = Float.parseFloat((String) constanteDer.getValor());
+                String result = String.valueOf(valorIz*valorDer);
+                return new Constante(result,Tipo.FLOAT);
+            }
+        } else { //no constantes
+            return multiplicacion;
+        }
+    }
+
+    @Override
+    public Expresion transform(Division division) throws ExcepcionDeTipos {
+        super.transform(division);
+        if(division.getIzquierda().getClass() == Constante.class && division.getDerecha().getClass() == Constante.class){
+            Constante constanteIz = (Constante) division.getIzquierda();
+            Constante constanteDer = (Constante) division.getDerecha();
+            if(constanteIz.getTipo().equals(Tipo.INTEGER) && constanteDer.getTipo().equals(Tipo.INTEGER)){
+                Integer valorIz = Integer.parseInt((String) constanteIz.getValor());
+                Integer valorDer = Integer.parseInt((String) constanteDer.getValor());
+                String result = String.valueOf(valorIz/valorDer);
+                return new Constante(result,Tipo.INTEGER);
+            } else {    //son float
+                Float valorIz = Float.parseFloat((String) constanteIz.getValor());
+                Float valorDer = Float.parseFloat((String) constanteDer.getValor());
+                String result = String.valueOf(valorIz/valorDer);
+                return new Constante(result,Tipo.FLOAT);
+            }
+        } else { //no constantes
+            return division;
         }
     }
 

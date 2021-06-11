@@ -97,7 +97,7 @@ when g
 #salamin es una funcion que retorna un float, en este caso el return no se encuentra entonces devolvera un float por defecto (0.0), posteriormente se realiza una transformacion
 #de bool a integer, quedando g con valor integer igual a 0
 
-inv = 9 - 5.5;
+inv = (1*2 + 3.5 * 2) /2;
 
 #write("Fin \"del\" programa\n");
 end.
