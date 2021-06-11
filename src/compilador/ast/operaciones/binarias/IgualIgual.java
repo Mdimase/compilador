@@ -24,7 +24,7 @@ public class IgualIgual extends ComparacionIgualdad{
 
 
     @Override
-    public IgualIgual accept_transfomer(Transformer t) throws ExcepcionDeTipos {
+    public Expresion accept_transfomer(Transformer t) throws ExcepcionDeTipos {
         return t.transform(this);
     }
 }

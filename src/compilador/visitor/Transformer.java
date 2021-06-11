@@ -86,28 +86,28 @@ public abstract class Transformer {
         return transformar_operacion_binaria(s);
     }
 
-    public Mayor transform(Mayor mayor) throws ExcepcionDeTipos {
-        return (Mayor) transformar_operacion_binaria(mayor);
+    public Expresion transform(Mayor mayor) throws ExcepcionDeTipos {
+        return transformar_operacion_binaria(mayor);
     }
 
-    public Menor transform(Menor menor) throws ExcepcionDeTipos {
-        return (Menor) transformar_operacion_binaria(menor);
+    public Expresion transform(Menor menor) throws ExcepcionDeTipos {
+        return transformar_operacion_binaria(menor);
     }
 
-    public MayorIgual transform(MayorIgual mayorIgual)  throws ExcepcionDeTipos {
-        return (MayorIgual) transformar_operacion_binaria(mayorIgual);
+    public Expresion transform(MayorIgual mayorIgual)  throws ExcepcionDeTipos {
+        return transformar_operacion_binaria(mayorIgual);
     }
 
-    public MenorIgual transform(MenorIgual menorIgual)  throws ExcepcionDeTipos {
-        return (MenorIgual) transformar_operacion_binaria(menorIgual);
+    public Expresion transform(MenorIgual menorIgual)  throws ExcepcionDeTipos {
+        return transformar_operacion_binaria(menorIgual);
     }
 
-    public IgualIgual transform(IgualIgual igualIgual)  throws ExcepcionDeTipos{
-        return (IgualIgual) transformar_operacion_binaria(igualIgual);
+    public Expresion transform(IgualIgual igualIgual)  throws ExcepcionDeTipos{
+        return transformar_operacion_binaria(igualIgual);
     }
 
-    public Distinto transform(Distinto distinto)  throws ExcepcionDeTipos {
-        return (Distinto) transformar_operacion_binaria(distinto);
+    public Expresion transform(Distinto distinto)  throws ExcepcionDeTipos {
+        return transformar_operacion_binaria(distinto);
     }
 
     public Expresion transform(Or or) throws ExcepcionDeTipos {

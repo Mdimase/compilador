@@ -99,6 +99,7 @@ when g
 
 inv = (1*2 + 3.5 * 2) /2;
 zz = true or false;
+zz = 7 > 7.2;
 
 #write("Fin \"del\" programa\n");
 end.

@@ -211,8 +211,8 @@ public class ValidadorTipos extends Transformer{
     }
 
     @Override
-    public Menor transform(Menor menor) throws ExcepcionDeTipos {
-        Menor nueva_op = super.transform(menor);
+    public Expresion transform(Menor menor) throws ExcepcionDeTipos {
+        Menor nueva_op = (Menor) super.transform(menor);
         if(menor.getIzquierda().getTipo() != Tipo.BOOL && menor.getDerecha().getTipo() != Tipo.BOOL){
             nueva_op = (Menor) transformarOperacionBinaria(nueva_op);
             nueva_op.setTipo(Tipo.BOOL);
@@ -223,8 +223,8 @@ public class ValidadorTipos extends Transformer{
     }
 
     @Override
-    public Mayor transform(Mayor mayor) throws ExcepcionDeTipos {
-        Mayor nueva_op = super.transform(mayor);
+    public Expresion transform(Mayor mayor) throws ExcepcionDeTipos {
+        Mayor nueva_op = (Mayor) super.transform(mayor);
         if(mayor.getIzquierda().getTipo() != Tipo.BOOL && mayor.getDerecha().getTipo() != Tipo.BOOL){
             nueva_op = (Mayor) transformarOperacionBinaria(nueva_op);
             nueva_op.setTipo(Tipo.BOOL);
@@ -235,8 +235,8 @@ public class ValidadorTipos extends Transformer{
     }
 
     @Override
-    public MayorIgual transform(MayorIgual mayorIgual) throws ExcepcionDeTipos {
-        MayorIgual nueva_op = super.transform(mayorIgual);
+    public Expresion transform(MayorIgual mayorIgual) throws ExcepcionDeTipos {
+        MayorIgual nueva_op = (MayorIgual) super.transform(mayorIgual);
         if(mayorIgual.getIzquierda().getTipo() != Tipo.BOOL && mayorIgual.getDerecha().getTipo() != Tipo.BOOL){
             nueva_op = (MayorIgual) transformarOperacionBinaria(nueva_op);
             nueva_op.setTipo(Tipo.BOOL);
@@ -247,8 +247,8 @@ public class ValidadorTipos extends Transformer{
     }
 
     @Override
-    public MenorIgual transform(MenorIgual menorIgual) throws ExcepcionDeTipos {
-        MenorIgual nueva_op = super.transform(menorIgual);
+    public Expresion transform(MenorIgual menorIgual) throws ExcepcionDeTipos {
+        MenorIgual nueva_op = (MenorIgual) super.transform(menorIgual);
         if(menorIgual.getIzquierda().getTipo() != Tipo.BOOL && menorIgual.getDerecha().getTipo() != Tipo.BOOL){
             nueva_op = (MenorIgual) transformarOperacionBinaria(nueva_op);
             nueva_op.setTipo(Tipo.BOOL);
@@ -259,8 +259,8 @@ public class ValidadorTipos extends Transformer{
     }
 
     @Override
-    public IgualIgual transform(IgualIgual igualIgual) throws ExcepcionDeTipos {
-        IgualIgual nueva_op = super.transform(igualIgual);
+    public Expresion transform(IgualIgual igualIgual) throws ExcepcionDeTipos {
+        IgualIgual nueva_op = (IgualIgual) super.transform(igualIgual);
         if(igualIgual.getIzquierda().getTipo() != Tipo.FLOAT && igualIgual.getDerecha().getTipo() != Tipo.FLOAT){
             if(igualIgual.getIzquierda().getTipo() == igualIgual.getDerecha().getTipo()){
                 nueva_op = (IgualIgual) transformarOperacionBinaria(nueva_op);
@@ -274,8 +274,8 @@ public class ValidadorTipos extends Transformer{
     }
 
     @Override
-    public Distinto transform(Distinto distinto) throws ExcepcionDeTipos {
-        Distinto nueva_op = super.transform(distinto);
+    public Expresion transform(Distinto distinto) throws ExcepcionDeTipos {
+        Distinto nueva_op = (Distinto) super.transform(distinto);
         if(distinto.getIzquierda().getTipo() != Tipo.FLOAT && distinto.getDerecha().getTipo() != Tipo.FLOAT){
             if(distinto.getIzquierda().getTipo() == distinto.getDerecha().getTipo()){
                 nueva_op = (Distinto) transformarOperacionBinaria(nueva_op);

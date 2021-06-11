@@ -23,7 +23,7 @@ public class Menor extends ComparacionDesigualdad{
     }
 
     @Override
-    public Menor accept_transfomer(Transformer t) throws ExcepcionDeTipos {
+    public Expresion accept_transfomer(Transformer t) throws ExcepcionDeTipos {
         return t.transform(this);
     }
 

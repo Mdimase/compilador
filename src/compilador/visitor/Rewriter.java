@@ -8,12 +8,10 @@ import compilador.ast.operaciones.binarias.*;
 import compilador.ast.operaciones.unarias.EnteroAFlotante;
 import compilador.ast.operaciones.unarias.FlotanteAEntero;
 import compilador.ast.operaciones.unarias.Not;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class Rewriter extends Transformer{
-
     private int n = 1;
 
     public Programa procesar(Programa programa) throws ExcepcionDeTipos {
@@ -84,7 +82,6 @@ public class Rewriter extends Transformer{
     }
 
     //CONSTANT FOLDING con conversiones implicitas entre int y float
-
     @Override
     public Expresion transform(EnteroAFlotante eaf) throws ExcepcionDeTipos {
         super.transform(eaf);
@@ -247,4 +244,207 @@ public class Rewriter extends Transformer{
         }
     }
 
+    @Override
+    public Expresion transform(Menor menor) throws ExcepcionDeTipos {
+        super.transform(menor);
+        if(menor.getIzquierda().getClass() == Constante.class && menor.getDerecha().getClass() == Constante.class){
+            Constante constanteIz = (Constante) menor.getIzquierda();
+            Constante constanteDer = (Constante) menor.getDerecha();
+            if(constanteIz.getTipo().equals(Tipo.INTEGER) && constanteDer.getTipo().equals(Tipo.INTEGER)){
+                int valorIz = Integer.parseInt((String) constanteIz.getValor());
+                int valorDer = Integer.parseInt((String) constanteDer.getValor());
+                if(valorIz < valorDer){ //menor
+                    return new Constante("true",Tipo.BOOL);
+                }
+                else {  //mayor o igual
+                    return new Constante("false",Tipo.BOOL);
+                }
+            } else {    //son float
+                float valorIz = Float.parseFloat((String) constanteIz.getValor());
+                float valorDer = Float.parseFloat((String) constanteDer.getValor());
+                if(valorIz < valorDer){ //menor
+                    return new Constante("true",Tipo.BOOL);
+                }
+                else {  //mayor o igual
+                    return new Constante("false",Tipo.BOOL);
+                }
+            }
+        } else { //no constantes
+            return menor;
+        }
+    }
+
+    @Override
+    public Expresion transform(Mayor mayor) throws ExcepcionDeTipos {
+        super.transform(mayor);
+        if(mayor.getIzquierda().getClass() == Constante.class && mayor.getDerecha().getClass() == Constante.class){
+            Constante constanteIz = (Constante) mayor.getIzquierda();
+            Constante constanteDer = (Constante) mayor.getDerecha();
+            if(constanteIz.getTipo().equals(Tipo.INTEGER) && constanteDer.getTipo().equals(Tipo.INTEGER)){
+                int valorIz = Integer.parseInt((String) constanteIz.getValor());
+                int valorDer = Integer.parseInt((String) constanteDer.getValor());
+                if(valorIz > valorDer){ //menor
+                    return new Constante("true",Tipo.BOOL);
+                }
+                else {  //mayor o igual
+                    return new Constante("false",Tipo.BOOL);
+                }
+            } else {    //son float
+                float valorIz = Float.parseFloat((String) constanteIz.getValor());
+                float valorDer = Float.parseFloat((String) constanteDer.getValor());
+                if(valorIz > valorDer){ //menor
+                    return new Constante("true",Tipo.BOOL);
+                }
+                else {  //mayor o igual
+                    return new Constante("false",Tipo.BOOL);
+                }
+            }
+        } else { //no constantes
+            return mayor;
+        }
+    }
+
+    @Override
+    public Expresion transform(MenorIgual menorIgual) throws ExcepcionDeTipos {
+        super.transform(menorIgual);
+        if(menorIgual.getIzquierda().getClass() == Constante.class && menorIgual.getDerecha().getClass() == Constante.class){
+            Constante constanteIz = (Constante) menorIgual.getIzquierda();
+            Constante constanteDer = (Constante) menorIgual.getDerecha();
+            if(constanteIz.getTipo().equals(Tipo.INTEGER) && constanteDer.getTipo().equals(Tipo.INTEGER)){
+                int valorIz = Integer.parseInt((String) constanteIz.getValor());
+                int valorDer = Integer.parseInt((String) constanteDer.getValor());
+                if(valorIz <= valorDer){ //menor
+                    return new Constante("true",Tipo.BOOL);
+                }
+                else {  //mayor o igual
+                    return new Constante("false",Tipo.BOOL);
+                }
+            } else {    //son float
+                float valorIz = Float.parseFloat((String) constanteIz.getValor());
+                float valorDer = Float.parseFloat((String) constanteDer.getValor());
+                if(valorIz <= valorDer){ //menor
+                    return new Constante("true",Tipo.BOOL);
+                }
+                else {  //mayor o igual
+                    return new Constante("false",Tipo.BOOL);
+                }
+            }
+        } else { //no constantes
+            return menorIgual;
+        }
+    }
+
+    @Override
+    public Expresion transform(MayorIgual mayorIgual) throws ExcepcionDeTipos {
+        super.transform(mayorIgual);
+        if(mayorIgual.getIzquierda().getClass() == Constante.class && mayorIgual.getDerecha().getClass() == Constante.class){
+            Constante constanteIz = (Constante) mayorIgual.getIzquierda();
+            Constante constanteDer = (Constante) mayorIgual.getDerecha();
+            if(constanteIz.getTipo().equals(Tipo.INTEGER) && constanteDer.getTipo().equals(Tipo.INTEGER)){
+                int valorIz = Integer.parseInt((String) constanteIz.getValor());
+                int valorDer = Integer.parseInt((String) constanteDer.getValor());
+                if(valorIz >= valorDer){ //menor
+                    return new Constante("true",Tipo.BOOL);
+                }
+                else {  //mayor o igual
+                    return new Constante("false",Tipo.BOOL);
+                }
+            } else {    //son float
+                float valorIz = Float.parseFloat((String) constanteIz.getValor());
+                float valorDer = Float.parseFloat((String) constanteDer.getValor());
+                if(valorIz >= valorDer){ //menor
+                    return new Constante("true",Tipo.BOOL);
+                }
+                else {  //mayor o igual
+                    return new Constante("false",Tipo.BOOL);
+                }
+            }
+        } else { //no constantes
+            return mayorIgual;
+        }
+    }
+
+    @Override
+    public Expresion transform(IgualIgual igualIgual) throws ExcepcionDeTipos {
+        super.transform(igualIgual);
+        if(igualIgual.getIzquierda().getClass() == Constante.class && igualIgual.getDerecha().getClass() == Constante.class){
+            Constante constanteIz = (Constante) igualIgual.getIzquierda();
+            Constante constanteDer = (Constante) igualIgual.getDerecha();
+            if(constanteIz.getValor().equals("true") && constanteDer.getValor().equals("true")){
+                return new Constante("true",Tipo.BOOL);
+            }
+            if(constanteIz.getValor().equals("false") && constanteDer.getValor().equals("false")){
+                return new Constante("true",Tipo.BOOL);
+            }
+            if(constanteIz.getValor().equals("true") && constanteDer.getValor().equals("false")){
+                return new Constante("false",Tipo.BOOL);
+            }
+            if(constanteIz.getValor().equals("false") && constanteDer.getValor().equals("true")){
+                return new Constante("false",Tipo.BOOL);
+            }
+            if(constanteIz.getTipo().equals(Tipo.INTEGER) && constanteDer.getTipo().equals(Tipo.INTEGER)){
+                int valorIz = Integer.parseInt((String) constanteIz.getValor());
+                int valorDer = Integer.parseInt((String) constanteDer.getValor());
+                if(valorIz == valorDer){ //menor
+                    return new Constante("true",Tipo.BOOL);
+                }
+                else {  //mayor o igual
+                    return new Constante("false",Tipo.BOOL);
+                }
+            } else {    //son float
+                float valorIz = Float.parseFloat((String) constanteIz.getValor());
+                float valorDer = Float.parseFloat((String) constanteDer.getValor());
+                if(valorIz == valorDer){ //menor
+                    return new Constante("true",Tipo.BOOL);
+                }
+                else {  //mayor o igual
+                    return new Constante("false",Tipo.BOOL);
+                }
+            }
+        } else { //no constantes
+            return igualIgual;
+        }
+    }
+
+    @Override
+    public Expresion transform(Distinto distinto) throws ExcepcionDeTipos {
+        super.transform(distinto);
+        if(distinto.getIzquierda().getClass() == Constante.class && distinto.getDerecha().getClass() == Constante.class){
+            Constante constanteIz = (Constante) distinto.getIzquierda();
+            Constante constanteDer = (Constante) distinto.getDerecha();
+            if(constanteIz.getValor().equals("true") && constanteDer.getValor().equals("true")){
+                return new Constante("false",Tipo.BOOL);
+            }
+            if(constanteIz.getValor().equals("false") && constanteDer.getValor().equals("false")){
+                return new Constante("false",Tipo.BOOL);
+            }
+            if(constanteIz.getValor().equals("true") && constanteDer.getValor().equals("false")){
+                return new Constante("true",Tipo.BOOL);
+            }
+            if(constanteIz.getValor().equals("false") && constanteDer.getValor().equals("true")){
+                return new Constante("true",Tipo.BOOL);
+            }
+            if(constanteIz.getTipo().equals(Tipo.INTEGER) && constanteDer.getTipo().equals(Tipo.INTEGER)){
+                int valorIz = Integer.parseInt((String) constanteIz.getValor());
+                int valorDer = Integer.parseInt((String) constanteDer.getValor());
+                if(valorIz != valorDer){ //menor
+                    return new Constante("true",Tipo.BOOL);
+                }
+                else {  //mayor o igual
+                    return new Constante("false",Tipo.BOOL);
+                }
+            } else {    //son float
+                float valorIz = Float.parseFloat((String) constanteIz.getValor());
+                float valorDer = Float.parseFloat((String) constanteDer.getValor());
+                if(valorIz != valorDer){ //menor
+                    return new Constante("true",Tipo.BOOL);
+                }
+                else {  //mayor o igual
+                    return new Constante("false",Tipo.BOOL);
+                }
+            }
+        } else { //no constantes
+            return distinto;
+        }
+    }
 }

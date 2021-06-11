@@ -483,4 +483,14 @@ graph G {1 [label="Programa"]
 241 -- 242
 243 [label="Const false BOOL"]
 241 -- 243
+244 [label="="]
+107 -- 244
+245 [label="Ident zz UNKNOWN"]
+244 -- 245
+246 [label="> UNKNOWN"]
+244 -- 246
+247 [label="Const 7 INTEGER"]
+246 -- 247
+248 [label="Const 7.2 FLOAT"]
+246 -- 248
 }

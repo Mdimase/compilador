@@ -24,7 +24,7 @@ public class Mayor extends ComparacionDesigualdad{
 
 
     @Override
-    public Mayor accept_transfomer(Transformer t) throws ExcepcionDeTipos {
+    public Expresion accept_transfomer(Transformer t) throws ExcepcionDeTipos {
         return t.transform(this);
     }
 

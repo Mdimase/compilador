@@ -23,7 +23,7 @@ public class Distinto extends ComparacionIgualdad{
 
 
     @Override
-    public Distinto accept_transfomer(Transformer t) throws ExcepcionDeTipos {
+    public Expresion accept_transfomer(Transformer t) throws ExcepcionDeTipos {
         return t.transform(this);
     }
 
