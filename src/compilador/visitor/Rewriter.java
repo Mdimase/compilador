@@ -82,6 +82,48 @@ public class Rewriter extends Transformer{
     }
 
     //CONSTANT FOLDING con conversiones implicitas entre int y float
+
+    public Constante evaluarAritmeticosBinarios(OperacionBinaria operacionBinaria) {
+        String result = "";
+        Tipo tipo = Tipo.UNKNOWN;
+        Constante constanteIz = (Constante) operacionBinaria.getIzquierda();
+        Constante constanteDer = (Constante) operacionBinaria.getDerecha();
+        if (constanteIz.getTipo().equals(Tipo.INTEGER) && constanteDer.getTipo().equals(Tipo.INTEGER)) {
+            Integer valorIz = Integer.parseInt((String) constanteIz.getValor());
+            Integer valorDer = Integer.parseInt((String) constanteDer.getValor());
+            tipo=Tipo.INTEGER;
+            if(operacionBinaria.getClass() == Suma.class){
+                result = String.valueOf(valorIz + valorDer);
+            }
+            if(operacionBinaria.getClass() == Resta.class){
+                result = String.valueOf(valorIz - valorDer);
+            }
+            if(operacionBinaria.getClass() == Multiplicacion.class){
+                result = String.valueOf(valorIz * valorDer);
+            }
+            if(operacionBinaria.getClass() == Division.class){
+                result = String.valueOf(valorIz / valorDer);
+            }
+        } else {    //son float
+            Float valorIz = Float.parseFloat((String) constanteIz.getValor());
+            Float valorDer = Float.parseFloat((String) constanteDer.getValor());
+            tipo = Tipo.FLOAT;
+            if(operacionBinaria.getClass() == Suma.class){
+                result = String.valueOf(valorIz + valorDer);
+            }
+            if(operacionBinaria.getClass() == Resta.class){
+                result = String.valueOf(valorIz - valorDer);
+            }
+            if(operacionBinaria.getClass() == Multiplicacion.class){
+                result = String.valueOf(valorIz * valorDer);
+            }
+            if(operacionBinaria.getClass() == Division.class){
+                result = String.valueOf(valorIz / valorDer);
+            }
+        }
+        return new Constante(result,tipo);
+    }
+
     @Override
     public Expresion transform(EnteroAFlotante eaf) throws ExcepcionDeTipos {
         super.transform(eaf);
@@ -111,19 +153,7 @@ public class Rewriter extends Transformer{
     public Expresion transform(Resta resta) throws ExcepcionDeTipos {
         super.transform(resta);
         if(resta.getIzquierda().getClass() == Constante.class && resta.getDerecha().getClass() == Constante.class){
-            Constante constanteIz = (Constante) resta.getIzquierda();
-            Constante constanteDer = (Constante) resta.getDerecha();
-            if(constanteIz.getTipo().equals(Tipo.INTEGER) && constanteDer.getTipo().equals(Tipo.INTEGER)){
-                Integer valorIz = Integer.parseInt((String) constanteIz.getValor());
-                Integer valorDer = Integer.parseInt((String) constanteDer.getValor());
-                String result = String.valueOf(valorIz-valorDer);
-                return new Constante(result,Tipo.INTEGER);
-            } else {    //son float
-                Float valorIz = Float.parseFloat((String) constanteIz.getValor());
-                Float valorDer = Float.parseFloat((String) constanteDer.getValor());
-                String result = String.valueOf(valorIz-valorDer);
-                return new Constante(result,Tipo.FLOAT);
-            }
+            return this.evaluarAritmeticosBinarios(resta);
         } else { //no constantes
             return resta;
         }
@@ -133,19 +163,7 @@ public class Rewriter extends Transformer{
     public Expresion transform(Suma suma) throws ExcepcionDeTipos {
         super.transform(suma);
         if(suma.getIzquierda().getClass() == Constante.class && suma.getDerecha().getClass() == Constante.class){
-            Constante constanteIz = (Constante) suma.getIzquierda();
-            Constante constanteDer = (Constante) suma.getDerecha();
-            if(constanteIz.getTipo().equals(Tipo.INTEGER) && constanteDer.getTipo().equals(Tipo.INTEGER)){
-                Integer valorIz = Integer.parseInt((String) constanteIz.getValor());
-                Integer valorDer = Integer.parseInt((String) constanteDer.getValor());
-                String result = String.valueOf(valorIz+valorDer);
-                return new Constante(result,Tipo.INTEGER);
-            } else {    //son float
-                Float valorIz = Float.parseFloat((String) constanteIz.getValor());
-                Float valorDer = Float.parseFloat((String) constanteDer.getValor());
-                String result = String.valueOf(valorIz+valorDer);
-                return new Constante(result,Tipo.FLOAT);
-            }
+            return this.evaluarAritmeticosBinarios(suma);
         } else { //no constantes
             return suma;
         }
@@ -155,19 +173,7 @@ public class Rewriter extends Transformer{
     public Expresion transform(Multiplicacion multiplicacion) throws ExcepcionDeTipos {
         super.transform(multiplicacion);
         if(multiplicacion.getIzquierda().getClass() == Constante.class && multiplicacion.getDerecha().getClass() == Constante.class){
-            Constante constanteIz = (Constante) multiplicacion.getIzquierda();
-            Constante constanteDer = (Constante) multiplicacion.getDerecha();
-            if(constanteIz.getTipo().equals(Tipo.INTEGER) && constanteDer.getTipo().equals(Tipo.INTEGER)){
-                Integer valorIz = Integer.parseInt((String) constanteIz.getValor());
-                Integer valorDer = Integer.parseInt((String) constanteDer.getValor());
-                String result = String.valueOf(valorIz*valorDer);
-                return new Constante(result,Tipo.INTEGER);
-            } else {    //son float
-                Float valorIz = Float.parseFloat((String) constanteIz.getValor());
-                Float valorDer = Float.parseFloat((String) constanteDer.getValor());
-                String result = String.valueOf(valorIz*valorDer);
-                return new Constante(result,Tipo.FLOAT);
-            }
+            return this.evaluarAritmeticosBinarios(multiplicacion);
         } else { //no constantes
             return multiplicacion;
         }
@@ -177,19 +183,7 @@ public class Rewriter extends Transformer{
     public Expresion transform(Division division) throws ExcepcionDeTipos {
         super.transform(division);
         if(division.getIzquierda().getClass() == Constante.class && division.getDerecha().getClass() == Constante.class){
-            Constante constanteIz = (Constante) division.getIzquierda();
-            Constante constanteDer = (Constante) division.getDerecha();
-            if(constanteIz.getTipo().equals(Tipo.INTEGER) && constanteDer.getTipo().equals(Tipo.INTEGER)){
-                Integer valorIz = Integer.parseInt((String) constanteIz.getValor());
-                Integer valorDer = Integer.parseInt((String) constanteDer.getValor());
-                String result = String.valueOf(valorIz/valorDer);
-                return new Constante(result,Tipo.INTEGER);
-            } else {    //son float
-                Float valorIz = Float.parseFloat((String) constanteIz.getValor());
-                Float valorDer = Float.parseFloat((String) constanteDer.getValor());
-                String result = String.valueOf(valorIz/valorDer);
-                return new Constante(result,Tipo.FLOAT);
-            }
+            return this.evaluarAritmeticosBinarios(division);
         } else { //no constantes
             return division;
         }
