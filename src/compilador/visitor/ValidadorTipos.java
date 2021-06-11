@@ -167,8 +167,8 @@ public class ValidadorTipos extends Transformer{
     }
 
     @Override
-    public Resta transform(Resta r) throws ExcepcionDeTipos {
-        Resta nueva_op = super.transform(r);
+    public Expresion transform(Resta r) throws ExcepcionDeTipos {
+        Resta nueva_op = (Resta) super.transform(r);
         if (r.getIzquierda().getTipo() != Tipo.BOOL && r.getDerecha().getTipo() != Tipo.BOOL){
             nueva_op = (Resta) transformarOperacionBinaria(nueva_op);
             return nueva_op;
@@ -313,15 +313,15 @@ public class ValidadorTipos extends Transformer{
     }
 
     @Override
-    public FlotanteAEntero transform(FlotanteAEntero fae) throws ExcepcionDeTipos {
-        FlotanteAEntero nueva_op = super.transform(fae);
+    public Expresion transform(FlotanteAEntero fae) throws ExcepcionDeTipos {
+        FlotanteAEntero nueva_op = (FlotanteAEntero) super.transform(fae);
         //nueva_op = (FlotanteAEntero) transformarOperacionUnaria(nueva_op);
         return nueva_op;
     }
 
     @Override
-    public EnteroAFlotante transform(EnteroAFlotante eaf) throws ExcepcionDeTipos {
-        EnteroAFlotante nueva_op = super.transform(eaf);
+    public Expresion transform(EnteroAFlotante eaf) throws ExcepcionDeTipos {
+        EnteroAFlotante nueva_op = (EnteroAFlotante) super.transform(eaf);
         //nueva_op = (EnteroAFlotante) transformarOperacionUnaria(nueva_op);
         return nueva_op;
     }

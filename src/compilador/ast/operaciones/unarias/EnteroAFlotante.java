@@ -24,7 +24,7 @@ public class EnteroAFlotante extends OperacionConversion{
     }
 
     @Override
-    public EnteroAFlotante accept_transfomer(Transformer t) throws ExcepcionDeTipos{
+    public Expresion accept_transfomer(Transformer t) throws ExcepcionDeTipos{
         return t.transform(this);
     }
 

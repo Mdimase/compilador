@@ -23,7 +23,7 @@ public class Resta extends OperacionBinaria{
     }
 
     @Override
-    public Resta accept_transfomer(Transformer t) throws ExcepcionDeTipos{
+    public Expresion accept_transfomer(Transformer t) throws ExcepcionDeTipos{
         return t.transform(this);
     }
 

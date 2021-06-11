@@ -1,7 +1,8 @@
 #variable a is float = 1 + pepe();  #esto genera un error, dado que no se puede invocar funciones en el ambito global "aclarado por german"
 #variable cd is float = 1 + 1 / random();  esto genera un error, dado que no se puede invocar funciones en el ambito global "aclarado por german"
 variable d is boolean = not false;
-variable hj is integer = 1.023;
+variable pol is float = 5-2;
+variable hj is integer = 1.3;
 # si invocara un parametro con nombre d,t, o cualquier otra variable declarada en el ambito global dispara una excepcion de nombre repetidos
 
 function prueba_Funciones (c is integer, j is boolean=false) return float #a partir de la variable j, los demas parametros deben ser con valor por defecto, caso contrario, da error
@@ -10,7 +11,7 @@ function prueba_Funciones (c is integer, j is boolean=false) return float #a par
         variable x is integer;
         if j == true then
             begin
-                c=c+5;
+                c=c-5;
                 j = j or d;
             end;
         return c; # se convierte c de integer a float para que coincida con el tipo de retorno de la funcion
@@ -20,7 +21,7 @@ function pepe (a is float) return integer
     begin
         salamin(a);
         variable aux is integer= -p / a + salamin(prueba_Funciones(a)); # en esta invocacion ocurren varias conversiones de tipos
-            if b == false and aux < 10 then
+            if b == false and aux < 10-8 then
                 write(4)
             else
                 salamin(a);
@@ -38,7 +39,7 @@ function salamin(z is integer) return float
 
 #variable t is float=2+3.56/p; dispara un error dado que p en este punto todavia no esta declarado
 variable l is boolean=true;
-variable p is integer = 1;
+variable p is integer = -1;
 variable b is boolean;
 
 main is
@@ -80,14 +81,14 @@ while 2 == 3 do
     begin
         write(5);
     end;
-variable inv is float = 1 + pepe(2);
+variable inv is float = 1 + pepe(2.3);
 
 prueba_Funciones(g);
 variable j is integer;
 variable zz is boolean=false;
 
 when g
-    is < fg then g=1
+    is < fg then g=1-pepe(5.2)
     #is == zz then g=23 #esto no se puede realizar porque comparamos un integer con un bool
     is != 15 then g=3
     else zz =true;
@@ -96,7 +97,7 @@ when g
 #salamin es una funcion que retorna un float, en este caso el return no se encuentra entonces devolvera un float por defecto (0.0), posteriormente se realiza una transformacion
 #de bool a integer, quedando g con valor integer igual a 0
 
-inv = 7 + 4;
+inv = 9 - 5.5;
 
 #write("Fin \"del\" programa\n");
 end.

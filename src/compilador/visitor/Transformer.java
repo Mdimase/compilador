@@ -78,8 +78,8 @@ public abstract class Transformer {
         return (Multiplicacion) transformar_operacion_binaria(m);
     }
 
-    public Resta transform(Resta r) throws ExcepcionDeTipos {
-        return (Resta) transformar_operacion_binaria(r);
+    public Expresion transform(Resta r) throws ExcepcionDeTipos {
+        return transformar_operacion_binaria(r);
     }
 
     public Suma transform(Suma s) throws ExcepcionDeTipos {
@@ -131,12 +131,13 @@ public abstract class Transformer {
         return (Not) transformar_operacion_unaria(not);
     }
 
-    public FlotanteAEntero transform(FlotanteAEntero fae) throws ExcepcionDeTipos {
+    //retornan Expresion x el constant folding
+    public Expresion transform(FlotanteAEntero fae) throws ExcepcionDeTipos {
         fae.setExpresion(fae.getExpresion().accept_transfomer(this));
         return fae;
     }
 
-    public EnteroAFlotante transform(EnteroAFlotante eaf) throws ExcepcionDeTipos {
+    public Expresion transform(EnteroAFlotante eaf) throws ExcepcionDeTipos {
         eaf.setExpresion(eaf.getExpresion().accept_transfomer(this));
         return eaf;
     }
