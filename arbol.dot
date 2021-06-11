@@ -427,4 +427,14 @@ graph G {1 [label="Programa"]
 213 -- 214
 215 [label="Const true BOOL"]
 213 -- 215
+216 [label="="]
+99 -- 216
+217 [label="Ident inv UNKNOWN"]
+216 -- 217
+218 [label="+ UNKNOWN"]
+216 -- 218
+219 [label="Const 7 INTEGER"]
+218 -- 219
+220 [label="Const 4 INTEGER"]
+218 -- 220
 }

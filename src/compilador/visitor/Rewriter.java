@@ -11,6 +11,8 @@ import java.util.List;
 
 public class Rewriter extends Transformer{
 
+    private int n = 1;
+
     public Programa procesar(Programa programa) throws ExcepcionDeTipos {
         return programa.accept_transfomer(this);
     }
@@ -41,11 +43,18 @@ public class Rewriter extends Transformer{
         return condicion;
     }
 
+    //nombre unico y que no puede ser utilizado como entrada en este lenguaje
+    public String crearNombreUnico(){
+        String nombre = "$"+n;
+        n++;
+        return nombre;
+    }
+
     @Override
     public Sentencia transform(When when) throws ExcepcionDeTipos {
         when = (When) super.transform(when);    //tuve que hacer que el transform(when) retorne una sentencia, por eso ahora casteo
         List<Sentencia> sentencias = new ArrayList<>();
-        Identificador identificador = new Identificador("temp",when.getExpresionBase().getTipo());
+        Identificador identificador = new Identificador(crearNombreUnico(),when.getExpresionBase().getTipo());
         DeclaracionVariable dv = new DeclaracionVariable(identificador,when.getExpresionBase().getTipo(),when.getExpresionBase());  //expresion que se comparara
         sentencias.add(dv);//sentencias del bloque a retornar
 
