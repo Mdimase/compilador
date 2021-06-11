@@ -473,4 +473,14 @@ graph G {1 [label="Programa"]
 235 -- 237
 238 [label="Const 2 INTEGER"]
 230 -- 238
+239 [label="="]
+107 -- 239
+240 [label="Ident zz UNKNOWN"]
+239 -- 240
+241 [label="OR UNKNOWN"]
+239 -- 241
+242 [label="Const true BOOL"]
+241 -- 242
+243 [label="Const false BOOL"]
+241 -- 243
 }

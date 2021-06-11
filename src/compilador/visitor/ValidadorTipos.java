@@ -189,8 +189,8 @@ public class ValidadorTipos extends Transformer{
     }
 
     @Override
-    public And transform(And and) throws ExcepcionDeTipos {
-        And nueva_op = super.transform(and);
+    public Expresion transform(And and) throws ExcepcionDeTipos {
+        And nueva_op = (And) super.transform(and);
         if(and.getIzquierda().getTipo() == Tipo.BOOL && and.getDerecha().getTipo() == Tipo.BOOL){
             nueva_op = (And) transformarOperacionBinaria(nueva_op);
             return nueva_op;
@@ -200,8 +200,8 @@ public class ValidadorTipos extends Transformer{
     }
 
     @Override
-    public Or transform(Or or) throws ExcepcionDeTipos {
-        Or nueva_op = super.transform(or);
+    public Expresion transform(Or or) throws ExcepcionDeTipos {
+        Or nueva_op = (Or) super.transform(or);
         if(or.getIzquierda().getTipo() == Tipo.BOOL && or.getDerecha().getTipo() == Tipo.BOOL){
             nueva_op = (Or) transformarOperacionBinaria(nueva_op);
             return nueva_op;
@@ -289,8 +289,8 @@ public class ValidadorTipos extends Transformer{
     }
 
     @Override
-    public Not transform(Not not) throws ExcepcionDeTipos {
-        Not nueva_op = super.transform(not);
+    public Expresion transform(Not not) throws ExcepcionDeTipos {
+        Not nueva_op = (Not) super.transform(not);
         if(not.getExpresion().getTipo() == Tipo.BOOL){
             nueva_op = (Not) transformarOperacionUnaria(nueva_op);
             return nueva_op;

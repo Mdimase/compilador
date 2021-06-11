@@ -110,12 +110,12 @@ public abstract class Transformer {
         return (Distinto) transformar_operacion_binaria(distinto);
     }
 
-    public Or transform(Or or) throws ExcepcionDeTipos {
-        return (Or) transformar_operacion_binaria(or);
+    public Expresion transform(Or or) throws ExcepcionDeTipos {
+        return transformar_operacion_binaria(or);
     }
 
-    public And transform(And and) throws ExcepcionDeTipos {
-        return (And) transformar_operacion_binaria(and);
+    public Expresion transform(And and) throws ExcepcionDeTipos {
+        return transformar_operacion_binaria(and);
     }
 
     private OperacionUnaria transformar_operacion_unaria(OperacionUnaria operacion) throws ExcepcionDeTipos{
@@ -127,8 +127,8 @@ public abstract class Transformer {
         return (MenosUnario) transformar_operacion_unaria(menosUnario);
     }
 
-    public Not transform(Not not) throws ExcepcionDeTipos {
-        return (Not) transformar_operacion_unaria(not);
+    public Expresion transform(Not not) throws ExcepcionDeTipos {
+        return transformar_operacion_unaria(not);
     }
 
     //retornan Expresion x el constant folding

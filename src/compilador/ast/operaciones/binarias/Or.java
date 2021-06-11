@@ -23,7 +23,7 @@ public class Or extends OperacionBinaria{
     }
 
     @Override
-    public Or accept_transfomer(Transformer t) throws ExcepcionDeTipos{
+    public Expresion accept_transfomer(Transformer t) throws ExcepcionDeTipos{
         return t.transform(this);
     }
 

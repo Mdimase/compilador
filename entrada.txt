@@ -98,6 +98,7 @@ when g
 #de bool a integer, quedando g con valor integer igual a 0
 
 inv = (1*2 + 3.5 * 2) /2;
+zz = true or false;
 
 #write("Fin \"del\" programa\n");
 end.

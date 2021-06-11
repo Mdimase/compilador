@@ -83,7 +83,7 @@ public class Rewriter extends Transformer{
         return new Bloque(sentencias,"When -> If",false);
     }
 
-    //a partir de aca son constant folding de exp arit con conversiones implicitas entre int y float
+    //CONSTANT FOLDING con conversiones implicitas entre int y float
 
     @Override
     public Expresion transform(EnteroAFlotante eaf) throws ExcepcionDeTipos {
@@ -195,6 +195,55 @@ public class Rewriter extends Transformer{
             }
         } else { //no constantes
             return division;
+        }
+    }
+
+    @Override
+    public Expresion transform(Not not) throws ExcepcionDeTipos {
+        super.transform(not);
+        if(not.getExpresion().getClass() == Constante.class){
+            Constante constante = (Constante) not.getExpresion();
+            if (constante.getValor().equals("true")){
+                return new Constante("false",Tipo.BOOL);
+            } else{
+                return new Constante("true",Tipo.BOOL);
+            }
+        } else{
+            return not;
+        }
+    }
+
+    @Override
+    public Expresion transform(And and) throws ExcepcionDeTipos {
+        super.transform(and);
+        if(and.getIzquierda().getClass() == Constante.class && and.getDerecha().getClass() == Constante.class){
+            Constante constanteIz = (Constante) and.getIzquierda();
+            Constante constanteDer = (Constante) and.getDerecha();
+            if(constanteIz.getValor().equals("true") && constanteDer.getValor().equals("true")){
+                return new Constante("true",Tipo.BOOL);
+            }
+            else{
+                return new Constante("false",Tipo.BOOL);
+            }
+        } else { //no constantes
+            return and;
+        }
+    }
+
+    @Override
+    public Expresion transform(Or or) throws ExcepcionDeTipos {
+        super.transform(or);
+        if(or.getIzquierda().getClass() == Constante.class && or.getDerecha().getClass() == Constante.class){
+            Constante constanteIz = (Constante) or.getIzquierda();
+            Constante constanteDer = (Constante) or.getDerecha();
+            if(constanteIz.getValor().equals("false") && constanteDer.getValor().equals("false")){
+                return new Constante("false",Tipo.BOOL);
+            }
+            else{
+                return new Constante("true",Tipo.BOOL);
+            }
+        } else { //no constantes
+            return or;
         }
     }
 

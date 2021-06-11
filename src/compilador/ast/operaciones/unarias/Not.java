@@ -23,7 +23,7 @@ public class Not extends OperacionUnaria{
     }
 
     @Override
-    public Not accept_transfomer(Transformer t) throws ExcepcionDeTipos {
+    public Expresion accept_transfomer(Transformer t) throws ExcepcionDeTipos {
         return t.transform(this);
     }
 }
