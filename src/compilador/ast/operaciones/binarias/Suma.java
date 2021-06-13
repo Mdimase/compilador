@@ -16,7 +16,16 @@ public class Suma extends OperacionBinaria{
     public Suma(Expresion izquierda, Expresion derecha, Tipo tipo) {
         super(izquierda, derecha, tipo, "+");
     }
-    
+
+    @Override
+    public String get_llvm_op_code() {
+        if(this.getTipo() == Tipo.INTEGER){
+            return "add";
+        } else{
+            return "fadd";
+        }
+    }
+
     @Override
     public <T> T accept(Visitor<T> v) throws ExcepcionDeAlcance{
         return v.visit(this);

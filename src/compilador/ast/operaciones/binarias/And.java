@@ -18,6 +18,11 @@ public class And extends OperacionBinaria{
     }
 
     @Override
+    public String get_llvm_op_code() {
+        return "";
+    }
+
+    @Override
     public <T> T accept(Visitor<T> v) throws ExcepcionDeAlcance {
         return v.visit(this);
     }

@@ -1,9 +1,10 @@
-#variable a is float = 1 + pepe();  #esto genera un error, dado que no se puede invocar funciones en el ambito global "aclarado por german"
-#variable cd is float = 1 + 1 / random();  esto genera un error, dado que no se puede invocar funciones en el ambito global "aclarado por german"
+
 variable d is boolean = not false;
-variable pol is float = 5-2;
-variable hj is integer = 1.3;
-# si invocara un parametro con nombre d,t, o cualquier otra variable declarada en el ambito global dispara una excepcion de nombre repetidos
+variable hj is integer = 1+65;
+variable rt is float=5.56;
+variable jk is float;
+variable df is integer;
+#variable yu is float = read_float(); HACER ESTO EN IRGLOBALVARIABLES
 
 function prueba_Funciones (c is integer, j is boolean=false) return float #a partir de la variable j, los demas parametros deben ser con valor por defecto, caso contrario, da error
     begin
@@ -37,23 +38,22 @@ function salamin(z is integer) return float
             # como no tiene un return, le agregamos uno implicitamente que retorna un valor por defecto segun el tipo de retorno de la funcion.
     end;
 
-#variable t is float=2+3.56/p; dispara un error dado que p en este punto todavia no esta declarado
-variable l is boolean=true;
-variable p is integer = -1;
+variable p is integer = 15 + hj;
+variable poyo is float = rt - jk;
 variable b is boolean;
+variable asd is float = -1.23;
+variable nm is integer = -56;
+variable l is boolean=not d;
+variable kl is boolean = hj != df;
 
 main is
 
 variable x is integer;
 variable mj is float = .9999;
 variable mk is float = 99.;
-#x =  not x; no se puede hacer un not integer
-#g = g and g; no se puede hacer un and entre aritmeticos y ademas, g todavia no esta declarada
-#l = l + l; no se puede sumar entre tipos bool
-#variable b is boolean=true;    # b ya esta declarada en global, no puede pisar su nombre
 
 variable f is float= 0.45;
-f = read_float();
+
 variable fg is integer;
 variable g is integer= 10 / fg;
 
@@ -100,6 +100,5 @@ when g
 inv = (1*2 + 3.5 * 2) /2;
 zz = true or false;
 zz = 7 > 7.2;
-
 #write("Fin \"del\" programa\n");
 end.

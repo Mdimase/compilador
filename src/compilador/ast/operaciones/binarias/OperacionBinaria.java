@@ -56,5 +56,6 @@ public abstract class OperacionBinaria extends Expresion {
         }
         return String.format("%s", this.getNombre());
     }
-    
+
+    public abstract String get_llvm_op_code();
 }

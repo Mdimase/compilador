@@ -34,12 +34,17 @@ public class Main {
             System.out.println("Tipos validados");
             Rewriter rw = new Rewriter();
             rw.procesar(programa);
-            System.out.println("When transformado");
+            System.out.println("Codigo transformado");
             pw = new PrintWriter(new FileWriter("arbol_tp.dot"));
             pw.println(graficador.visit(rw.procesar(programa)));
             pw.close();
             cmd = "dot -Tpng arbol_tp.dot -o arbol_tp.png";
             Runtime.getRuntime().exec(cmd);
+
+            IRGlobalVariables irgb = new IRGlobalVariables(ga.getAlcance_global());
+            irgb.procesar(programa.getDeclaraciones(),"Programita.ll");
+            System.out.println(irgb.getResultado());
+
         } catch(Exception e){
             System.out.println(e);
         }    

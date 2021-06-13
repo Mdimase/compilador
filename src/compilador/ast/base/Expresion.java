@@ -7,6 +7,7 @@ import compilador.ast.instrucciones.Sentencia;
 public abstract class Expresion extends Sentencia {
     
     private Tipo tipo;
+    private String irRef;
 
     public Expresion(Tipo tipo) {
         this.tipo = tipo;
@@ -33,4 +34,11 @@ public abstract class Expresion extends Sentencia {
         this.tipo = tipo;
     }
 
+    public String getIrRef() {
+        return irRef;
+    }
+
+    public void setIrRef(String irRef) {
+        this.irRef = irRef;
+    }
 }

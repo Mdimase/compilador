@@ -14,6 +14,7 @@ public class DeclaracionVariable extends Declaracion{
     private Identificador id;   //identificador que estoy creando (seria con nombre solo aca, xq el tipo lo agrego abajo)
     private Tipo tipo;      //tipo de dato, util para hacer el chequeo despues
     private Expresion expresion;
+    private String irName;
     
     public DeclaracionVariable(Identificador id, Tipo tipo){
         this.id = id;
@@ -25,6 +26,14 @@ public class DeclaracionVariable extends Declaracion{
         this.id = id;
         this.tipo = tipo;
         this.expresion=expresion;
+    }
+
+    public String getIrName() {
+        return irName;
+    }
+
+    public void setIrName(String irName) {
+        this.irName = irName;
     }
 
     public Identificador getId() {

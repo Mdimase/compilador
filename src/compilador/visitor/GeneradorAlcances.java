@@ -27,6 +27,10 @@ public class GeneradorAlcances extends Visitor<Void> {
         this.alcance_global = alcance_global;
     }
 
+    public Alcance getAlcance_global() {
+        return alcance_global;
+    }
+
     //seteo main como hijo de global
     private void mainConDeclaraciones (Bloque bloque){
         bloque.setAlcance(new Alcance("main",alcance_global));  //seteo su padre, que sera el alcance global
