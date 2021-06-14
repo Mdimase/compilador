@@ -45,8 +45,8 @@ public class Main {
             irgb.procesar(programa.getDeclaraciones(),"Programita.ll");
 
             GeneradorCodigo generadorCodigo = new GeneradorCodigo(irgb.getAlcance_global(),irgb.getResultado());
+            generadorCodigo.setInicializaciones(irgb.getInicializaciones());
             System.out.println(generadorCodigo.procesar(programa));
-
 
         } catch(Exception e){
             System.out.println(e);

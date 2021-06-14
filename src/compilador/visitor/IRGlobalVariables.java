@@ -15,6 +15,11 @@ public class IRGlobalVariables extends Visitor<String>{
     private String nombre_archivo;
     private Alcance alcance_global;
     private StringBuilder resultado = new StringBuilder();
+    private StringBuilder inicializaciones = new StringBuilder();
+
+    public StringBuilder getInicializaciones() {
+        return inicializaciones;
+    }
 
     public IRGlobalVariables(Alcance alcance_global) {
         this.alcance_global = alcance_global;
@@ -96,11 +101,11 @@ public class IRGlobalVariables extends Visitor<String>{
                     dv.setIrName(nombre_ir);
                 }
             }
-            resultado.append("define i32 @main(i32, i8**) {\n");
+            //resultado.append("define i32 @main(i32, i8**) {\n");
             resultado.append(super.visit(declaraciones));
             return resultado.toString();
         } else{
-            resultado.append("define i32 @main(i32, i8**) {\n");
+            //resultado.append("define i32 @main(i32, i8**) {\n");
             return resultado.toString();    //sin agregar las declaraciones
         }
     }
@@ -115,12 +120,12 @@ public class IRGlobalVariables extends Visitor<String>{
         if(declaracionVariable.getExpresion().getClass() == Constante.class){ //ya declaradas en procesar()
             return "";
         }
-        resultado.append(declaracionVariable.getExpresion().accept(this));
+        inicializaciones.append(declaracionVariable.getExpresion().accept(this));
         DeclaracionVariable dv = (DeclaracionVariable) alcance_global.resolver(declaracionVariable.getId().getNombre());
         String tipoLlvm = this.LLVM_IR_TYPE_INFO.get(dv.getTipo()).get(0);
-        resultado.append(String.format("  store %1$s %2$s, %1$s* %3$s ; %3$s = %2$s\n",
+        inicializaciones.append(String.format("  store %1$s %2$s, %1$s* %3$s ; %3$s = %2$s\n",
              tipoLlvm, dv.getExpresion().getIrRef(), dv.getIrName()));
-        return resultado.toString();
+        return inicializaciones.toString();
     }
 
     @Override
@@ -130,7 +135,7 @@ public class IRGlobalVariables extends Visitor<String>{
         if(res instanceof DeclaracionVariable dv){
             String tipoLlvm = this.LLVM_IR_TYPE_INFO.get(dv.getTipo()).get(0);
             String llvmRef = dv.getIrName();
-            resultado.append(String.format("  %1$s = load %2$s, %2$s* %3$s ; %1$s = %4$s\n",
+            inicializaciones.append(String.format("  %1$s = load %2$s, %2$s* %3$s ; %1$s = %4$s\n",
                     tempId, tipoLlvm, llvmRef, identificador.getNombre()));
             identificador.setIrRef(tempId);
         }
@@ -138,10 +143,10 @@ public class IRGlobalVariables extends Visitor<String>{
     }
 
     public void generarCodigoOperacionBinaria(OperacionBinaria s) throws ExcepcionDeAlcance {
-        resultado.append(super.visit(s));
+        inicializaciones.append(super.visit(s));
         s.setIrRef(this.newTempId());
         String tipoLlvm = this.LLVM_IR_TYPE_INFO.get(s.getIzquierda().getTipo()).get(0);
-        resultado.append(String.format("  %1$s = %2$s %3$s %4$s, %5$s\n", s.getIrRef(),
+        inicializaciones.append(String.format("  %1$s = %2$s %3$s %4$s, %5$s\n", s.getIrRef(),
                     s.get_llvm_op_code(), tipoLlvm, s.getIzquierda().getIrRef(), s.getDerecha().getIrRef()));
     }
 
@@ -170,12 +175,12 @@ public class IRGlobalVariables extends Visitor<String>{
     }
 
     public void generarCodigoConversion(OperacionConversion o) throws ExcepcionDeAlcance {
-        resultado.append(super.visit(o));
+        inicializaciones.append(super.visit(o));
         o.setIrRef(this.newTempId());
         if(o.getClass() == EnteroAFlotante.class){
-            resultado.append(String.format("  %1$s = sitofp i32 %2$s to float\n", o.getIrRef(), o.getExpresion().getIrRef()));
+            inicializaciones.append(String.format("  %1$s = sitofp i32 %2$s to float\n", o.getIrRef(), o.getExpresion().getIrRef()));
         } else{
-            resultado.append(String.format("  %1$s = sitofp float %2$s to i32\n", o.getIrRef(), o.getExpresion().getIrRef()));
+            inicializaciones.append(String.format("  %1$s = sitofp float %2$s to i32\n", o.getIrRef(), o.getExpresion().getIrRef()));
         }
     }
 
@@ -187,19 +192,19 @@ public class IRGlobalVariables extends Visitor<String>{
         }
         if(ou.getClass() == MenosUnario.class){
             if(ou.getExpresion().getTipo() == Tipo.FLOAT){  // %rv=fneg float,%rv
-                resultado.append(super.visit(ou));
+                inicializaciones.append(super.visit(ou));
                 ou.setIrRef(this.newTempId());
-                resultado.append(String.format("  %1$s = fneg float , %2$s\n", ou.getIrRef(), ou.getExpresion().getIrRef()));
+                inicializaciones.append(String.format("  %1$s = fneg float , %2$s\n", ou.getIrRef(), ou.getExpresion().getIrRef()));
             } else{ //integer  %rv=sub i32 0,%rv
-                resultado.append(super.visit(ou));
+                inicializaciones.append(super.visit(ou));
                 ou.setIrRef(this.newTempId());
-                resultado.append(String.format("  %1$s = sub i32 0, %2$s\n", ou.getIrRef(), ou.getExpresion().getIrRef()));
+                inicializaciones.append(String.format("  %1$s = sub i32 0, %2$s\n", ou.getIrRef(), ou.getExpresion().getIrRef()));
             }
         }
         else{   //not   %rv=xor i1 %rv, true
-            resultado.append(super.visit(ou));
+            inicializaciones.append(super.visit(ou));
             ou.setIrRef(this.newTempId());
-            resultado.append(String.format("  %1$s = xor i1 %2$s, 1\n", ou.getIrRef(), ou.getExpresion().getIrRef()));
+            inicializaciones.append(String.format("  %1$s = xor i1 %2$s, 1\n", ou.getIrRef(), ou.getExpresion().getIrRef()));
         }
         return "";
     }

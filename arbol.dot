@@ -35,38 +35,62 @@ graph G {1 [label="Programa"]
 17 -- 18
 19 [label="Const true BOOL"]
 17 -- 19
-20 [label="MAIN"]
-1 -- 20
-21 [label="DeclaracionVariable"]
+20 [label="DeclaracionFuncion"]
+2 -- 20
+21 [label="Ident hola INTEGER"]
 20 -- 21
-22 [label="Ident j INTEGER"]
-21 -- 22
-23 [label="Const 56 INTEGER"]
-21 -- 23
-24 [label="DeclaracionVariable"]
+22 [label="Parametro"]
+20 -- 22
+23 [label="Ident g21 FLOAT"]
+22 -- 23
+24 [label="Parametro"]
 20 -- 24
-25 [label="Ident zz BOOL"]
+25 [label="Ident yupi INTEGER"]
 24 -- 25
-26 [label="Const false BOOL"]
-24 -- 26
-27 [label="DeclaracionVariable"]
-20 -- 27
-28 [label="Ident int INTEGER"]
+26 [label="BLOQUE_FUNCION"]
+20 -- 26
+27 [label="="]
+26 -- 27
+28 [label="Ident hj UNKNOWN"]
 27 -- 28
 29 [label="+ UNKNOWN"]
 27 -- 29
-30 [label="Ident j UNKNOWN"]
+30 [label="Ident hj UNKNOWN"]
 29 -- 30
-31 [label="Const 500 INTEGER"]
+31 [label="Const 1 INTEGER"]
 29 -- 31
-32 [label="="]
-20 -- 32
-33 [label="Ident int UNKNOWN"]
+32 [label="MAIN"]
+1 -- 32
+33 [label="DeclaracionVariable"]
 32 -- 33
-34 [label="+ UNKNOWN"]
-32 -- 34
-35 [label="Ident int UNKNOWN"]
-34 -- 35
-36 [label="Const 1 INTEGER"]
-34 -- 36
+34 [label="Ident j INTEGER"]
+33 -- 34
+35 [label="Const 56 INTEGER"]
+33 -- 35
+36 [label="DeclaracionVariable"]
+32 -- 36
+37 [label="Ident zz BOOL"]
+36 -- 37
+38 [label="Const false BOOL"]
+36 -- 38
+39 [label="DeclaracionVariable"]
+32 -- 39
+40 [label="Ident int INTEGER"]
+39 -- 40
+41 [label="+ UNKNOWN"]
+39 -- 41
+42 [label="Ident j UNKNOWN"]
+41 -- 42
+43 [label="Const 500 INTEGER"]
+41 -- 43
+44 [label="="]
+32 -- 44
+45 [label="Ident int UNKNOWN"]
+44 -- 45
+46 [label="+ UNKNOWN"]
+44 -- 46
+47 [label="Ident int UNKNOWN"]
+46 -- 47
+48 [label="Const 1 INTEGER"]
+46 -- 48
 }

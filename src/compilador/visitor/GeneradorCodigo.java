@@ -12,10 +12,15 @@ public class GeneradorCodigo extends Visitor<String>{
     private Alcance alcance_global;
     private Alcance alcance_actual;
     private StringBuilder resultado;
+    private StringBuilder inicializaciones;
 
     public GeneradorCodigo(Alcance alcance_global,StringBuilder string) {
         this.alcance_global = alcance_actual = alcance_global;
         resultado=string;
+    }
+
+    public void setInicializaciones(StringBuilder inicializaciones) {
+        this.inicializaciones = inicializaciones;
     }
 
     // la lista tendra en .get(0)=tipoir y en .get(1)=valor
@@ -35,8 +40,8 @@ public class GeneradorCodigo extends Visitor<String>{
     }};
 
 
-    public String getIRGlobalVariableName(DeclaracionVariable dv){
-        return String.format("@%1$s", dv.getId().getNombre());
+    public String getIRGlobalName(Identificador identificador){
+        return String.format("@%1$s", identificador.getNombre());
     }
 
     public String newTempId(){
@@ -66,7 +71,11 @@ public class GeneradorCodigo extends Visitor<String>{
     public String visit(Bloque bloque) throws ExcepcionDeAlcance {
         if(bloque.getNombre().equals("MAIN")){
             alcance_actual = bloque.getAlcance();
-            //resultado.append("define i32 @main(i32, i8**) {\n");
+            resultado.append("\n");
+            resultado.append("define i32 @main(i32, i8**) {\n");
+            if(!inicializaciones.isEmpty()){
+                resultado.append(inicializaciones); //inicializacion de todas las variables globales
+            }
             resultado.append(super.visit(bloque));
             resultado.append("ret i32 0\n");
             resultado.append("}");
@@ -74,6 +83,38 @@ public class GeneradorCodigo extends Visitor<String>{
             alcance_actual = bloque.getAlcance();
             resultado.append(super.visit(bloque));
         }
+        return "";
+    }
+
+    @Override
+    public String visit(DeclaracionFuncion declaracionFuncion) throws ExcepcionDeAlcance {
+        resultado.append("\n");
+        alcance_actual = declaracionFuncion.getBloque().getAlcance();
+        String tipoLlvm = this.LLVM_IR_TYPE_INFO.get(declaracionFuncion.getTipoRetorno()).get(0);
+        StringBuilder params = new StringBuilder();
+        if(!declaracionFuncion.getParametros().isEmpty()){
+           params = this.conseguirParametros(declaracionFuncion.getParametros());
+        }
+        resultado.append(String.format("define %1$s %2$s (%3$s) {\n",
+                tipoLlvm, this.getIRGlobalName(declaracionFuncion.getIdentificador()), params));
+        //CUERPO DE LA FUNCION
+        resultado.append("}\n");
+        return "";
+    }
+
+    public StringBuilder conseguirParametros(List<Parametro> list){
+        StringBuilder auxp = new StringBuilder();
+        ArrayList<String> pa = new ArrayList<>();
+        for (Parametro p: list){
+            String tipoPLlvm = this.LLVM_IR_TYPE_INFO.get(p.getTipo()).get(0);
+            pa.add(String.format("%1$s %2$s", tipoPLlvm, this.newTempId()));
+        }
+        auxp.append(pa);
+        return new StringBuilder(auxp.substring(1,auxp.length()-1));
+    }
+
+    @Override
+    public String visit(Parametro parametro){
         return "";
     }
 
@@ -120,6 +161,10 @@ public class GeneradorCodigo extends Visitor<String>{
             resultado.append(String.format("  %1$s = load %2$s, %2$s* %3$s ; %1$s = %4$s\n",
                     tempId, tipoLlvm, llvmRef, identificador.getNombre()));
             identificador.setIrRef(tempId);
+        }
+        if(res instanceof Parametro){
+            System.out.println(alcance_actual.getNombre());
+            System.out.println(res);
         }
         return "";
     }
