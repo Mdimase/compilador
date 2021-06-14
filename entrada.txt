@@ -5,7 +5,7 @@ variable rt is float=5.56;
 variable jk is float;
 variable df is integer;
 #variable yu is float = read_float(); HACER ESTO EN IRGLOBALVARIABLES
-
+{
 function prueba_Funciones (c is integer, j is boolean=false) return float #a partir de la variable j, los demas parametros deben ser con valor por defecto, caso contrario, da error
     begin
         #puedo declarar variables locales a la funcion, siempre y cuando no pisen algun nombre de variables globales
@@ -37,7 +37,7 @@ function salamin(z is integer) return float
             end;
             # como no tiene un return, le agregamos uno implicitamente que retorna un valor por defecto segun el tipo de retorno de la funcion.
     end;
-
+}
 variable p is integer = 15 + hj;
 variable poyo is float = rt - jk;
 variable b is boolean;
@@ -48,57 +48,7 @@ variable kl is boolean = hj != df;
 
 main is
 
-variable x is integer;
-variable mj is float = .9999;
-variable mk is float = 99.;
-
-variable f is float= 0.45;
-
-variable fg is integer;
-variable g is integer= 10 / fg;
-
-if g==1 and b!= false then
-    begin
-        while fg<pepe(f) do
-            begin
-                #variable x is boolean; no puede pisar la x ya declarada
-                variable lk is float;
-                writeln(37.5 / prueba_Funciones(pepe(f)));
-                fg=fg+1;
-            end;
-        #if 2+2 then b=false; #error porque la condicion no es booleana
-        if fg == 12 then
-            writeln("funciono bien");
-    end;
-
-#tranforma el for a su while equivalente
-for g from 6 to 1 by 2 do
-    begin
-        write(g);
-    end;
-
-while 2 == 3 do
-    begin
-        write(5);
-    end;
-variable inv is float = 1 + pepe(2.3);
-
-prueba_Funciones(g);
 variable j is integer;
 variable zz is boolean=false;
 
-when g
-    is < fg then g=1-pepe(5.2)
-    #is == zz then g=23 #esto no se puede realizar porque comparamos un integer con un bool
-    is != 15 then g=3
-    else zz =true;
-
-#g = salamin(g);
-#salamin es una funcion que retorna un float, en este caso el return no se encuentra entonces devolvera un float por defecto (0.0), posteriormente se realiza una transformacion
-#de bool a integer, quedando g con valor integer igual a 0
-
-inv = (1*2 + 3.5 * 2) /2;
-zz = true or false;
-zz = 7 > 7.2;
-#write("Fin \"del\" programa\n");
 end.

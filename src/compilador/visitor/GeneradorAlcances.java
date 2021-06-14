@@ -42,6 +42,7 @@ public class GeneradorAlcances extends Visitor<Void> {
         alcance_global = new Alcance("global");
         bloque.setAlcance(new Alcance("main",alcance_global));  //seteo su padre, que sera el alcance global
         this.alcance_actual = bloque.getAlcance();
+        alcances.push(new Bloque(new ArrayList<Sentencia>(),"DECLARACIONES",false,alcance_global)); //error empty stack
     }
 
     // dispara toda la generacion de alcances del AST

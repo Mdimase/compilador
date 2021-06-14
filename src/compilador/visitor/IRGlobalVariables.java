@@ -14,7 +14,6 @@ import java.util.Map;
 public class IRGlobalVariables extends Visitor<String>{
 
     private String nombre_archivo;
-    private boolean idNombre;
     private Alcance alcance_global;
     private StringBuilder resultado = new StringBuilder();
 
@@ -24,6 +23,10 @@ public class IRGlobalVariables extends Visitor<String>{
 
     public StringBuilder getResultado() {
         return resultado;
+    }
+
+    public Alcance getAlcance_global() {
+        return alcance_global;
     }
 
     // la lista tendra en .get(0)=tipoir y en .get(1)=valor
@@ -49,10 +52,6 @@ public class IRGlobalVariables extends Visitor<String>{
 
     public String newTempId(){
         return String.format("%%t$%1$s", String.valueOf(getID()));
-    }
-
-    public String newTempLabel(){
-        return String.format("label$%1$s", String.valueOf(getID()));
     }
 
     public String procesar(Bloque declaraciones, String nombre_archivo) throws ExcepcionDeAlcance {
@@ -101,11 +100,9 @@ public class IRGlobalVariables extends Visitor<String>{
             }
             resultado.append("define i32 @main(i32, i8**) {\n");
             resultado.append(super.visit(declaraciones));
-            // ACA VA EL CALL @MAIN.USER()
-            resultado.append("  ret i32 0\n");
-            resultado.append("}");
             return resultado.toString();
         } else{
+            resultado.append("define i32 @main(i32, i8**) {\n");
             return resultado.toString();    //sin agregar las declaraciones
         }
     }

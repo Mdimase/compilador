@@ -43,7 +43,10 @@ public class Main {
 
             IRGlobalVariables irgb = new IRGlobalVariables(ga.getAlcance_global());
             irgb.procesar(programa.getDeclaraciones(),"Programita.ll");
-            System.out.println(irgb.getResultado());
+
+            GeneradorCodigo generadorCodigo = new GeneradorCodigo(irgb.getAlcance_global(),irgb.getResultado());
+            System.out.println(generadorCodigo.procesar(programa));
+
 
         } catch(Exception e){
             System.out.println(e);
