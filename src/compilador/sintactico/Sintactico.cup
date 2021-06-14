@@ -380,8 +380,8 @@ write::= WRITE APERTURA_PARENTESIS expresion:e CIERRE_PARENTESIS{:
             RESULT = new Write(e);
         :};
 
-write ::= WRITE APERTURA_PARENTESIS STRING_LITERAL CIERRE_PARENTESIS {:
-            Write w = new Write();
+write ::= WRITE APERTURA_PARENTESIS STRING_LITERAL:s CIERRE_PARENTESIS {:
+            Write w = new Write(s);
             w.setEsString(true);
             RESULT = w;
             :};
@@ -390,8 +390,8 @@ writeln ::= WRITELN APERTURA_PARENTESIS expresion:e CIERRE_PARENTESIS{:
             RESULT = new Write(e, true);
             :};
 
-writeln ::= WRITELN APERTURA_PARENTESIS STRING_LITERAL CIERRE_PARENTESIS{:
-            Write w = new Write(true);
+writeln ::= WRITELN APERTURA_PARENTESIS STRING_LITERAL:s CIERRE_PARENTESIS{:
+            Write w = new Write(true,s);
             w.setEsString(true);
             RESULT = w;
             :};

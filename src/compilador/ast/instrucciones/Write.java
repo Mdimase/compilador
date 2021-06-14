@@ -10,6 +10,7 @@ public class Write extends Sentencia{
     private Expresion expresion;
     private Boolean esString=false;
     private Boolean esLn=false;
+    private String mensaje;
 
     public Write(Expresion expresion) {
         super("Write");
@@ -22,13 +23,17 @@ public class Write extends Sentencia{
         this.esLn = esLn;
     }
 
-    public Write(Boolean esLn) {
+    public Write(Boolean esLn,String mensaje) {
         super("WriteLn String");
         this.esLn = esLn;
+        this.mensaje = mensaje;
+        this.esString = true;
     }
 
-    public Write() {
+    public Write(String mensaje) {
         super("Write String");
+        this.mensaje = mensaje;
+        this.esString = true;
     }
 
     public Boolean getEsString() {
@@ -53,6 +58,14 @@ public class Write extends Sentencia{
 
     public void setExpresion(Expresion expresion) {
         this.expresion = expresion;
+    }
+
+    public String getMensaje() {
+        return mensaje;
+    }
+
+    public void setMensaje(String mensaje) {
+        this.mensaje = mensaje;
     }
 
     @Override

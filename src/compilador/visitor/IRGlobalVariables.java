@@ -3,8 +3,7 @@ package compilador.visitor;
 import compilador.ast.base.*;
 import compilador.ast.instrucciones.*;
 import compilador.ast.operaciones.binarias.*;
-import compilador.ast.operaciones.unarias.MenosUnario;
-import compilador.ast.operaciones.unarias.OperacionUnaria;
+import compilador.ast.operaciones.unarias.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,7 +50,7 @@ public class IRGlobalVariables extends Visitor<String>{
     }
 
     public String newTempId(){
-        return String.format("%%t$%1$s", String.valueOf(getID()));
+        return String.format("%%t.%1$s", String.valueOf(getID()));
     }
 
     public String procesar(Bloque declaraciones, String nombre_archivo) throws ExcepcionDeAlcance {
@@ -95,7 +94,6 @@ public class IRGlobalVariables extends Visitor<String>{
                     String nombre_ir = this.getIRGlobalVariableName(dv);
                     resultado.append(String.format("%1$s = global %2$s %3$s\n", nombre_ir, tipo_ir, valor_ir));
                     dv.setIrName(nombre_ir);
-                    alcance_global.replace(dv.getId().getNombre(), dv); //remplazo la declaracion original por una nueva que tiene seteado el nombreIr de esta variable
                 }
             }
             resultado.append("define i32 @main(i32, i8**) {\n");
@@ -139,26 +137,12 @@ public class IRGlobalVariables extends Visitor<String>{
         return "";
     }
 
-    // HACER EL CORTOCIRCUITO BOOLEANO PARA EL AND Y EL OR
-    public void generarCortocircuitoBooleano(OperacionBinaria s){
-        if(s.getClass() == And.class){
-            //cortocircuito And
-            int a=0;
-        } else{ //cortocircuito Or
-            int b=0;
-        }
-    }
-
     public void generarCodigoOperacionBinaria(OperacionBinaria s) throws ExcepcionDeAlcance {
-        if(s.getClass() == And.class || s.getClass() == Or.class){
-            this.generarCortocircuitoBooleano(s);
-        } else {
-            resultado.append(super.visit(s));
-            s.setIrRef(this.newTempId());
-            String tipoLlvm = this.LLVM_IR_TYPE_INFO.get(s.getIzquierda().getTipo()).get(0);
-            resultado.append(String.format("  %1$s = %2$s %3$s %4$s, %5$s\n", s.getIrRef(),
+        resultado.append(super.visit(s));
+        s.setIrRef(this.newTempId());
+        String tipoLlvm = this.LLVM_IR_TYPE_INFO.get(s.getIzquierda().getTipo()).get(0);
+        resultado.append(String.format("  %1$s = %2$s %3$s %4$s, %5$s\n", s.getIrRef(),
                     s.get_llvm_op_code(), tipoLlvm, s.getIzquierda().getIrRef(), s.getDerecha().getIrRef()));
-        }
     }
 
     @Override
@@ -169,6 +153,14 @@ public class IRGlobalVariables extends Visitor<String>{
 
     @Override
     public String visit(Constante c) {
+        if(c.getValor().equals("false")){
+            c.setIrRef("0");
+            return "";
+        }
+        if(c.getValor().equals("true")){
+            c.setIrRef("1");
+            return "";
+        }
         if (c.getTipo() == Tipo.FLOAT){
             double a = Float.parseFloat((String) c.getValor());
             c.setIrRef(Double.toString(a));
@@ -177,8 +169,22 @@ public class IRGlobalVariables extends Visitor<String>{
         return "";
     }
 
+    public void generarCodigoConversion(OperacionConversion o) throws ExcepcionDeAlcance {
+        resultado.append(super.visit(o));
+        o.setIrRef(this.newTempId());
+        if(o.getClass() == EnteroAFlotante.class){
+            resultado.append(String.format("  %1$s = sitofp i32 %2$s to float\n", o.getIrRef(), o.getExpresion().getIrRef()));
+        } else{
+            resultado.append(String.format("  %1$s = sitofp float %2$s to i32\n", o.getIrRef(), o.getExpresion().getIrRef()));
+        }
+    }
+
     @Override
     public String visit(OperacionUnaria ou) throws ExcepcionDeAlcance {
+        if(ou.getClass() == EnteroAFlotante.class || ou.getClass() == FlotanteAEntero.class){
+            this.generarCodigoConversion((OperacionConversion) ou);
+            return "";
+        }
         if(ou.getClass() == MenosUnario.class){
             if(ou.getExpresion().getTipo() == Tipo.FLOAT){  // %rv=fneg float,%rv
                 resultado.append(super.visit(ou));
@@ -193,10 +199,12 @@ public class IRGlobalVariables extends Visitor<String>{
         else{   //not   %rv=xor i1 %rv, true
             resultado.append(super.visit(ou));
             ou.setIrRef(this.newTempId());
-            resultado.append(String.format("  %1$s = xor i1 %2$s, true\n", ou.getIrRef(), ou.getExpresion().getIrRef()));
+            resultado.append(String.format("  %1$s = xor i1 %2$s, 1\n", ou.getIrRef(), ou.getExpresion().getIrRef()));
         }
         return "";
     }
+
+
 
 
 

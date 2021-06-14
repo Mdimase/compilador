@@ -1429,8 +1429,11 @@ class CUP$Sintactico$actions {
           case 49: // write ::= WRITE APERTURA_PARENTESIS STRING_LITERAL CIERRE_PARENTESIS 
             {
               Write RESULT =null;
+		int sleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).left;
+		int sright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).right;
+		String s = (String)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).value;
 		
-            Write w = new Write();
+            Write w = new Write(s);
             w.setEsString(true);
             RESULT = w;
             
@@ -1456,8 +1459,11 @@ class CUP$Sintactico$actions {
           case 51: // writeln ::= WRITELN APERTURA_PARENTESIS STRING_LITERAL CIERRE_PARENTESIS 
             {
               Write RESULT =null;
+		int sleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).left;
+		int sright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).right;
+		String s = (String)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).value;
 		
-            Write w = new Write(true);
+            Write w = new Write(true,s);
             w.setEsString(true);
             RESULT = w;
             

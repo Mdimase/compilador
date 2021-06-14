@@ -19,7 +19,7 @@ public class And extends OperacionBinaria{
 
     @Override
     public String get_llvm_op_code() {
-        return "";
+        return "and";
     }
 
     @Override

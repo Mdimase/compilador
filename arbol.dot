@@ -27,88 +27,46 @@ graph G {1 [label="Programa"]
 12 -- 14
 15 [label="DeclaracionVariable"]
 2 -- 15
-16 [label="Ident jk FLOAT"]
+16 [label="Ident fghjl BOOL"]
 15 -- 16
-17 [label="Const 0.0 FLOAT"]
+17 [label="OR UNKNOWN"]
 15 -- 17
-18 [label="DeclaracionVariable"]
-2 -- 18
-19 [label="Ident df INTEGER"]
-18 -- 19
-20 [label="Const 0 INTEGER"]
-18 -- 20
+18 [label="Ident d UNKNOWN"]
+17 -- 18
+19 [label="Const true BOOL"]
+17 -- 19
+20 [label="MAIN"]
+1 -- 20
 21 [label="DeclaracionVariable"]
-2 -- 21
-22 [label="Ident p INTEGER"]
+20 -- 21
+22 [label="Ident j INTEGER"]
 21 -- 22
-23 [label="+ UNKNOWN"]
+23 [label="Const 56 INTEGER"]
 21 -- 23
-24 [label="Const 15 INTEGER"]
-23 -- 24
-25 [label="Ident hj UNKNOWN"]
-23 -- 25
-26 [label="DeclaracionVariable"]
-2 -- 26
-27 [label="Ident poyo FLOAT"]
-26 -- 27
-28 [label="- UNKNOWN"]
-26 -- 28
-29 [label="Ident rt UNKNOWN"]
-28 -- 29
-30 [label="Ident jk UNKNOWN"]
-28 -- 30
-31 [label="DeclaracionVariable"]
-2 -- 31
-32 [label="Ident b BOOL"]
-31 -- 32
-33 [label="Const false BOOL"]
-31 -- 33
-34 [label="DeclaracionVariable"]
-2 -- 34
-35 [label="Ident asd FLOAT"]
+24 [label="DeclaracionVariable"]
+20 -- 24
+25 [label="Ident zz BOOL"]
+24 -- 25
+26 [label="Const false BOOL"]
+24 -- 26
+27 [label="DeclaracionVariable"]
+20 -- 27
+28 [label="Ident int INTEGER"]
+27 -- 28
+29 [label="+ UNKNOWN"]
+27 -- 29
+30 [label="Ident j UNKNOWN"]
+29 -- 30
+31 [label="Const 500 INTEGER"]
+29 -- 31
+32 [label="="]
+20 -- 32
+33 [label="Ident int UNKNOWN"]
+32 -- 33
+34 [label="+ UNKNOWN"]
+32 -- 34
+35 [label="Ident int UNKNOWN"]
 34 -- 35
-36 [label="-"]
+36 [label="Const 1 INTEGER"]
 34 -- 36
-37 [label="Const 1.23 FLOAT"]
-36 -- 37
-38 [label="DeclaracionVariable"]
-2 -- 38
-39 [label="Ident nm INTEGER"]
-38 -- 39
-40 [label="-"]
-38 -- 40
-41 [label="Const 56 INTEGER"]
-40 -- 41
-42 [label="DeclaracionVariable"]
-2 -- 42
-43 [label="Ident l BOOL"]
-42 -- 43
-44 [label="NOT"]
-42 -- 44
-45 [label="Ident d UNKNOWN"]
-44 -- 45
-46 [label="DeclaracionVariable"]
-2 -- 46
-47 [label="Ident kl BOOL"]
-46 -- 47
-48 [label="!= UNKNOWN"]
-46 -- 48
-49 [label="Ident hj UNKNOWN"]
-48 -- 49
-50 [label="Ident df UNKNOWN"]
-48 -- 50
-51 [label="MAIN"]
-1 -- 51
-52 [label="DeclaracionVariable"]
-51 -- 52
-53 [label="Ident j INTEGER"]
-52 -- 53
-54 [label="Const 0 INTEGER"]
-52 -- 54
-55 [label="DeclaracionVariable"]
-51 -- 55
-56 [label="Ident zz BOOL"]
-55 -- 56
-57 [label="Const false BOOL"]
-55 -- 57
 }
