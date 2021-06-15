@@ -119,12 +119,36 @@ graph G {1 [label="Programa"]
 59 -- 60
 61 [label="Ident nm UNKNOWN"]
 59 -- 61
-62 [label="MAIN"]
-1 -- 62
-63 [label="DeclaracionVariable"]
+62 [label="DeclaracionFuncion"]
+2 -- 62
+63 [label="Ident hola INTEGER"]
 62 -- 63
-64 [label="Ident j INTEGER"]
-63 -- 64
-65 [label="Const 56 INTEGER"]
-63 -- 65
+64 [label="Parametro"]
+62 -- 64
+65 [label="Ident g21 FLOAT"]
+64 -- 65
+66 [label="Parametro"]
+62 -- 66
+67 [label="Ident yupi INTEGER"]
+66 -- 67
+68 [label="BLOQUE_FUNCION"]
+62 -- 68
+69 [label="="]
+68 -- 69
+70 [label="Ident hj UNKNOWN"]
+69 -- 70
+71 [label="+ UNKNOWN"]
+69 -- 71
+72 [label="Ident hj UNKNOWN"]
+71 -- 72
+73 [label="Const 1 INTEGER"]
+71 -- 73
+74 [label="MAIN"]
+1 -- 74
+75 [label="DeclaracionVariable"]
+74 -- 75
+76 [label="Ident j INTEGER"]
+75 -- 76
+77 [label="Const 56 INTEGER"]
+75 -- 77
 }
