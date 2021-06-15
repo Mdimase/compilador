@@ -3,7 +3,7 @@ variable d is boolean = not false;
 variable hj is integer = 1+65;
 variable rt is float=5.56;
 variable fghjl is boolean = d or true;
-{
+
 variable jk is float;
 variable df is integer = 1 + rt;
 #variable yu is float = read_float(); HACER ESTO EN IRGLOBALVARIABLES
@@ -48,16 +48,18 @@ variable nm is integer = 56;
 variable l is boolean=not d;
 variable kl is boolean = hj != df;
 variable po is float = 12 + nm;
-}
 
+{
 function hola(g21 is float,yupi is integer) return integer
     begin
         hj=hj+1;
-    end;
+    end;}
+
 main is
 variable j is integer = 56;
+{
 variable zz is boolean;
 variable int is integer = j + 500;
 int = int + 1;
-writeln(int);
+writeln(int);}
 end.

@@ -36,17 +36,13 @@ public class Main {
             rw.procesar(programa);
             System.out.println("Codigo transformado");
             pw = new PrintWriter(new FileWriter("arbol_tp.dot"));
-            pw.println(graficador.visit(rw.procesar(programa)));
+            pw.println(graficador.visit(programa));
             pw.close();
             cmd = "dot -Tpng arbol_tp.dot -o arbol_tp.png";
             Runtime.getRuntime().exec(cmd);
 
-            IRGlobalVariables irgb = new IRGlobalVariables(ga.getAlcance_global());
-            irgb.procesar(programa.getDeclaraciones(),"Programita.ll");
-
-            GeneradorCodigo generadorCodigo = new GeneradorCodigo(irgb.getAlcance_global(),irgb.getResultado());
-            generadorCodigo.setInicializaciones(irgb.getInicializaciones());
-            System.out.println(generadorCodigo.procesar(programa));
+            GeneradorCodigo generadorCodigo = new GeneradorCodigo(ga.getAlcance_global());
+            System.out.println(generadorCodigo.procesar(programa,"Programa.ll"));
 
         } catch(Exception e){
             System.out.println(e);
