@@ -25,7 +25,6 @@ public class While extends Sentencia{
             Asignacion asignacion = (Asignacion) bloque.getSentencias().get(1); //esto ocurre solamente cuando instancio la transformacion de for a while
             this.bloque.getSentencias().add(asignacion);
         }
-
     }
 
     public Expresion getCondicion() {

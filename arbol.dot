@@ -35,66 +35,96 @@ graph G {1 [label="Programa"]
 17 -- 18
 19 [label="Const true BOOL"]
 17 -- 19
-20 [label="DeclaracionFuncion"]
+20 [label="DeclaracionVariable"]
 2 -- 20
-21 [label="Ident hola INTEGER"]
+21 [label="Ident jk FLOAT"]
 20 -- 21
-22 [label="Parametro"]
+22 [label="Const 0.0 FLOAT"]
 20 -- 22
-23 [label="Ident g21 FLOAT"]
-22 -- 23
-24 [label="Parametro"]
-20 -- 24
-25 [label="Ident yupi INTEGER"]
-24 -- 25
-26 [label="BLOQUE_FUNCION"]
-20 -- 26
-27 [label="="]
-26 -- 27
-28 [label="Ident hj UNKNOWN"]
-27 -- 28
-29 [label="+ UNKNOWN"]
-27 -- 29
-30 [label="Ident hj UNKNOWN"]
-29 -- 30
-31 [label="Const 1 INTEGER"]
-29 -- 31
-32 [label="MAIN"]
-1 -- 32
+23 [label="DeclaracionVariable"]
+2 -- 23
+24 [label="Ident df INTEGER"]
+23 -- 24
+25 [label="+ UNKNOWN"]
+23 -- 25
+26 [label="Const 1 INTEGER"]
+25 -- 26
+27 [label="Ident rt UNKNOWN"]
+25 -- 27
+28 [label="DeclaracionVariable"]
+2 -- 28
+29 [label="Ident p INTEGER"]
+28 -- 29
+30 [label="+ UNKNOWN"]
+28 -- 30
+31 [label="Const 15 INTEGER"]
+30 -- 31
+32 [label="Ident hj UNKNOWN"]
+30 -- 32
 33 [label="DeclaracionVariable"]
-32 -- 33
-34 [label="Ident j INTEGER"]
+2 -- 33
+34 [label="Ident poyo FLOAT"]
 33 -- 34
-35 [label="Const 56 INTEGER"]
+35 [label="- UNKNOWN"]
 33 -- 35
-36 [label="DeclaracionVariable"]
-32 -- 36
-37 [label="Ident zz BOOL"]
-36 -- 37
-38 [label="Const false BOOL"]
-36 -- 38
-39 [label="DeclaracionVariable"]
-32 -- 39
-40 [label="Ident int INTEGER"]
-39 -- 40
-41 [label="+ UNKNOWN"]
-39 -- 41
-42 [label="Ident j UNKNOWN"]
+36 [label="Ident rt UNKNOWN"]
+35 -- 36
+37 [label="Ident jk UNKNOWN"]
+35 -- 37
+38 [label="DeclaracionVariable"]
+2 -- 38
+39 [label="Ident b BOOL"]
+38 -- 39
+40 [label="Const false BOOL"]
+38 -- 40
+41 [label="DeclaracionVariable"]
+2 -- 41
+42 [label="Ident asd FLOAT"]
 41 -- 42
-43 [label="Const 500 INTEGER"]
+43 [label="-"]
 41 -- 43
-44 [label="="]
-32 -- 44
-45 [label="Ident int UNKNOWN"]
-44 -- 45
-46 [label="+ UNKNOWN"]
-44 -- 46
-47 [label="Ident int UNKNOWN"]
-46 -- 47
-48 [label="Const 1 INTEGER"]
-46 -- 48
-49 [label="WriteLn"]
-32 -- 49
-50 [label="Ident int UNKNOWN"]
-49 -- 50
+44 [label="Const 1.23 FLOAT"]
+43 -- 44
+45 [label="DeclaracionVariable"]
+2 -- 45
+46 [label="Ident nm INTEGER"]
+45 -- 46
+47 [label="Const 56 INTEGER"]
+45 -- 47
+48 [label="DeclaracionVariable"]
+2 -- 48
+49 [label="Ident l BOOL"]
+48 -- 49
+50 [label="NOT"]
+48 -- 50
+51 [label="Ident d UNKNOWN"]
+50 -- 51
+52 [label="DeclaracionVariable"]
+2 -- 52
+53 [label="Ident kl BOOL"]
+52 -- 53
+54 [label="!= UNKNOWN"]
+52 -- 54
+55 [label="Ident hj UNKNOWN"]
+54 -- 55
+56 [label="Ident df UNKNOWN"]
+54 -- 56
+57 [label="DeclaracionVariable"]
+2 -- 57
+58 [label="Ident po FLOAT"]
+57 -- 58
+59 [label="+ UNKNOWN"]
+57 -- 59
+60 [label="Const 12 INTEGER"]
+59 -- 60
+61 [label="Ident nm UNKNOWN"]
+59 -- 61
+62 [label="MAIN"]
+1 -- 62
+63 [label="DeclaracionVariable"]
+62 -- 63
+64 [label="Ident j INTEGER"]
+63 -- 64
+65 [label="Const 56 INTEGER"]
+63 -- 65
 }

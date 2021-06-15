@@ -9,18 +9,14 @@ import java.util.*;
 
 public class GeneradorCodigo extends Visitor<String>{
 
+    private String nombreArchivo;
     private Alcance alcance_global;
     private Alcance alcance_actual;
-    private StringBuilder resultado;
-    private StringBuilder inicializaciones;
+    private StringBuilder resultado = new StringBuilder();
+    private StringBuilder inicializaciones = new StringBuilder();
 
-    public GeneradorCodigo(Alcance alcance_global,StringBuilder string) {
+    public GeneradorCodigo(Alcance alcance_global) {
         this.alcance_global = alcance_actual = alcance_global;
-        resultado=string;
-    }
-
-    public void setInicializaciones(StringBuilder inicializaciones) {
-        this.inicializaciones = inicializaciones;
     }
 
     // la lista tendra en .get(0)=tipoir y en .get(1)=valor
@@ -39,7 +35,6 @@ public class GeneradorCodigo extends Visitor<String>{
         put(Tipo.FLOAT, listFloat);
     }};
 
-
     public String getIRGlobalName(Identificador identificador){
         return String.format("@%1$s", identificador.getNombre());
     }
@@ -52,19 +47,32 @@ public class GeneradorCodigo extends Visitor<String>{
         return String.format("label$%1$s", String.valueOf(getID()));
     }
 
-    public String procesar(Programa programa) throws ExcepcionDeAlcance {
+    public String procesar(Programa programa,String nombreArchivo) throws ExcepcionDeAlcance {
+        this.nombreArchivo = nombreArchivo;
+        resultado.append(String.format("source_filename = \"%1$s\"\n", nombreArchivo));
+
+        //CAMBIAR LOS TARGET
+        resultado.append("target datalayout = \"e-m:w-p270:32:32-p271:32:32-p272:64:64-i64:64-f80:128-n8:16:32:64-S128\"\n");
+        resultado.append("target triple = \"x86_64-pc-windows-msvc19.16.27038\"\n\n");
+
+        resultado.append("declare i32 @puts(i8*)\n");
+        resultado.append("declare i32 @printf(i8*, ...)\n\n");
+        resultado.append("@.true = private constant[4 x i8] c\".T.\\00\"\n");
+        resultado.append("@.false = private constant[4 x i8] c\".F.\\00\"\n\n");
+        resultado.append("@.integer = private constant [4 x i8] c\"%d\\00\"\n");
+        resultado.append("@.float = private constant [4 x i8] c\"%f\\00\"\n");
+        resultado.append("@.integerN = private constant [4 x i8] c\"%d\\0A\\00\"\n");
+        resultado.append("@.floatN = private constant [4 x i8] c\"%f\\0A\\00\"\n");
         if(programa.getDeclaraciones() == null){
-            this.visit(programa.getCuerpo());
+           return resultado.append(this.visit(programa.getCuerpo())).toString();   //dispara el visit(bloqueMain)
         } else{
-            this.visit(programa);
+           return resultado.append(this.visit(programa)).toString();
         }
-        return resultado.toString();
     }
 
     @Override
     public String visit(Programa programa) throws ExcepcionDeAlcance {
-        resultado.append(super.visit(programa));
-        return resultado.toString();
+        return super.visit(programa);
     }
 
     @Override
@@ -73,9 +81,7 @@ public class GeneradorCodigo extends Visitor<String>{
             alcance_actual = bloque.getAlcance();
             resultado.append("\n");
             resultado.append("define i32 @main(i32, i8**) {\n");
-            if(!inicializaciones.isEmpty()){
-                resultado.append(inicializaciones); //inicializacion de todas las variables globales
-            }
+            resultado.append(inicializaciones); //inicializacion de todas las variables globales
             resultado.append(super.visit(bloque));
             resultado.append("ret i32 0\n");
             resultado.append("}");
@@ -104,7 +110,6 @@ public class GeneradorCodigo extends Visitor<String>{
     }
 
     public void inicializarParametros(List<Parametro> parametros){
-        StringBuilder aux = new StringBuilder();
         for(Parametro p: parametros){
             String tipoLlvm = this.LLVM_IR_TYPE_INFO.get(p.getTipo()).get(0);
             String pName = p.getIrRef();    //guardo el que tenia en la firma
@@ -127,23 +132,23 @@ public class GeneradorCodigo extends Visitor<String>{
     }
 
     @Override
-    public String visit(Parametro parametro){
-        return "";
-    }
-
-    @Override
     public String visit(DeclaracionVariable declaracionVariable) throws ExcepcionDeAlcance {
-        if(alcance_actual == alcance_global){ //ya declaradas
-            return "";
-        }
-        declaracionVariable.setIrName(this.newTempId());
         String tipoLlvm = this.LLVM_IR_TYPE_INFO.get(declaracionVariable.getTipo()).get(0);
-        resultado.append(String.format("  %1$s = alloca %2$s ; alloca = %1$s\n",
-                declaracionVariable.getIrName(), tipoLlvm));
-        resultado.append(declaracionVariable.getExpresion().accept(this));
-        resultado.append(String.format("  store %1$s %2$s, %1$s* %3$s ; %3$s = %2$s\n",
-                tipoLlvm, declaracionVariable.getExpresion().getIrRef(), declaracionVariable.getIrName()));
-        return resultado.toString();
+        if(alcance_actual == alcance_global){ //ya declaradas
+            declaracionVariable.setIrName(this.getIRGlobalName(declaracionVariable.getId()));
+            String valor_ir = LLVM_IR_TYPE_INFO.get(declaracionVariable.getTipo()).get(1);
+            resultado.append(String.format("%1$s = global %2$s %3$s\n", declaracionVariable.getIrName(), tipoLlvm, valor_ir));
+            inicializaciones.append(declaracionVariable.getExpresion().accept(this));
+            inicializaciones.append(String.format("  store %1$s %2$s, %1$s* %3$s ; %3$s = %2$s\n",
+                    tipoLlvm, declaracionVariable.getExpresion().getIrRef(), declaracionVariable.getIrName()));
+        } else {
+            declaracionVariable.setIrName(this.newTempId());
+            resultado.append(String.format("  %1$s = alloca %2$s ; alloca = %1$s\n", declaracionVariable.getIrName(), tipoLlvm));
+            resultado.append(declaracionVariable.getExpresion().accept(this));
+            resultado.append(String.format("  store %1$s %2$s, %1$s* %3$s ; %3$s = %2$s\n"
+                    , tipoLlvm, declaracionVariable.getExpresion().getIrRef(), declaracionVariable.getIrName()));
+        }
+        return "";
     }
 
     @Override
@@ -167,27 +172,32 @@ public class GeneradorCodigo extends Visitor<String>{
     @Override
     public String visit(Identificador identificador){
         Object res = alcance_actual.resolver(identificador.getNombre());
-        String tempId = this.newTempId();
+        identificador.setIrRef(this.newTempId());
         if(res instanceof DeclaracionVariable dv){
             String tipoLlvm = this.LLVM_IR_TYPE_INFO.get(dv.getTipo()).get(0);
-            String llvmRef = dv.getIrName();
-            resultado.append(String.format("  %1$s = load %2$s, %2$s* %3$s ; %1$s = %4$s\n",
-                    tempId, tipoLlvm, llvmRef, identificador.getNombre()));
-            identificador.setIrRef(tempId);
-        }
-        if(res instanceof Parametro){
-            System.out.println(alcance_actual.getNombre());
-            System.out.println(res);
+            String inicializacion = String.format("  %1$s = load %2$s, %2$s* %3$s ; %1$s = %4$s\n",
+                    identificador.getIrRef(), tipoLlvm, dv.getIrName(), identificador.getNombre());
+            if(alcance_actual == alcance_global){ //variable global
+                inicializaciones.append(inicializacion);
+            } else {    // variable local
+                resultado.append(inicializacion);
+            }
         }
         return "";
     }
 
     public void generarCodigoOperacionBinaria(OperacionBinaria s) throws ExcepcionDeAlcance {
-        resultado.append(super.visit(s));
+        StringBuilder aux = new StringBuilder();
+        aux.append(super.visit(s));
         s.setIrRef(this.newTempId());
         String tipoLlvm = this.LLVM_IR_TYPE_INFO.get(s.getIzquierda().getTipo()).get(0);
-        resultado.append(String.format("  %1$s = %2$s %3$s %4$s, %5$s\n", s.getIrRef(),
+        aux.append(String.format("  %1$s = %2$s %3$s %4$s, %5$s\n", s.getIrRef(),
                 s.get_llvm_op_code(), tipoLlvm, s.getIzquierda().getIrRef(), s.getDerecha().getIrRef()));
+        if(alcance_actual == alcance_global){
+            inicializaciones.append(aux);
+        } else {
+            resultado.append(aux);
+        }
     }
 
     @Override
@@ -197,36 +207,59 @@ public class GeneradorCodigo extends Visitor<String>{
     }
 
     public void generarCodigoConversion(OperacionConversion o) throws ExcepcionDeAlcance {
-        resultado.append(super.visit(o));
+        StringBuilder aux = new StringBuilder();
+        aux.append(super.visit(o));
         o.setIrRef(this.newTempId());
         if(o.getClass() == EnteroAFlotante.class){
-            resultado.append(String.format("  %1$s = sitofp i32 %2$s to float\n", o.getIrRef(), o.getExpresion().getIrRef()));
+            aux.append(String.format("  %1$s = sitofp i32 %2$s to float\n", o.getIrRef(), o.getExpresion().getIrRef()));
         } else{
-            resultado.append(String.format("  %1$s = sitofp float %2$s to i32\n", o.getIrRef(), o.getExpresion().getIrRef()));
+            aux.append(String.format("  %1$s = sitofp float %2$s to i32\n", o.getIrRef(), o.getExpresion().getIrRef()));
+        }
+        if(alcance_actual == alcance_global){
+            inicializaciones.append(aux);
+        } else {
+            resultado.append(aux);
+        }
+    }
+
+    public void generarCodigoMenosUnario(MenosUnario menosUnario) throws ExcepcionDeAlcance {
+        StringBuilder aux = new StringBuilder();
+        aux.append(super.visit(menosUnario));
+        menosUnario.setIrRef(this.newTempId());
+        if (menosUnario.getExpresion().getTipo() == Tipo.FLOAT) {  // %rv=fneg float,%rv
+            aux.append(String.format("  %1$s = fneg float , %2$s\n", menosUnario.getIrRef(), menosUnario.getExpresion().getIrRef()));
+        } else{ //integer  %rv=sub i32 0,%rv
+            aux.append(String.format("  %1$s = sub i32 0, %2$s\n", menosUnario.getIrRef(), menosUnario.getExpresion().getIrRef()));
+        }
+        if (alcance_actual == alcance_global) {
+            inicializaciones.append(aux);
+        } else {
+            resultado.append(aux);
+        }
+    }
+
+    public void generarCodigoNot(Not not) throws ExcepcionDeAlcance {
+        StringBuilder aux = new StringBuilder();
+        aux.append(super.visit(not));
+        not.setIrRef(this.newTempId());
+        aux.append(String.format("  %1$s = xor i1 %2$s, 1\n", not.getIrRef(), not.getExpresion().getIrRef()));
+        if (alcance_actual == alcance_global) {
+            inicializaciones.append(aux);
+        } else {
+            resultado.append(aux);
         }
     }
 
     @Override
     public String visit(OperacionUnaria ou) throws ExcepcionDeAlcance {
         if(ou.getClass() == EnteroAFlotante.class || ou.getClass() == FlotanteAEntero.class){
-            this.generarCodigoConversion((OperacionConversion) ou);
-            return "";
+           this.generarCodigoConversion((OperacionConversion) ou);
         }
         if(ou.getClass() == MenosUnario.class){
-            if(ou.getExpresion().getTipo() == Tipo.FLOAT){  // %rv=fneg float,%rv
-                resultado.append(super.visit(ou));
-                ou.setIrRef(this.newTempId());
-                resultado.append(String.format("  %1$s = fneg float , %2$s\n", ou.getIrRef(), ou.getExpresion().getIrRef()));
-            } else{ //integer  %rv=sub i32 0,%rv
-                resultado.append(super.visit(ou));
-                ou.setIrRef(this.newTempId());
-                resultado.append(String.format("  %1$s = sub i32 0, %2$s\n", ou.getIrRef(), ou.getExpresion().getIrRef()));
-            }
+            this.generarCodigoMenosUnario((MenosUnario) ou);
         }
-        else{   //not   %rv=xor i1 %rv, true
-            resultado.append(super.visit(ou));
-            ou.setIrRef(this.newTempId());
-            resultado.append(String.format("  %1$s = xor i1 %2$s, 1\n", ou.getIrRef(), ou.getExpresion().getIrRef()));
+        if(ou.getClass() == Not.class){
+            this.generarCodigoNot((Not) ou);
         }
         return "";
     }
@@ -238,7 +271,7 @@ public class GeneradorCodigo extends Visitor<String>{
         String tipo_llvm = this.LLVM_IR_TYPE_INFO.get(dv.getTipo()).get(0);
         resultado.append(String.format("  store %1$s %2$s, %1$s* %3$s ; %3$s = %2$s\n",
                 tipo_llvm, asignacion.getExpresion().getIrRef(), dv.getIrName()));
-        return "";
+        return resultado.toString();
     }
 
     @Override
@@ -251,7 +284,7 @@ public class GeneradorCodigo extends Visitor<String>{
         } else {
             this.generarCodigoWriteExp(w);
         }
-        return resultado.toString();
+        return "";
     }
 
     public void generarCodigoWriteExp(Write w) throws ExcepcionDeAlcance {

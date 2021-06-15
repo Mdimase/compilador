@@ -104,18 +104,9 @@ public class GeneradorAlcances extends Visitor<Void> {
         return null;
     }
 
-    public boolean estaDeclarado(Identificador identificador){
-        boolean esta=true;
-        Object elemento = alcance_actual.resolver(identificador.getNombre());
-        if(elemento == null){
-            esta=false;
-        }
-        return esta;
-    }
-
     @Override
     public Void visit(Identificador identificador) throws ExcepcionDeAlcance {
-        if(!estaDeclarado(identificador)){
+        if(null == this.alcance_actual.resolver(identificador.getNombre())){
             throw new ExcepcionDeAlcance(String.format("%1$s NO esta declarado previamente\"]\n",identificador.getNombre()));
         }
         return null;
