@@ -97,17 +97,30 @@ public class GeneradorCodigo extends Visitor<String>{
         }
         resultado.append(String.format("define %1$s %2$s (%3$s) {\n",
                 tipoLlvm, this.getIRGlobalName(declaracionFuncion.getIdentificador()), params));
-        //CUERPO DE LA FUNCION
+        this.inicializarParametros(declaracionFuncion.getParametros());
+        //CUERPO DE LA FUNCION Y RETURN
         resultado.append("}\n");
         return "";
+    }
+
+    public void inicializarParametros(List<Parametro> parametros){
+        StringBuilder aux = new StringBuilder();
+        for(Parametro p: parametros){
+            String tipoLlvm = this.LLVM_IR_TYPE_INFO.get(p.getTipo()).get(0);
+            String pName = p.getIrRef();    //guardo el que tenia en la firma
+            p.setIrRef(this.newTempId());   //nuevo nombre para el alloca
+            resultado.append(String.format("  %1$s = alloca %2$s ; alloca = %1$s\n", p.getIrRef(), tipoLlvm));
+            resultado.append(String.format("  store %1$s %2$s, %1$s* %3$s ; %3$s = %2$s\n", tipoLlvm, pName, p.getIrRef()));
+        }
     }
 
     public StringBuilder conseguirParametros(List<Parametro> list){
         StringBuilder auxp = new StringBuilder();
         ArrayList<String> pa = new ArrayList<>();
         for (Parametro p: list){
+            p.setIrRef(this.newTempId());
             String tipoPLlvm = this.LLVM_IR_TYPE_INFO.get(p.getTipo()).get(0);
-            pa.add(String.format("%1$s %2$s", tipoPLlvm, this.newTempId()));
+            pa.add(String.format("%1$s %2$s", tipoPLlvm, p.getIrRef()));
         }
         auxp.append(pa);
         return new StringBuilder(auxp.substring(1,auxp.length()-1));
@@ -228,31 +241,42 @@ public class GeneradorCodigo extends Visitor<String>{
         return "";
     }
 
-
     @Override
     public String visit(Write w) throws ExcepcionDeAlcance {
+        String variable_print;
         if(w.getEsString()){
             String tipo_llvm="string";
-            String variable_print = "@.str";
+            //variable_print = "@.str";
             //TERMINAR ESTO
-            return "";
+        } else {
+            this.generarCodigoWriteExp(w);
         }
+        return resultado.toString();
+    }
+
+    public void generarCodigoWriteExp(Write w) throws ExcepcionDeAlcance {
+        String variable_print;
         resultado.append(w.getExpresion().accept(this));
         String tipo_llvm = this.LLVM_IR_TYPE_INFO.get(w.getExpresion().getTipo()).get(0);
-        String variable_print = "@.integer";
+        if(w.getEsLn()){
+            variable_print = "@.integerN";
+        } else {
+            variable_print = "@.integer";
+        }
         String ref_to_print = w.getExpresion().getIrRef();
         if (w.getExpresion().getTipo() == Tipo.FLOAT){
             String temp_ref_to_print = this.newTempId();
-            resultado.append(String.format("%1$s = fpext float %2$s to double\n", temp_ref_to_print, ref_to_print));
+            resultado.append(String.format("  %1$s = fpext float %2$s to double\n", temp_ref_to_print, ref_to_print));
             ref_to_print = temp_ref_to_print;
             tipo_llvm = "double";
-            variable_print = "@.float";
+            if(w.getEsLn()){
+                variable_print = "@.floatN";
+            } else {
+                variable_print = "@.float";
+            }
         }
-        resultado.append(String.format("%1$s = call i32 (i8*, ...) @printf(i8* getelementptr([4 x i8], [4 x i8]* %2$s, i32 0, i32 0), %3$s %4$s)\n",
+        resultado.append(String.format("  %1$s = call i32 (i8*, ...) @printf(i8* getelementptr([4 x i8], [4 x i8]* %2$s, i32 0, i32 0), %3$s %4$s)\n",
                 this.newTempId(), variable_print, tipo_llvm, ref_to_print));
-        //REVISAR LO DE QUE AMBOS WRITELN HAGAN UN SALTO DE LINEA
-        //REVISAR LOS WRITE(STRING)
-        return resultado.toString();
     }
 
 

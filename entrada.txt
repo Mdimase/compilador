@@ -55,9 +55,9 @@ function hola(g21 is float,yupi is integer) return integer
         hj=hj+1;
     end;
 main is
-
 variable j is integer = 56;
 variable zz is boolean;
 variable int is integer = j + 500;
 int = int + 1;
+writeln(int);
 end.

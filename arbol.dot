@@ -93,4 +93,8 @@ graph G {1 [label="Programa"]
 46 -- 47
 48 [label="Const 1 INTEGER"]
 46 -- 48
+49 [label="WriteLn"]
+32 -- 49
+50 [label="Ident int UNKNOWN"]
+49 -- 50
 }

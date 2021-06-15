@@ -73,8 +73,10 @@ public class IRGlobalVariables extends Visitor<String>{
         resultado.append("@.true = private constant[4 x i8] c\".T.\\00\"\n");
         resultado.append("@.false = private constant[4 x i8] c\".F.\\00\"\n");
         resultado.append("\n");
-        resultado.append("@.integer = private constant [4 x i8] c\"%d\\0A\\00\"\n");
-        resultado.append("@.float = private constant [4 x i8] c\"%f\\0A\\00\"\n");
+        resultado.append("@.integer = private constant [4 x i8] c\"%d\\00\"\n");
+        resultado.append("@.float = private constant [4 x i8] c\"%f\\00\"\n");
+        resultado.append("@.integerN = private constant [4 x i8] c\"%d\\0A\\00\"\n");
+        resultado.append("@.floatN = private constant [4 x i8] c\"%f\\0A\\00\"\n");
         if(declaraciones != null){  //con declaraciones
             for (Object obj:alcance_global.values()){   //declaro todas las variables globales con valores por defecto
                 if(obj instanceof DeclaracionVariable dv){
