@@ -65,9 +65,9 @@ public class GeneradorCodigo extends Visitor<String>{
         globalVar.append("@.integerN = private constant [4 x i8] c\"%d\\0A\\00\"\n");
         globalVar.append("@.floatN = private constant [4 x i8] c\"%f\\0A\\00\"\n");
         if(programa.getDeclaraciones() == null){
-           resultado.append(this.visit(programa.getCuerpo())).toString();   //dispara el visit(bloqueMain)
+           resultado.append(this.visit(programa.getCuerpo()));   //dispara el visit(bloqueMain)
         } else{
-           resultado.append(this.visit(programa)).toString();
+           resultado.append(this.visit(programa));
         }
         return globalVar.toString() +/* @str.n  + */ resultado;
     }
