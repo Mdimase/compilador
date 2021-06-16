@@ -146,11 +146,6 @@ public class GeneradorAlcanceGlobal extends Visitor<Void>{
     }
 
     @Override
-    protected Void procesarFor(For aFor, Void identificador, Void bloque, Void from, Void to, Void by) {
-        return null;
-    }
-
-    @Override
     protected Void procesarBloque(Bloque bloque, List<Void> sentencias) {
         return null;
     }

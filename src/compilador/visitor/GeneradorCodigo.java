@@ -393,11 +393,6 @@ public class GeneradorCodigo extends Visitor<String>{
     }
 
     @Override
-    protected String procesarFor(For aFor, String identificador, String bloque, String from, String to, String by) {
-        return "";
-    }
-
-    @Override
     protected String procesarBloque(Bloque bloque, List<String> sentencias) {
         return "";
     }

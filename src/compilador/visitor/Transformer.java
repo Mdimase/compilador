@@ -188,20 +188,6 @@ public abstract class Transformer {
         return declaracionFuncion;
     }
 
-    public For transform(For aFor) throws ExcepcionDeTipos {
-        Identificador id = aFor.getIdentificador().accept_transfomer(this);
-        Bloque bloque = aFor.getBloque().accept_transfomer(this);
-        Constante from = aFor.getFrom().accept_transfomer(this);
-        Constante to = aFor.getTo().accept_transfomer(this);
-        Constante by = aFor.getBy().accept_transfomer(this);
-        aFor.setIdentificador(id);
-        aFor.setBloque(bloque);
-        aFor.setFrom(from);
-        aFor.setTo(to);
-        aFor.setBy(by);
-        return aFor;
-    }
-
     public If transform(If anIf) throws ExcepcionDeTipos {
         Expresion e = anIf.getCondicion().accept_transfomer(this);
         Bloque bloqueThen = anIf.getBloqueThen().accept_transfomer(this);

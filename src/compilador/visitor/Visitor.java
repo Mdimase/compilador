@@ -123,16 +123,6 @@ public abstract class Visitor<T> {
         }
     }
 
-    // QUEDO SIN USO, POR LA TRANSFORMACION DE UN FOR A WHILE EN EL PARSING
-    public T visit(For aFor) throws ExcepcionDeAlcance {
-        T id = aFor.getIdentificador().accept(this);
-        T from = aFor.getFrom().accept(this);
-        T to = aFor.getTo().accept(this);
-        T by = aFor.getBy().accept(this);
-        T bloque = aFor.getBloque().accept(this);
-        return procesarFor(aFor,id,bloque,from,to,by);
-    }
-
     public T visit(While aWhile) throws ExcepcionDeAlcance {
         T exp = aWhile.getCondicion().accept(this);
         T bloque = aWhile.getBloque().accept(this);
@@ -207,8 +197,6 @@ public abstract class Visitor<T> {
     protected abstract T procesarInvocacionFuncion(InvocacionFuncion invocacionFuncion, T identificador);
 
     protected abstract T procesarWhile(While aWhile, T expresion, T bloqueWhile);
-
-    protected abstract T procesarFor(For aFor, T identificador,T bloque , T from, T to,T by);
 
     protected abstract T procesarBloque(Bloque bloque, List<T> sentencias);
 

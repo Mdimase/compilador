@@ -149,18 +149,6 @@ public class ASTGraphviz extends Visitor<String>{
         return resultado.toString();
     }
 
-    //DESUSO
-    @Override
-    public String visit(For aFor) throws ExcepcionDeAlcance{
-        StringBuilder resultado = new StringBuilder();
-        current_id = this.getID();
-        resultado.append(this.procesarNodo(aFor));
-        parents.push(current_id);
-        resultado.append(super.visit(aFor)); //invoco los visit de sus nodos atributos
-        parents.pop();
-        return resultado.toString();
-    }
-
     @Override
     public String visit(If i) throws ExcepcionDeAlcance{
         StringBuilder resultado = new StringBuilder();
@@ -317,10 +305,7 @@ public class ASTGraphviz extends Visitor<String>{
 
     @Override
     protected String procesarDeclaracionFuncion(DeclaracionFuncion declaracionFuncion, String identificador, String bloque) {
-        StringBuilder resultado = new StringBuilder();
-        resultado.append(identificador);
-        resultado.append(bloque);
-        return resultado.toString();
+        return identificador + bloque;
     }
 
     @Override
@@ -351,22 +336,7 @@ public class ASTGraphviz extends Visitor<String>{
 
     @Override
     protected String procesarWhile(While aWhile, String expresion, String bloqueWhile) {
-        StringBuilder resultado = new StringBuilder();
-        resultado.append(expresion);
-        resultado.append(bloqueWhile);
-        return resultado.toString();
-    }
-
-    // QUEDO SIN USO, POR LA TRANSFORMACION DE UN FOR A WHILE EN EL PARSING
-    @Override
-    protected String procesarFor(For aFor, String identificador, String bloque, String from, String to, String by) {
-        StringBuilder resultado = new StringBuilder();
-        resultado.append(identificador);
-        resultado.append(from);
-        resultado.append(to);
-        resultado.append(by);
-        resultado.append(bloque);
-        return resultado.toString();
+        return expresion + bloqueWhile;
     }
 
     @Override
@@ -390,19 +360,12 @@ public class ASTGraphviz extends Visitor<String>{
 
     @Override
     protected String procesarIf(If anIf, String expresion, String bloqueThen) {
-        StringBuilder resultado = new StringBuilder();
-        resultado.append(expresion);
-        resultado.append(bloqueThen);
-        return resultado.toString();
+        return expresion + bloqueThen;
     }
 
     @Override
     protected String procesarIf(If anIf, String expresion, String bloqueThen, String bloqueElse) {
-        StringBuilder resultado = new StringBuilder();
-        resultado.append(expresion);
-        resultado.append(bloqueThen);
-        resultado.append(bloqueElse);
-        return resultado.toString();
+        return expresion + bloqueThen + bloqueElse;
     }
 
     @Override
