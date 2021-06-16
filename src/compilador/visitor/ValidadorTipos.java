@@ -261,31 +261,17 @@ public class ValidadorTipos extends Transformer{
     @Override
     public Expresion transform(IgualIgual igualIgual) throws ExcepcionDeTipos {
         IgualIgual nueva_op = (IgualIgual) super.transform(igualIgual);
-        if(igualIgual.getIzquierda().getTipo() != Tipo.FLOAT && igualIgual.getDerecha().getTipo() != Tipo.FLOAT){
-            if(igualIgual.getIzquierda().getTipo() == igualIgual.getDerecha().getTipo()){
-                nueva_op = (IgualIgual) transformarOperacionBinaria(nueva_op);
-                nueva_op.setTipo(Tipo.BOOL);
-                return nueva_op;
-            } else{
-                throw new ExcepcionDeTipos(String.format("No se puede realizar un == con %1$s y %2$s\n",igualIgual.getIzquierda().getTipo(),igualIgual.getDerecha().getTipo())); }
-        } else{
-            throw new ExcepcionDeTipos(String.format("No se puede realizar un == con %1$s y %2$s\n",igualIgual.getIzquierda().getTipo(),igualIgual.getDerecha().getTipo()));
-        }
+        transformarOperacionBinaria(nueva_op);
+        nueva_op.setTipo(Tipo.BOOL);
+        return nueva_op;
     }
 
     @Override
     public Expresion transform(Distinto distinto) throws ExcepcionDeTipos {
         Distinto nueva_op = (Distinto) super.transform(distinto);
-        if(distinto.getIzquierda().getTipo() != Tipo.FLOAT && distinto.getDerecha().getTipo() != Tipo.FLOAT){
-            if(distinto.getIzquierda().getTipo() == distinto.getDerecha().getTipo()){
-                nueva_op = (Distinto) transformarOperacionBinaria(nueva_op);
-                nueva_op.setTipo(Tipo.BOOL);
-                return nueva_op;
-            } else{
-                throw new ExcepcionDeTipos(String.format("No se puede realizar un != con %1$s y %2$s\n",distinto.getIzquierda().getTipo(),distinto.getDerecha().getTipo())); }
-        } else{
-            throw new ExcepcionDeTipos(String.format("No se puede realizar un != con %1$s y %2$s\n",distinto.getIzquierda().getTipo(),distinto.getDerecha().getTipo()));
-        }
+        transformarOperacionBinaria(nueva_op);
+        nueva_op.setTipo(Tipo.BOOL);
+        return nueva_op;
     }
 
     @Override

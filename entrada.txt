@@ -3,6 +3,7 @@ variable d is boolean = not false;
 variable hj is integer = 1+65;
 
 variable rt is float=5.56;
+variable bv is boolean = rt == 5.56;
 variable fghjl is boolean = d or true;
 
 variable jk is float;
@@ -67,5 +68,4 @@ for j from 1 to 6 by 2 do
 when j
         is > 100 then write("j>100")
         is < 100 then write("j<100");
-break;
 end.
