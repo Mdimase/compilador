@@ -51,9 +51,7 @@ variable kl is boolean = hj != df;
 variable po is float = 12 + nm;
 
 function hola(g21 is float,yupi is integer) return integer
-    begin
-        hj=hj+1;
-    end;
+    hj=hj+1;
 
 main is
 variable j is integer = 56;

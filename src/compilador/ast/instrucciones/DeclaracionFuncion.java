@@ -17,7 +17,6 @@ public class DeclaracionFuncion extends Declaracion{
     public DeclaracionFuncion(Identificador identificador, Tipo tipoRetorno, List<Parametro> parametros, Bloque bloque) {
         this.identificador = identificador;
         this.tipoRetorno = tipoRetorno;
-        acomodar(parametros);
         this.parametros =  parametros;
         this.bloque=bloque;
     }
@@ -73,10 +72,6 @@ public class DeclaracionFuncion extends Declaracion{
 
     public void setBloque(Bloque bloque) {
         this.bloque = bloque;
-    }
-
-    private void acomodar (List<Parametro> parametros){
-        Collections.reverse(parametros);
     }
 
     @Override

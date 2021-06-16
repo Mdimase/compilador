@@ -113,12 +113,12 @@ declaracion_funcion::= FUNCTION IDENTIFICADOR:id APERTURA_PARENTESIS CIERRE_PARE
         :};
 
 parametros::= parametro:p COMA parametros:pp {:
-            pp.add(p);
+            pp.add(0,p);
             RESULT = pp;
         :};
 
 parametros::= parametro_con_v_defecto:p parametros_con_v_defecto:pp {:
-            pp.add(p);
+            pp.add(0,p);
             RESULT = pp;
         :};
 
@@ -129,7 +129,7 @@ parametros::= parametro:p {:
         :};
 
 parametros_con_v_defecto::= COMA parametro_con_v_defecto:p parametros_con_v_defecto:pp {:
-            pp.add(p);
+            pp.add(0,p);
             RESULT=pp;
         :};
 

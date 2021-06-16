@@ -726,7 +726,7 @@ class CUP$Sintactico$actions {
 		int ppright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
 		List<Parametro> pp = (List<Parametro>)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
 		
-            pp.add(p);
+            pp.add(0,p);
             RESULT = pp;
         
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("parametros",21, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
@@ -744,7 +744,7 @@ class CUP$Sintactico$actions {
 		int ppright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
 		List<Parametro> pp = (List<Parametro>)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
 		
-            pp.add(p);
+            pp.add(0,p);
             RESULT = pp;
         
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("parametros",21, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
@@ -778,7 +778,7 @@ class CUP$Sintactico$actions {
 		int ppright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
 		List<Parametro> pp = (List<Parametro>)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
 		
-            pp.add(p);
+            pp.add(0,p);
             RESULT=pp;
         
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("parametros_con_v_defecto",22, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);

@@ -21,12 +21,12 @@ public abstract class Sentencia extends Nodo{
     }
 
     public Bloque toBloque() {
-        List<Sentencia> sentencias = new ArrayList<>();
         if(this.getClass() == Bloque.class){
-            sentencias = ((Bloque) this).getSentencias();
+            return (Bloque) this;
         } else {
+            List<Sentencia> sentencias = new ArrayList<>();
             sentencias.add(this);
+            return new Bloque(sentencias,"BLOQUE");
         }
-        return new Bloque(sentencias,"BLOQUE");
     }
 }
