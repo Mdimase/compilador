@@ -61,4 +61,8 @@ variable int is integer = j + 500;
 int = int + 1;
 write(2);
 writeln("hola");
+for j from 1 to 6 by 2 do
+    begin
+        write("daleee");
+    end;
 end.

@@ -349,4 +349,36 @@ graph G {1 [label="Programa"]
 156 -- 175
 176 [label="hola"]
 175 -- 176
+177 [label="FOR->WHILE"]
+156 -- 177
+178 [label="="]
+177 -- 178
+179 [label="Ident j UNKNOWN"]
+178 -- 179
+180 [label="Const 1 INTEGER"]
+178 -- 180
+181 [label="WHILE"]
+177 -- 181
+182 [label="<= UNKNOWN"]
+181 -- 182
+183 [label="Ident j UNKNOWN"]
+182 -- 183
+184 [label="Const 6 INTEGER"]
+182 -- 184
+185 [label="BLOQUE_WHILE"]
+181 -- 185
+186 [label="Write String"]
+185 -- 186
+187 [label="daleee"]
+186 -- 187
+188 [label="="]
+185 -- 188
+189 [label="Ident j UNKNOWN"]
+188 -- 189
+190 [label="+ UNKNOWN"]
+188 -- 190
+191 [label="Ident j UNKNOWN"]
+190 -- 191
+192 [label="Const 2 INTEGER"]
+190 -- 192
 }

@@ -10,7 +10,7 @@ import java.util.List;
 public class When extends Sentencia {
 
     private Expresion expresionBase;
-    private List<WhenIs> whenIs = new ArrayList<>();
+    private List<WhenIs> whenIs;
     private Bloque bloqueElse;
 
     public When(Expresion expresionBase, List<WhenIs> whenIs, Bloque bloqueElse) {

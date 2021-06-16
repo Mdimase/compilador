@@ -1,372 +1,404 @@
-graph G {177 [label="Programa"]
-178 [label="DECLARACIONES"]
-177 -- 178
-179 [label="DeclaracionVariable"]
-178 -- 179
-180 [label="Ident d BOOL"]
-179 -- 180
-181 [label="Const true BOOL"]
-179 -- 181
-182 [label="DeclaracionVariable"]
-178 -- 182
-183 [label="Ident hj INTEGER"]
-182 -- 183
-184 [label="Const 66 INTEGER"]
-182 -- 184
-185 [label="DeclaracionVariable"]
-178 -- 185
-186 [label="Ident rt FLOAT"]
-185 -- 186
-187 [label="Const 5.56 FLOAT"]
-185 -- 187
-188 [label="DeclaracionVariable"]
-178 -- 188
-189 [label="Ident fghjl BOOL"]
-188 -- 189
-190 [label="OR BOOL"]
-188 -- 190
-191 [label="Ident d BOOL"]
-190 -- 191
-192 [label="Const true BOOL"]
-190 -- 192
-193 [label="DeclaracionVariable"]
-178 -- 193
-194 [label="Ident jk FLOAT"]
+graph G {193 [label="Programa"]
+194 [label="DECLARACIONES"]
 193 -- 194
-195 [label="Const 0.0 FLOAT"]
-193 -- 195
-196 [label="DeclaracionVariable"]
-178 -- 196
-197 [label="Ident df INTEGER"]
-196 -- 197
-198 [label="flotante a entero"]
-196 -- 198
-199 [label="+ FLOAT"]
+195 [label="DeclaracionVariable"]
+194 -- 195
+196 [label="Ident d BOOL"]
+195 -- 196
+197 [label="Const true BOOL"]
+195 -- 197
+198 [label="DeclaracionVariable"]
+194 -- 198
+199 [label="Ident hj INTEGER"]
 198 -- 199
-200 [label="Const 1.0 FLOAT"]
-199 -- 200
-201 [label="Ident rt FLOAT"]
-199 -- 201
-202 [label="DeclaracionFuncion"]
-178 -- 202
-203 [label="Ident prueba_Funciones FLOAT"]
-202 -- 203
-204 [label="Parametro"]
-202 -- 204
-205 [label="Ident c INTEGER"]
+200 [label="Const 66 INTEGER"]
+198 -- 200
+201 [label="DeclaracionVariable"]
+194 -- 201
+202 [label="Ident rt FLOAT"]
+201 -- 202
+203 [label="Const 5.56 FLOAT"]
+201 -- 203
+204 [label="DeclaracionVariable"]
+194 -- 204
+205 [label="Ident fghjl BOOL"]
 204 -- 205
-206 [label="Parametro"]
-202 -- 206
-207 [label="Ident j BOOL"]
+206 [label="OR BOOL"]
+204 -- 206
+207 [label="Ident d BOOL"]
 206 -- 207
-208 [label="Const false BOOL"]
+208 [label="Const true BOOL"]
 206 -- 208
-209 [label="BLOQUE_FUNCION"]
-202 -- 209
-210 [label="DeclaracionVariable"]
+209 [label="DeclaracionVariable"]
+194 -- 209
+210 [label="Ident jk FLOAT"]
 209 -- 210
-211 [label="Ident x INTEGER"]
-210 -- 211
-212 [label="Const 0 INTEGER"]
-210 -- 212
-213 [label="IF"]
-209 -- 213
-214 [label="== BOOL"]
-213 -- 214
-215 [label="Ident j BOOL"]
+211 [label="Const 0.0 FLOAT"]
+209 -- 211
+212 [label="DeclaracionVariable"]
+194 -- 212
+213 [label="Ident df INTEGER"]
+212 -- 213
+214 [label="flotante a entero"]
+212 -- 214
+215 [label="+ FLOAT"]
 214 -- 215
-216 [label="Const true BOOL"]
-214 -- 216
-217 [label="BLOQUE_THEN"]
-213 -- 217
-218 [label="="]
-217 -- 218
-219 [label="Ident c INTEGER"]
+216 [label="Const 1.0 FLOAT"]
+215 -- 216
+217 [label="Ident rt FLOAT"]
+215 -- 217
+218 [label="DeclaracionFuncion"]
+194 -- 218
+219 [label="Ident prueba_Funciones FLOAT"]
 218 -- 219
-220 [label="- INTEGER"]
+220 [label="Parametro"]
 218 -- 220
 221 [label="Ident c INTEGER"]
 220 -- 221
-222 [label="Const 5 INTEGER"]
-220 -- 222
-223 [label="="]
-217 -- 223
-224 [label="Ident j BOOL"]
-223 -- 224
-225 [label="OR BOOL"]
-223 -- 225
-226 [label="Ident j BOOL"]
+222 [label="Parametro"]
+218 -- 222
+223 [label="Ident j BOOL"]
+222 -- 223
+224 [label="Const false BOOL"]
+222 -- 224
+225 [label="BLOQUE_FUNCION"]
+218 -- 225
+226 [label="DeclaracionVariable"]
 225 -- 226
-227 [label="Ident d BOOL"]
-225 -- 227
-228 [label="Return"]
-209 -- 228
-229 [label="entero a flotante"]
-228 -- 229
-230 [label="Ident c INTEGER"]
+227 [label="Ident x INTEGER"]
+226 -- 227
+228 [label="Const 0 INTEGER"]
+226 -- 228
+229 [label="IF"]
+225 -- 229
+230 [label="== BOOL"]
 229 -- 230
-231 [label="DeclaracionFuncion"]
-178 -- 231
-232 [label="Ident pepe INTEGER"]
-231 -- 232
-233 [label="Parametro"]
-231 -- 233
-234 [label="Ident a FLOAT"]
+231 [label="Ident j BOOL"]
+230 -- 231
+232 [label="Const true BOOL"]
+230 -- 232
+233 [label="BLOQUE_THEN"]
+229 -- 233
+234 [label="="]
 233 -- 234
-235 [label="BLOQUE_FUNCION"]
-231 -- 235
-236 [label="InvocacionFuncion"]
-235 -- 236
-237 [label="Ident salamin FLOAT"]
+235 [label="Ident c INTEGER"]
+234 -- 235
+236 [label="- INTEGER"]
+234 -- 236
+237 [label="Ident c INTEGER"]
 236 -- 237
-238 [label="flotante a entero"]
+238 [label="Const 5 INTEGER"]
 236 -- 238
-239 [label="Ident a FLOAT"]
-238 -- 239
-240 [label="DeclaracionVariable"]
-235 -- 240
-241 [label="Ident aux INTEGER"]
-240 -- 241
-242 [label="flotante a entero"]
-240 -- 242
-243 [label="+ FLOAT"]
-242 -- 243
-244 [label="/ FLOAT"]
-243 -- 244
+239 [label="="]
+233 -- 239
+240 [label="Ident j BOOL"]
+239 -- 240
+241 [label="OR BOOL"]
+239 -- 241
+242 [label="Ident j BOOL"]
+241 -- 242
+243 [label="Ident d BOOL"]
+241 -- 243
+244 [label="Return"]
+225 -- 244
 245 [label="entero a flotante"]
 244 -- 245
-246 [label="-"]
+246 [label="Ident c INTEGER"]
 245 -- 246
-247 [label="Ident p INTEGER"]
-246 -- 247
-248 [label="Ident a FLOAT"]
-244 -- 248
-249 [label="InvocacionFuncion"]
-243 -- 249
-250 [label="Ident salamin FLOAT"]
+247 [label="DeclaracionFuncion"]
+194 -- 247
+248 [label="Ident pepe INTEGER"]
+247 -- 248
+249 [label="Parametro"]
+247 -- 249
+250 [label="Ident a FLOAT"]
 249 -- 250
-251 [label="flotante a entero"]
-249 -- 251
+251 [label="BLOQUE_FUNCION"]
+247 -- 251
 252 [label="InvocacionFuncion"]
 251 -- 252
-253 [label="Ident prueba_Funciones FLOAT"]
+253 [label="Ident salamin FLOAT"]
 252 -- 253
 254 [label="flotante a entero"]
 252 -- 254
 255 [label="Ident a FLOAT"]
 254 -- 255
-256 [label="IF/ELSE"]
-235 -- 256
-257 [label="AND BOOL"]
+256 [label="DeclaracionVariable"]
+251 -- 256
+257 [label="Ident aux INTEGER"]
 256 -- 257
-258 [label="== BOOL"]
-257 -- 258
-259 [label="Ident b BOOL"]
+258 [label="flotante a entero"]
+256 -- 258
+259 [label="+ FLOAT"]
 258 -- 259
-260 [label="Const false BOOL"]
-258 -- 260
-261 [label="< BOOL"]
-257 -- 261
-262 [label="Ident aux INTEGER"]
+260 [label="/ FLOAT"]
+259 -- 260
+261 [label="entero a flotante"]
+260 -- 261
+262 [label="-"]
 261 -- 262
-263 [label="Const 2 INTEGER"]
-261 -- 263
-264 [label="BLOQUE_THEN"]
-256 -- 264
-265 [label="Write"]
-264 -- 265
-266 [label="Const 4 INTEGER"]
+263 [label="Ident p INTEGER"]
+262 -- 263
+264 [label="Ident a FLOAT"]
+260 -- 264
+265 [label="InvocacionFuncion"]
+259 -- 265
+266 [label="Ident salamin FLOAT"]
 265 -- 266
-267 [label="BLOQUE_ELSE"]
-256 -- 267
+267 [label="flotante a entero"]
+265 -- 267
 268 [label="InvocacionFuncion"]
 267 -- 268
-269 [label="Ident salamin FLOAT"]
+269 [label="Ident prueba_Funciones FLOAT"]
 268 -- 269
 270 [label="flotante a entero"]
 268 -- 270
 271 [label="Ident a FLOAT"]
 270 -- 271
-272 [label="Return"]
-235 -- 272
-273 [label="Const 0 INTEGER"]
+272 [label="IF/ELSE"]
+251 -- 272
+273 [label="AND BOOL"]
 272 -- 273
-274 [label="DeclaracionFuncion"]
-178 -- 274
-275 [label="Ident salamin FLOAT"]
+274 [label="== BOOL"]
+273 -- 274
+275 [label="Ident b BOOL"]
 274 -- 275
-276 [label="Parametro"]
+276 [label="Const false BOOL"]
 274 -- 276
-277 [label="Ident z INTEGER"]
-276 -- 277
-278 [label="BLOQUE_FUNCION"]
-274 -- 278
-279 [label="WHILE"]
-278 -- 279
-280 [label="< BOOL"]
-279 -- 280
-281 [label="Ident z INTEGER"]
+277 [label="< BOOL"]
+273 -- 277
+278 [label="Ident aux INTEGER"]
+277 -- 278
+279 [label="Const 2 INTEGER"]
+277 -- 279
+280 [label="BLOQUE_THEN"]
+272 -- 280
+281 [label="Write"]
 280 -- 281
-282 [label="Const 12 INTEGER"]
-280 -- 282
-283 [label="BLOQUE_WHILE"]
-279 -- 283
-284 [label="WriteLn"]
+282 [label="Const 4 INTEGER"]
+281 -- 282
+283 [label="BLOQUE_ELSE"]
+272 -- 283
+284 [label="InvocacionFuncion"]
 283 -- 284
-285 [label="Ident z INTEGER"]
+285 [label="Ident salamin FLOAT"]
 284 -- 285
-286 [label="="]
-283 -- 286
-287 [label="Ident z INTEGER"]
+286 [label="flotante a entero"]
+284 -- 286
+287 [label="Ident a FLOAT"]
 286 -- 287
-288 [label="+ INTEGER"]
-286 -- 288
-289 [label="Ident z INTEGER"]
+288 [label="Return"]
+251 -- 288
+289 [label="Const 0 INTEGER"]
 288 -- 289
-290 [label="Const 1 INTEGER"]
-288 -- 290
-291 [label="Return"]
-278 -- 291
-292 [label="Const 0.0 FLOAT"]
-291 -- 292
-293 [label="DeclaracionVariable"]
-178 -- 293
-294 [label="Ident p INTEGER"]
-293 -- 294
-295 [label="+ INTEGER"]
-293 -- 295
-296 [label="Const 15 INTEGER"]
+290 [label="DeclaracionFuncion"]
+194 -- 290
+291 [label="Ident salamin FLOAT"]
+290 -- 291
+292 [label="Parametro"]
+290 -- 292
+293 [label="Ident z INTEGER"]
+292 -- 293
+294 [label="BLOQUE_FUNCION"]
+290 -- 294
+295 [label="WHILE"]
+294 -- 295
+296 [label="< BOOL"]
 295 -- 296
-297 [label="Ident hj INTEGER"]
-295 -- 297
-298 [label="DeclaracionVariable"]
-178 -- 298
-299 [label="Ident poyo FLOAT"]
-298 -- 299
-300 [label="- FLOAT"]
-298 -- 300
-301 [label="Ident rt FLOAT"]
+297 [label="Ident z INTEGER"]
+296 -- 297
+298 [label="Const 12 INTEGER"]
+296 -- 298
+299 [label="BLOQUE_WHILE"]
+295 -- 299
+300 [label="WriteLn"]
+299 -- 300
+301 [label="Ident z INTEGER"]
 300 -- 301
-302 [label="Ident jk FLOAT"]
-300 -- 302
-303 [label="DeclaracionVariable"]
-178 -- 303
-304 [label="Ident b BOOL"]
-303 -- 304
-305 [label="Const false BOOL"]
-303 -- 305
-306 [label="DeclaracionVariable"]
-178 -- 306
-307 [label="Ident asd FLOAT"]
-306 -- 307
-308 [label="-"]
-306 -- 308
-309 [label="Const 1.23 FLOAT"]
-308 -- 309
-310 [label="DeclaracionVariable"]
-178 -- 310
-311 [label="Ident nm INTEGER"]
-310 -- 311
-312 [label="Const 56 INTEGER"]
-310 -- 312
-313 [label="DeclaracionVariable"]
-178 -- 313
-314 [label="Ident l BOOL"]
-313 -- 314
-315 [label="NOT"]
-313 -- 315
-316 [label="Ident d BOOL"]
-315 -- 316
-317 [label="DeclaracionVariable"]
-178 -- 317
-318 [label="Ident kl BOOL"]
-317 -- 318
-319 [label="!= BOOL"]
-317 -- 319
-320 [label="Ident hj INTEGER"]
+302 [label="="]
+299 -- 302
+303 [label="Ident z INTEGER"]
+302 -- 303
+304 [label="+ INTEGER"]
+302 -- 304
+305 [label="Ident z INTEGER"]
+304 -- 305
+306 [label="Const 1 INTEGER"]
+304 -- 306
+307 [label="Return"]
+294 -- 307
+308 [label="Const 0.0 FLOAT"]
+307 -- 308
+309 [label="DeclaracionVariable"]
+194 -- 309
+310 [label="Ident p INTEGER"]
+309 -- 310
+311 [label="+ INTEGER"]
+309 -- 311
+312 [label="Const 15 INTEGER"]
+311 -- 312
+313 [label="Ident hj INTEGER"]
+311 -- 313
+314 [label="DeclaracionVariable"]
+194 -- 314
+315 [label="Ident poyo FLOAT"]
+314 -- 315
+316 [label="- FLOAT"]
+314 -- 316
+317 [label="Ident rt FLOAT"]
+316 -- 317
+318 [label="Ident jk FLOAT"]
+316 -- 318
+319 [label="DeclaracionVariable"]
+194 -- 319
+320 [label="Ident b BOOL"]
 319 -- 320
-321 [label="Ident df INTEGER"]
+321 [label="Const false BOOL"]
 319 -- 321
 322 [label="DeclaracionVariable"]
-178 -- 322
-323 [label="Ident po FLOAT"]
+194 -- 322
+323 [label="Ident asd FLOAT"]
 322 -- 323
-324 [label="entero a flotante"]
+324 [label="-"]
 322 -- 324
-325 [label="+ INTEGER"]
+325 [label="Const 1.23 FLOAT"]
 324 -- 325
-326 [label="Const 12 INTEGER"]
-325 -- 326
+326 [label="DeclaracionVariable"]
+194 -- 326
 327 [label="Ident nm INTEGER"]
-325 -- 327
-328 [label="DeclaracionFuncion"]
-178 -- 328
-329 [label="Ident hola INTEGER"]
-328 -- 329
-330 [label="Parametro"]
-328 -- 330
-331 [label="Ident g21 FLOAT"]
-330 -- 331
-332 [label="Parametro"]
-328 -- 332
-333 [label="Ident yupi INTEGER"]
-332 -- 333
-334 [label="BLOQUE_FUNCION"]
-328 -- 334
-335 [label="="]
-334 -- 335
+326 -- 327
+328 [label="Const 56 INTEGER"]
+326 -- 328
+329 [label="DeclaracionVariable"]
+194 -- 329
+330 [label="Ident l BOOL"]
+329 -- 330
+331 [label="NOT"]
+329 -- 331
+332 [label="Ident d BOOL"]
+331 -- 332
+333 [label="DeclaracionVariable"]
+194 -- 333
+334 [label="Ident kl BOOL"]
+333 -- 334
+335 [label="!= BOOL"]
+333 -- 335
 336 [label="Ident hj INTEGER"]
 335 -- 336
-337 [label="+ INTEGER"]
+337 [label="Ident df INTEGER"]
 335 -- 337
-338 [label="Ident hj INTEGER"]
-337 -- 338
-339 [label="Const 1 INTEGER"]
-337 -- 339
-340 [label="Return"]
-334 -- 340
-341 [label="Const 0 INTEGER"]
+338 [label="DeclaracionVariable"]
+194 -- 338
+339 [label="Ident po FLOAT"]
+338 -- 339
+340 [label="entero a flotante"]
+338 -- 340
+341 [label="+ INTEGER"]
 340 -- 341
-342 [label="MAIN"]
-177 -- 342
-343 [label="DeclaracionVariable"]
-342 -- 343
-344 [label="Ident j INTEGER"]
-343 -- 344
-345 [label="Const 56 INTEGER"]
-343 -- 345
-346 [label="DeclaracionVariable"]
-342 -- 346
-347 [label="Ident zz BOOL"]
+342 [label="Const 12 INTEGER"]
+341 -- 342
+343 [label="Ident nm INTEGER"]
+341 -- 343
+344 [label="DeclaracionFuncion"]
+194 -- 344
+345 [label="Ident hola INTEGER"]
+344 -- 345
+346 [label="Parametro"]
+344 -- 346
+347 [label="Ident g21 FLOAT"]
 346 -- 347
-348 [label="Const false BOOL"]
-346 -- 348
-349 [label="DeclaracionVariable"]
-342 -- 349
-350 [label="Ident int INTEGER"]
-349 -- 350
-351 [label="+ INTEGER"]
-349 -- 351
-352 [label="Ident j INTEGER"]
+348 [label="Parametro"]
+344 -- 348
+349 [label="Ident yupi INTEGER"]
+348 -- 349
+350 [label="BLOQUE_FUNCION"]
+344 -- 350
+351 [label="="]
+350 -- 351
+352 [label="Ident hj INTEGER"]
 351 -- 352
-353 [label="Const 500 INTEGER"]
+353 [label="+ INTEGER"]
 351 -- 353
-354 [label="="]
-342 -- 354
-355 [label="Ident int INTEGER"]
-354 -- 355
-356 [label="+ INTEGER"]
-354 -- 356
-357 [label="Ident int INTEGER"]
+354 [label="Ident hj INTEGER"]
+353 -- 354
+355 [label="Const 1 INTEGER"]
+353 -- 355
+356 [label="Return"]
+350 -- 356
+357 [label="Const 0 INTEGER"]
 356 -- 357
-358 [label="Const 1 INTEGER"]
-356 -- 358
-359 [label="Write"]
-342 -- 359
-360 [label="Const 2 INTEGER"]
+358 [label="MAIN"]
+193 -- 358
+359 [label="DeclaracionVariable"]
+358 -- 359
+360 [label="Ident j INTEGER"]
 359 -- 360
-361 [label="WriteLn String"]
-342 -- 361
-362 [label="hola"]
-361 -- 362
+361 [label="Const 56 INTEGER"]
+359 -- 361
+362 [label="DeclaracionVariable"]
+358 -- 362
+363 [label="Ident zz BOOL"]
+362 -- 363
+364 [label="Const false BOOL"]
+362 -- 364
+365 [label="DeclaracionVariable"]
+358 -- 365
+366 [label="Ident int INTEGER"]
+365 -- 366
+367 [label="+ INTEGER"]
+365 -- 367
+368 [label="Ident j INTEGER"]
+367 -- 368
+369 [label="Const 500 INTEGER"]
+367 -- 369
+370 [label="="]
+358 -- 370
+371 [label="Ident int INTEGER"]
+370 -- 371
+372 [label="+ INTEGER"]
+370 -- 372
+373 [label="Ident int INTEGER"]
+372 -- 373
+374 [label="Const 1 INTEGER"]
+372 -- 374
+375 [label="Write"]
+358 -- 375
+376 [label="Const 2 INTEGER"]
+375 -- 376
+377 [label="WriteLn String"]
+358 -- 377
+378 [label="hola"]
+377 -- 378
+379 [label="FOR->WHILE"]
+358 -- 379
+380 [label="="]
+379 -- 380
+381 [label="Ident j INTEGER"]
+380 -- 381
+382 [label="Const 1 INTEGER"]
+380 -- 382
+383 [label="WHILE"]
+379 -- 383
+384 [label="<= BOOL"]
+383 -- 384
+385 [label="Ident j INTEGER"]
+384 -- 385
+386 [label="Const 6 INTEGER"]
+384 -- 386
+387 [label="BLOQUE_WHILE"]
+383 -- 387
+388 [label="Write String"]
+387 -- 388
+389 [label="daleee"]
+388 -- 389
+390 [label="="]
+387 -- 390
+391 [label="Ident j INTEGER"]
+390 -- 391
+392 [label="+ INTEGER"]
+390 -- 392
+393 [label="Ident j INTEGER"]
+392 -- 393
+394 [label="Const 2 INTEGER"]
+392 -- 394
 }
