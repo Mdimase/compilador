@@ -21,22 +21,22 @@ public class Rewriter extends Transformer{
     // instancia la condicion correspondiente y le setea su tipo
     public Comparacion resolverCondicion(Expresion expresionBase, WhenIs whenIs){
         Comparacion condicion = null;
-        if(whenIs.getComparador().equals(Comparador.MAYOR)){
+        if(whenIs.getSimboloCmp().getComparador().equals(Comparador.MAYOR)){
             condicion = new Mayor(expresionBase,whenIs.getExpresion());
         }
-        if (whenIs.getComparador().equals(Comparador.MAYORIGUAL)){
+        if (whenIs.getSimboloCmp().getComparador().equals(Comparador.MAYORIGUAL)){
             condicion = new MenorIgual(expresionBase, whenIs.getExpresion());
         }
-        if (whenIs.getComparador().equals(Comparador.MENOR)){
+        if (whenIs.getSimboloCmp().getComparador().equals(Comparador.MENOR)){
             condicion = new Menor(expresionBase, whenIs.getExpresion());
         }
-        if (whenIs.getComparador().equals(Comparador.MENORIGUAL)){
+        if (whenIs.getSimboloCmp().getComparador().equals(Comparador.MENORIGUAL)){
             condicion = new MenorIgual(expresionBase, whenIs.getExpresion());
         }
-        if (whenIs.getComparador().equals(Comparador.IGUALIGUAL)){
+        if (whenIs.getSimboloCmp().getComparador().equals(Comparador.IGUALIGUAL)){
             condicion = new IgualIgual(expresionBase, whenIs.getExpresion());
         }
-        if (whenIs.getComparador().equals(Comparador.DISTINTO)){
+        if (whenIs.getSimboloCmp().getComparador().equals(Comparador.DISTINTO)){
             condicion = new Distinto(expresionBase, whenIs.getExpresion());
         }
         assert condicion != null;

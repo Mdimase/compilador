@@ -57,27 +57,27 @@ public class ValidadorTipos extends Transformer{
     public When transform(When aWhen) throws ExcepcionDeTipos {
         super.transform(aWhen);
         for (WhenIs whenIs: aWhen.getWhenIs()){
-            if(whenIs.getComparador() == Comparador.MENOR){
+            if(whenIs.getSimboloCmp().getComparador() == Comparador.MENOR){
                 Menor menor = new Menor(aWhen.getExpresionBase(),whenIs.getExpresion());
                 this.transform(menor);
             }
-            if(whenIs.getComparador() == Comparador.MAYOR){
+            if(whenIs.getSimboloCmp().getComparador() == Comparador.MAYOR){
                 Mayor mayor = new Mayor(aWhen.getExpresionBase(),whenIs.getExpresion());
                 this.transform(mayor);
             }
-            if(whenIs.getComparador() == Comparador.MENORIGUAL){
+            if(whenIs.getSimboloCmp().getComparador() == Comparador.MENORIGUAL){
                 MenorIgual menorIgual = new MenorIgual(aWhen.getExpresionBase(),whenIs.getExpresion());
                 this.transform(menorIgual);
             }
-            if(whenIs.getComparador() == Comparador.MAYORIGUAL){
+            if(whenIs.getSimboloCmp().getComparador() == Comparador.MAYORIGUAL){
                 MayorIgual mayorIgual = new MayorIgual(aWhen.getExpresionBase(),whenIs.getExpresion());
                 this.transform(mayorIgual);
             }
-            if(whenIs.getComparador() == Comparador.IGUALIGUAL){
+            if(whenIs.getSimboloCmp().getComparador() == Comparador.IGUALIGUAL){
                 IgualIgual igualIgual = new IgualIgual(aWhen.getExpresionBase(),whenIs.getExpresion());
                 this.transform(igualIgual);
             }
-            if(whenIs.getComparador() == Comparador.DISTINTO){
+            if(whenIs.getSimboloCmp().getComparador() == Comparador.DISTINTO){
                 Distinto distinto = new Distinto(aWhen.getExpresionBase(),whenIs.getExpresion());
                 this.transform(distinto);
             }

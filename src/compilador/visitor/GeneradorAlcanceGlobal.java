@@ -72,7 +72,7 @@ public class GeneradorAlcanceGlobal extends Visitor<Void>{
     }
 
     @Override
-    protected Void procesarWhenIs(WhenIs whenIs, Void expresion, Void bloque) {
+    protected Void procesarWhenIs(WhenIs whenIs,Void simboloCpm, Void expresion, Void bloque) {
         return null;
     }
 

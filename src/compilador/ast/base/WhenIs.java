@@ -6,22 +6,29 @@ import compilador.visitor.Visitor;
 
 public class WhenIs extends Sentencia {
 
-    private Comparador comparador;
+    private SimboloCmp simboloCmp;
     private Expresion expresion;
     private Bloque bloque;
 
-    public WhenIs(Comparador comparador, Expresion expresion, Bloque bloque) {
-        this.comparador = comparador;
+    public WhenIs(String nombre, SimboloCmp simboloCmp, Expresion expresion, Bloque bloque) {
+        super(nombre);
+        this.simboloCmp = simboloCmp;
         this.expresion = expresion;
         this.bloque = bloque;
     }
 
-    public Comparador getComparador() {
-        return comparador;
+    public WhenIs(SimboloCmp simboloCmp, Expresion expresion, Bloque bloque) {
+        this.simboloCmp = simboloCmp;
+        this.expresion = expresion;
+        this.bloque = bloque;
     }
 
-    public void setComparador(Comparador comparador) {
-        this.comparador = comparador;
+    public SimboloCmp getSimboloCmp() {
+        return simboloCmp;
+    }
+
+    public void setSimboloCmp(SimboloCmp simboloCmp) {
+        this.simboloCmp = simboloCmp;
     }
 
     public Expresion getExpresion() {

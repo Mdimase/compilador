@@ -265,18 +265,38 @@ public class ASTGraphviz extends Visitor<String>{
         return resultado.toString();
     }
 
+
     @Override
-    protected String procesarWhenIs(WhenIs whenIs, String expresion, String bloque) {
-        return expresion+bloque;
+    public String visit(WhenIs wi) throws ExcepcionDeAlcance{
+        StringBuilder resultado = new StringBuilder();
+        current_id = this.getID();
+        resultado.append(this.procesarNodo(wi));
+        parents.push(current_id);
+        resultado.append(super.visit(wi)); //invoco los visit de sus nodos atributos
+        parents.pop();
+        return resultado.toString();
+    }
+
+    @Override
+    public String visit(SimboloCmp simboloCmp){
+        StringBuilder resultado = new StringBuilder();
+        current_id = this.getID();
+        resultado.append(this.procesarNodo(simboloCmp));
+        parents.push(current_id);
+        parents.pop();
+        return resultado.toString();
+    }
+
+    @Override
+    protected String procesarWhenIs(WhenIs whenIs, String simboloCmp, String expresion, String bloque) {
+        return simboloCmp+expresion+bloque;
     }
 
     @Override
     protected String procesarWhen(When when, String expresion, List<String> whenIs, String bloque) {
         StringBuilder resultado = new StringBuilder();
         resultado.append(expresion);
-        whenIs.forEach((when_is) -> {
-            resultado.append(when_is);
-        });
+        whenIs.forEach(resultado::append);
         resultado.append(bloque);
         return resultado.toString();
     }
@@ -285,9 +305,7 @@ public class ASTGraphviz extends Visitor<String>{
     protected String procesarWhen(When when, String expresion, List<String> whenIs) {
         StringBuilder resultado = new StringBuilder();
         resultado.append(expresion);
-        whenIs.forEach((when_is) -> {
-            resultado.append(when_is);
-        });
+        whenIs.forEach(resultado::append);
         return resultado.toString();
     }
 
@@ -320,9 +338,7 @@ public class ASTGraphviz extends Visitor<String>{
     protected String procesarDeclaracionFuncion(DeclaracionFuncion declaracionFuncion, String identificador, List<String> parametros, String bloque) {
         StringBuilder resultado = new StringBuilder();
         resultado.append(identificador);
-        parametros.forEach((parametro) -> {
-            resultado.append(parametro);
-        });
+        parametros.forEach(resultado::append);
         resultado.append(bloque);
         return resultado.toString();
     }
@@ -331,9 +347,7 @@ public class ASTGraphviz extends Visitor<String>{
     protected String procesarInvocacionFuncion(InvocacionFuncion invocacionFuncion, String identificador, List<String> parametros) {
         StringBuilder resultado = new StringBuilder();
         resultado.append(identificador);
-        parametros.forEach((expresion) -> {
-            resultado.append(expresion);
-        });
+        parametros.forEach(resultado::append);
         return resultado.toString();
     }
 
@@ -350,9 +364,7 @@ public class ASTGraphviz extends Visitor<String>{
     @Override
     protected String procesarBloque(Bloque b, List<String> sentencias) {
         StringBuilder resultado = new StringBuilder();
-        sentencias.forEach((sentencia) -> {
-            resultado.append(sentencia);
-        });
+        sentencias.forEach(resultado::append);
         return resultado.toString();
     }
 

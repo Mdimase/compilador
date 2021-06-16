@@ -55,7 +55,7 @@ non terminal Constante valor_defecto;
 non terminal When when;
 non terminal List<WhenIs> comparaciones_is;
 non terminal WhenIs comparacion_is;
-non terminal Comparador comparador;
+non terminal SimboloCmp comparador;
 
 precedence left IS; //para evitar shift/reduce en el when sin else
 precedence left ELSE; // para evitar shift/reduce en el if
@@ -401,34 +401,33 @@ comparaciones_is ::= comparacion_is:c {:
         :};
 
 comparacion_is::= IS comparador:c expresion:e THEN instruccion:i{:
-            List<Sentencia> sentenciasWhenIs = new ArrayList<Sentencia>();
-            sentenciasWhenIs.add(i);
-            Bloque bloque = new Bloque(sentenciasWhenIs,"WhenIs",false);
+            Bloque bloque = i.toBloque();
+            bloque.setNombre("BLOQUE_WHEN_IS");
             RESULT= new WhenIs(c,e,bloque);
         :};
 
 comparador::= MENOR {:
-            RESULT= Comparador.MENOR;
+            RESULT= new SimboloCmp( "<",Comparador.MENOR);
         :};
 
 comparador::= MENOR_IGUAL {:
-            RESULT= Comparador.MENORIGUAL;
+            RESULT= new SimboloCmp( "<=",Comparador.MENORIGUAL);
         :};
 
 comparador::= MAYOR {:
-            RESULT= Comparador.MAYOR;
+            RESULT= new SimboloCmp( ">",Comparador.MAYOR);
         :};
 
 comparador::= MAYOR_IGUAL {:
-            RESULT= Comparador.MAYORIGUAL;
+            RESULT= new SimboloCmp( ">=",Comparador.MAYORIGUAL);
         :};
 
 comparador::= IGUAL_IGUAL {:
-            RESULT= Comparador.IGUALIGUAL;
+            RESULT= new SimboloCmp( "==",Comparador.IGUALIGUAL);
         :};
 
 comparador::= DISTINTO {:
-            RESULT= Comparador.DISTINTO;
+            RESULT= new SimboloCmp( "!=",Comparador.DISTINTO);
         :};
 
 // if una instruccion sin; + else una instruccion con ; al final(lo agrega la sentencia que engloba al if)

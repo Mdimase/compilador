@@ -312,28 +312,8 @@ public class GeneradorCodigo extends Visitor<String>{
                 this.newTempId(), variable_print, tipo_llvm, ref_to_print));
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     @Override
-    protected String procesarWhenIs(WhenIs whenIs, String expresion, String bloque) {
+    protected String procesarWhenIs(WhenIs whenIs,String simboloCpm, String expresion, String bloque) {
         return "";
     }
 

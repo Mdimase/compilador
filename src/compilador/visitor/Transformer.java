@@ -247,4 +247,7 @@ public abstract class Transformer {
         return when;
     }
 
+    public SimboloCmp transform(SimboloCmp simboloCmp){
+        return simboloCmp;
+    }
 }

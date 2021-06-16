@@ -157,10 +157,15 @@ public abstract class Visitor<T> {
         return procesarParametro(parametro,id);
     }
 
+    public T visit(SimboloCmp simboloCmp){
+        return procesarNodo(simboloCmp);
+    }
+
     public T visit(WhenIs whenIs) throws ExcepcionDeAlcance {
+        T simboloCmp = whenIs.getSimboloCmp().accept(this);
         T exp = whenIs.getExpresion().accept(this);
         T bloque = whenIs.getBloque().accept(this);
-        return procesarWhenIs(whenIs,exp,bloque);
+        return procesarWhenIs(whenIs,simboloCmp,exp,bloque);
     }
 
     public T visit(When when) throws ExcepcionDeAlcance {
@@ -175,10 +180,9 @@ public abstract class Visitor<T> {
         } else {
             return procesarWhen(when,exp,list);
         }
-
     }
 
-    protected abstract T procesarWhenIs (WhenIs whenIs,T expresion, T bloque);
+    protected abstract T procesarWhenIs (WhenIs whenIs,T simboloCpm, T expresion, T bloque);
 
     protected abstract T procesarWhen(When when,T expresion,List<T> whenIs,T bloque);
 

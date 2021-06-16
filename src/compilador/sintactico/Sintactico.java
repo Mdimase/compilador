@@ -1565,7 +1565,7 @@ class CUP$Sintactico$actions {
               WhenIs RESULT =null;
 		int cleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-3)).left;
 		int cright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-3)).right;
-		Comparador c = (Comparador)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-3)).value;
+		SimboloCmp c = (SimboloCmp)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-3)).value;
 		int eleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)).left;
 		int eright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)).right;
 		Expresion e = (Expresion)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)).value;
@@ -1573,9 +1573,8 @@ class CUP$Sintactico$actions {
 		int iright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
 		Sentencia i = (Sentencia)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
 		
-            List<Sentencia> sentenciasWhenIs = new ArrayList<Sentencia>();
-            sentenciasWhenIs.add(i);
-            Bloque bloque = new Bloque(sentenciasWhenIs,"WhenIs",false);
+            Bloque bloque = i.toBloque();
+            bloque.setNombre("BLOQUE_WHEN_IS");
             RESULT= new WhenIs(c,e,bloque);
         
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("comparacion_is",34, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-4)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
@@ -1585,9 +1584,9 @@ class CUP$Sintactico$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 60: // comparador ::= MENOR 
             {
-              Comparador RESULT =null;
+              SimboloCmp RESULT =null;
 		
-            RESULT= Comparador.MENOR;
+            RESULT= new SimboloCmp( "<",Comparador.MENOR);
         
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("comparador",35, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
@@ -1596,9 +1595,9 @@ class CUP$Sintactico$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 61: // comparador ::= MENOR_IGUAL 
             {
-              Comparador RESULT =null;
+              SimboloCmp RESULT =null;
 		
-            RESULT= Comparador.MENORIGUAL;
+            RESULT= new SimboloCmp( "<=",Comparador.MENORIGUAL);
         
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("comparador",35, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
@@ -1607,9 +1606,9 @@ class CUP$Sintactico$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 62: // comparador ::= MAYOR 
             {
-              Comparador RESULT =null;
+              SimboloCmp RESULT =null;
 		
-            RESULT= Comparador.MAYOR;
+            RESULT= new SimboloCmp( ">",Comparador.MAYOR);
         
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("comparador",35, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
@@ -1618,9 +1617,9 @@ class CUP$Sintactico$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 63: // comparador ::= MAYOR_IGUAL 
             {
-              Comparador RESULT =null;
+              SimboloCmp RESULT =null;
 		
-            RESULT= Comparador.MAYORIGUAL;
+            RESULT= new SimboloCmp( ">=",Comparador.MAYORIGUAL);
         
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("comparador",35, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
@@ -1629,9 +1628,9 @@ class CUP$Sintactico$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 64: // comparador ::= IGUAL_IGUAL 
             {
-              Comparador RESULT =null;
+              SimboloCmp RESULT =null;
 		
-            RESULT= Comparador.IGUALIGUAL;
+            RESULT= new SimboloCmp( "==",Comparador.IGUALIGUAL);
         
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("comparador",35, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
@@ -1640,9 +1639,9 @@ class CUP$Sintactico$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 65: // comparador ::= DISTINTO 
             {
-              Comparador RESULT =null;
+              SimboloCmp RESULT =null;
 		
-            RESULT= Comparador.DISTINTO;
+            RESULT= new SimboloCmp( "!=",Comparador.DISTINTO);
         
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("comparador",35, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }

@@ -381,4 +381,32 @@ graph G {1 [label="Programa"]
 190 -- 191
 192 [label="Const 2 INTEGER"]
 190 -- 192
+193 [label="When"]
+156 -- 193
+194 [label="Ident j UNKNOWN"]
+193 -- 194
+195 [label="WhenIs"]
+193 -- 195
+196 [label=">"]
+195 -- 196
+197 [label="Const 100 INTEGER"]
+195 -- 197
+198 [label="BLOQUE_WHEN_IS"]
+195 -- 198
+199 [label="Write String"]
+198 -- 199
+200 [label="j>100"]
+199 -- 200
+201 [label="WhenIs"]
+193 -- 201
+202 [label="<"]
+201 -- 202
+203 [label="Const 100 INTEGER"]
+201 -- 203
+204 [label="BLOQUE_WHEN_IS"]
+201 -- 204
+205 [label="Write String"]
+204 -- 205
+206 [label="j<100"]
+205 -- 206
 }
