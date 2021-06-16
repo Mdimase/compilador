@@ -59,5 +59,6 @@ variable j is integer = 56;
 variable zz is boolean;
 variable int is integer = j + 500;
 int = int + 1;
-writeln(int);
+write(2);
+writeln("hola");
 end.

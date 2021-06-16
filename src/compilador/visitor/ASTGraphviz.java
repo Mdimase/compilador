@@ -118,9 +118,17 @@ public class ASTGraphviz extends Visitor<String>{
         current_id = this.getID();
         resultado.append(this.procesarNodo(w));
         parents.push(current_id);
-        if(!w.getEsString()){    //si es writeln(expresion) o write(expresion)
-            resultado.append(super.visit(w));
-        }
+        resultado.append(super.visit(w));
+        parents.pop();
+        return resultado.toString();
+    }
+
+    @Override
+    public String visit(Mensaje m){
+        StringBuilder resultado = new StringBuilder();
+        current_id = this.getID();
+        resultado.append(this.procesarNodo(m));
+        parents.push(current_id);
         parents.pop();
         return resultado.toString();
     }

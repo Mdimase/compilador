@@ -1229,17 +1229,6 @@ class CUP$Sintactico$actions {
 		int iright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
 		Sentencia i = (Sentencia)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
 		
-/*
-            Identificador identificador = new Identificador(id);
-            Constante from = new Constante(f, Tipo.INTEGER);
-            Constante to = new Constante(t, Tipo.INTEGER);
-            Constante by = new Constante(b, Tipo.INTEGER);
-            List<Sentencia> aux = new ArrayList<Sentencia>();
-            aux.add(i);
-            Bloque bloque = new Bloque(aux,"FOR",false);
-            RESULT= new For(identificador,from,to,by,bloque);
-*/
-
             List<Sentencia> cuerpoFor = new ArrayList<Sentencia>(); //lista de sentencias del bloque principal
             Expresion from = new Constante(f, Tipo.INTEGER);    //constante from
             Identificador identificador = new Identificador(id);    //identificador
@@ -1294,17 +1283,6 @@ class CUP$Sintactico$actions {
 		int iright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
 		Sentencia i = (Sentencia)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
 		
-/*
-            Identificador identificador = new Identificador(id);
-            Constante from = new Constante(f, Tipo.INTEGER);
-            Constante to = new Constante(t, Tipo.INTEGER);
-            Constante by = new Constante(String.valueOf(1), Tipo.INTEGER);
-            List<Sentencia> aux = new ArrayList<Sentencia>();
-            aux.add(i);
-            Bloque bloque = new Bloque(aux,"FOR",false);
-            RESULT= new For(identificador,from,to,by,bloque);
-*/
-
             List<Sentencia> cuerpoFor = new ArrayList<Sentencia>(); //lista de sentencias del bloque principal
             Expresion from = new Constante(f, Tipo.INTEGER);    //constante from
             Identificador identificador = new Identificador(id);    //identificador
@@ -1337,7 +1315,6 @@ class CUP$Sintactico$actions {
                     While w = new While("WHILE",condicion,bloque);  // while interno completo
                     cuerpoFor.add(w);   //agrego el while completo a la lista de sentencias del cuerpo de mi for original
             }
-
             RESULT = new Bloque (cuerpoFor,"FOR->WHILE",false);
         
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("for",13, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-7)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);

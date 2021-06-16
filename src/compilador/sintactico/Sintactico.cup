@@ -260,17 +260,6 @@ while::= WHILE condicion:c DO instruccion:i {:
         :};
 
 for::= FOR IDENTIFICADOR:id FROM INTEGER_LITERAL:f TO INTEGER_LITERAL:t BY INTEGER_LITERAL:b DO instruccion:i{:
-/*
-            Identificador identificador = new Identificador(id);
-            Constante from = new Constante(f, Tipo.INTEGER);
-            Constante to = new Constante(t, Tipo.INTEGER);
-            Constante by = new Constante(b, Tipo.INTEGER);
-            List<Sentencia> aux = new ArrayList<Sentencia>();
-            aux.add(i);
-            Bloque bloque = new Bloque(aux,"FOR",false);
-            RESULT= new For(identificador,from,to,by,bloque);
-*/
-
             List<Sentencia> cuerpoFor = new ArrayList<Sentencia>(); //lista de sentencias del bloque principal
             Expresion from = new Constante(f, Tipo.INTEGER);    //constante from
             Identificador identificador = new Identificador(id);    //identificador
@@ -306,17 +295,6 @@ for::= FOR IDENTIFICADOR:id FROM INTEGER_LITERAL:f TO INTEGER_LITERAL:t BY INTEG
         :};
 
 for::= FOR IDENTIFICADOR:id FROM INTEGER_LITERAL:f TO INTEGER_LITERAL:t DO instruccion:i{:
-/*
-            Identificador identificador = new Identificador(id);
-            Constante from = new Constante(f, Tipo.INTEGER);
-            Constante to = new Constante(t, Tipo.INTEGER);
-            Constante by = new Constante(String.valueOf(1), Tipo.INTEGER);
-            List<Sentencia> aux = new ArrayList<Sentencia>();
-            aux.add(i);
-            Bloque bloque = new Bloque(aux,"FOR",false);
-            RESULT= new For(identificador,from,to,by,bloque);
-*/
-
             List<Sentencia> cuerpoFor = new ArrayList<Sentencia>(); //lista de sentencias del bloque principal
             Expresion from = new Constante(f, Tipo.INTEGER);    //constante from
             Identificador identificador = new Identificador(id);    //identificador
@@ -349,17 +327,14 @@ for::= FOR IDENTIFICADOR:id FROM INTEGER_LITERAL:f TO INTEGER_LITERAL:t DO instr
                     While w = new While("WHILE",condicion,bloque);  // while interno completo
                     cuerpoFor.add(w);   //agrego el while completo a la lista de sentencias del cuerpo de mi for original
             }
-
             RESULT = new Bloque (cuerpoFor,"FOR->WHILE",false);
         :};
 
-// falla en una expresion
 invocacion_funciones ::= IDENTIFICADOR:id APERTURA_PARENTESIS parametros_invocacion:p CIERRE_PARENTESIS{:
             Identificador identificador = new Identificador(id);
             RESULT = new InvocacionFuncion(identificador,p);
         :};
 
-//falla en una expresion
 invocacion_funciones ::= IDENTIFICADOR:id APERTURA_PARENTESIS CIERRE_PARENTESIS {:
             Identificador identificador = new Identificador(id);
             RESULT = new InvocacionFuncion(identificador);

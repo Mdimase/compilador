@@ -42,8 +42,12 @@ public abstract class Visitor<T> {
         if(w.getExpresion() !=null ) {
             return w.getExpresion().accept(this);
         } else {
-            return procesarNodo(w);
+            return w.getMensaje().accept(this);
         }
+    }
+
+    public T visit(Mensaje mensaje){
+        return procesarNodo(mensaje);
     }
 
     public T visit(Read read){

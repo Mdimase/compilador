@@ -341,8 +341,12 @@ graph G {1 [label="Programa"]
 170 -- 171
 172 [label="Const 1 INTEGER"]
 170 -- 172
-173 [label="WriteLn"]
+173 [label="Write"]
 156 -- 173
-174 [label="Ident int UNKNOWN"]
+174 [label="Const 2 INTEGER"]
 173 -- 174
+175 [label="WriteLn String"]
+156 -- 175
+176 [label="hola"]
+175 -- 176
 }

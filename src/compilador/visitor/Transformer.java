@@ -216,6 +216,10 @@ public abstract class Transformer {
         return write;
     }
 
+    public Mensaje transform(Mensaje mensaje){
+        return mensaje;
+    }
+
     public Read transform(Read read){
         return read;
     }
@@ -242,4 +246,5 @@ public abstract class Transformer {
         when.setWhenIs(list);
         return when;
     }
+
 }
