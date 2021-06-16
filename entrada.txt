@@ -1,6 +1,7 @@
 
 variable d is boolean = not false;
 variable hj is integer = 1+65;
+
 variable rt is float=5.56;
 variable fghjl is boolean = d or true;
 

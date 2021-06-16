@@ -15,21 +15,9 @@ public class GeneradorAlcanceGlobal extends Visitor<Void>{
     }
 
     public void procesar(Programa programa) throws ExcepcionDeAlcance{
-        this.visit(programa);   // como aca no hay visit(programa) usa de la superclase
-    }
-
-    private void setGlobal(Bloque bloque){
-        bloque.setAlcance(new Alcance("global"));
-        this.alcance_global =  bloque.getAlcance();
-    }
-
-    public boolean estaDeclarado(Identificador identificador){
-        boolean esta=true;
-        Object elemento = alcance_global.resolver(identificador.getNombre());
-        if(elemento == null || elemento instanceof DeclaracionFuncion){
-            esta=false;
+        if(programa.getDeclaraciones() != null){
+            this.visit(programa.getDeclaraciones());
         }
-        return esta;
     }
 
     // agregarSimbolo(nombre , declaracion)
@@ -42,10 +30,8 @@ public class GeneradorAlcanceGlobal extends Visitor<Void>{
 
     @Override
     public Void visit(Bloque bloque) throws ExcepcionDeAlcance {
-        if (bloque.getNombre().equals("MAIN")) {
-            return null;
-        }
-        this.setGlobal(bloque);
+        bloque.setAlcance(new Alcance("global"));
+        this.alcance_global =  bloque.getAlcance();
         super.visit(bloque);
         return null;
     }
@@ -74,7 +60,7 @@ public class GeneradorAlcanceGlobal extends Visitor<Void>{
 
     @Override
     public Void visit(Identificador identificador) throws ExcepcionDeAlcance {
-        if(!estaDeclarado(identificador)){
+        if(this.alcance_global.resolver(identificador.getNombre()) == null){
             throw new ExcepcionDeAlcance(String.format("%1$s NO esta declarado previamente\"]\n",identificador.getNombre()));
         }
         return null;

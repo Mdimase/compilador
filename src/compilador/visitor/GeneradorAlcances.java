@@ -91,21 +91,20 @@ public class GeneradorAlcances extends Visitor<Void> {
     // cuando llegue a visit(decaracionVariable) aca si esta, por ende, usa este y no el de la superclase
     @Override
     public Void visit(DeclaracionVariable dv) throws ExcepcionDeAlcance{
-        if(alcance_actual == alcance_global){
-            return null;
+        if(alcance_actual != alcance_global){
+            Object result = this.agregarSimbolo(dv.getId().getNombre(), dv);
+            if(result!=null){   //repetido
+                throw new ExcepcionDeAlcance(String.format("El nombre de la variable %1$s de tipo %2$s fue utilizado previamente\"]\n",
+                        dv.getId().getNombre(), dv.getTipo() ));
+            }
+            super.visit(dv);
         }
-        Object result = this.agregarSimbolo(dv.getId().getNombre(), dv);
-        if(result!=null){   //repetido
-            throw new ExcepcionDeAlcance(String.format("El nombre de la variable %1$s de tipo %2$s fue utilizado previamente\"]\n",
-                    dv.getId().getNombre(), dv.getTipo() ));
-        }
-        super.visit(dv);
         return null;
     }
 
     @Override
     public Void visit(Identificador identificador) throws ExcepcionDeAlcance {
-        if(null == this.alcance_actual.resolver(identificador.getNombre())){
+        if(this.alcance_actual.resolver(identificador.getNombre()) == null){
             throw new ExcepcionDeAlcance(String.format("%1$s NO esta declarado previamente\"]\n",identificador.getNombre()));
         }
         return null;
