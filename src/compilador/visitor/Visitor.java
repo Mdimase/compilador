@@ -133,7 +133,6 @@ public abstract class Visitor<T> {
         return procesarFor(aFor,id,bloque,from,to,by);
     }
 
-
     public T visit(While aWhile) throws ExcepcionDeAlcance {
         T exp = aWhile.getCondicion().accept(this);
         T bloque = aWhile.getBloque().accept(this);
@@ -222,13 +221,5 @@ public abstract class Visitor<T> {
     protected abstract T procesarIf(If anIf,T expresion, T bloqueThen);
 
     protected abstract T procesarIf(If anIf, T expresion, T bloqueThen, T bloqueElse);
-
-    public <T> T visit(Variable v) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public <T> T visit(Funcion f) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
 }

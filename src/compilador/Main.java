@@ -40,10 +40,10 @@ public class Main {
             pw.close();
             cmd = "dot -Tpng arbol_tp.dot -o arbol_tp.png";
             Runtime.getRuntime().exec(cmd);
-
+            /*
             GeneradorCodigo generadorCodigo = new GeneradorCodigo(ga.getAlcance_global());
             System.out.println(generadorCodigo.procesar(programa,"Programa.ll"));
-
+            */
         } catch(Exception e){
             System.out.println(e);
         }    

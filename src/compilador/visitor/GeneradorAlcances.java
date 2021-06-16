@@ -94,8 +94,7 @@ public class GeneradorAlcances extends Visitor<Void> {
         if(alcance_actual == alcance_global){
             return null;
         }
-        Variable var = new Variable(dv);    // var : declaracionVariable
-        Object result = this.agregarSimbolo(var.getDeclaracion().getId().getNombre(), dv);
+        Object result = this.agregarSimbolo(dv.getId().getNombre(), dv);
         if(result!=null){   //repetido
             throw new ExcepcionDeAlcance(String.format("El nombre de la variable %1$s de tipo %2$s fue utilizado previamente\"]\n",
                     dv.getId().getNombre(), dv.getTipo() ));

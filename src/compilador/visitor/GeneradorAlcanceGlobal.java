@@ -52,8 +52,7 @@ public class GeneradorAlcanceGlobal extends Visitor<Void>{
 
     @Override
     public Void visit(DeclaracionFuncion declaracionFuncion) throws ExcepcionDeAlcance {
-        Funcion funcion = new Funcion(declaracionFuncion);    // var : declaracionVariable
-        Object result = this.agregarSimbolo(funcion.getDeclaracionFuncion().getIdentificador().getNombre(), declaracionFuncion);
+        Object result = this.agregarSimbolo(declaracionFuncion.getIdentificador().getNombre(), declaracionFuncion);
         if(result!=null){   //repetido
             throw new ExcepcionDeAlcance(
                     String.format("El nombre de la funcion %1$s de tipo retorno %2$s fue utilizado previamente\"]\n",
@@ -64,8 +63,7 @@ public class GeneradorAlcanceGlobal extends Visitor<Void>{
 
     @Override
     public Void visit(DeclaracionVariable dv) throws ExcepcionDeAlcance{
-        Variable var = new Variable(dv);
-        Object result = this.agregarSimbolo(var.getDeclaracion().getId().getNombre(), dv);
+        Object result = this.agregarSimbolo(dv.getId().getNombre(), dv);
         if(result!=null){   //repetido
             throw new ExcepcionDeAlcance(String.format("El nombre de la variable %1$s de tipo %2$s fue utilizado previamente\"]\n",
                     dv.getId().getNombre(), dv.getTipo() ));

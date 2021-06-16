@@ -44,10 +44,6 @@ public abstract class Transformer {
         return i;
     }
 
-    public Variable transform(Variable v) {
-        return v;
-    }
-
     public Asignacion transform(Asignacion a) throws ExcepcionDeTipos{
         Identificador id = a.getIdentificador().accept_transfomer(this);
         Expresion e = a.getExpresion().accept_transfomer(this);
@@ -151,10 +147,6 @@ public abstract class Transformer {
         invocacionFuncion.setIdentificador(id);
         invocacionFuncion.setParams(result);
         return invocacionFuncion;
-    }
-
-    public Funcion transform(Funcion funcion) throws ExcepcionDeTipos {
-        return funcion;
     }
 
     public Break transform(Break aBreak){
