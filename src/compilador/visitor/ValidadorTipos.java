@@ -16,6 +16,7 @@ public class ValidadorTipos extends Transformer{
     private Tipo tipoRetorno;   //tipo de retorno de una funcion
     private boolean masFunciones = true;    //flag que indica si es posible que vengan mas declaraciones de funciones
     private boolean hayInvocaciones = false;
+    private boolean hayReturn = false;
 
     //inicio de ejecucion del validador de tipos
     public Programa procesar(Programa programa) throws ExcepcionDeTipos{
@@ -288,13 +289,9 @@ public class ValidadorTipos extends Transformer{
     @Override
     public DeclaracionVariable transform(DeclaracionVariable declaracionVariable) throws ExcepcionDeTipos {
         super.transform(declaracionVariable);
-        if(declaracionVariable.getExpresion().getClass() == FlotanteAEntero.class || declaracionVariable.getExpresion().getClass() == EnteroAFlotante.class){
-            return declaracionVariable;
-        }
         if(declaracionVariable.getId().getTipo() != declaracionVariable.getExpresion().getTipo()){
             if(declaracionVariable.getId().getTipo() != Tipo.BOOL && declaracionVariable.getExpresion().getTipo() != Tipo.BOOL){ //convierto los numericos
-                Tipo destino = declaracionVariable.getId().getTipo();
-                declaracionVariable.setExpresion(convertir_a_tipo(declaracionVariable.getExpresion(),destino));
+                declaracionVariable.setExpresion(convertir_a_tipo(declaracionVariable.getExpresion(),declaracionVariable.getId().getTipo()));
             } else{
                 throw new ExcepcionDeTipos(String.format
                         ("el tipo declarado %1$s no es compatible con el de la expresion %2$s",declaracionVariable.getId().getTipo(),declaracionVariable.getExpresion().getTipo()));
@@ -306,13 +303,7 @@ public class ValidadorTipos extends Transformer{
     @Override
     public DeclaracionFuncion transform(DeclaracionFuncion declaracionFuncion) throws ExcepcionDeTipos {
         super.transform(declaracionFuncion);
-        boolean hayReturn = false;
-        for (Sentencia sentencia:declaracionFuncion.getBloque().getSentencias()){
-            if(sentencia.getClass() == Return.class){
-                hayReturn =true;
-            }
-        }
-        if(!hayReturn){
+        if(!hayReturn){ // agrego return implicito
             Return r = new Return(new Constante("unknown",Tipo.UNKNOWN));
             if (tipoRetorno == Tipo.BOOL){
                 r = new Return(new Constante("false",Tipo.BOOL));
@@ -325,6 +316,7 @@ public class ValidadorTipos extends Transformer{
             }
             declaracionFuncion.getBloque().getSentencias().add(r);
         }
+        hayReturn = false;  //dejo en falso para la proxima funcion
         return declaracionFuncion;
     }
 
@@ -362,6 +354,7 @@ public class ValidadorTipos extends Transformer{
     @Override
     public Return transform(Return aReturn) throws ExcepcionDeTipos {
         super.transform(aReturn);
+        hayReturn=true; //hay return -> que no se agregue uno implicito
         if(aReturn.getExpresion().getTipo() != tipoRetorno){
             aReturn.setExpresion(convertir_a_tipo(aReturn.getExpresion(),tipoRetorno));
         }
