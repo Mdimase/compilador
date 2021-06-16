@@ -16,6 +16,24 @@ import java.util.List;
 public abstract class Visitor<T> {
 
     private int iden=0;
+    private boolean enFuncion;
+    private boolean enBucle;
+
+    protected boolean isEnFuncion() {
+        return enFuncion;
+    }
+
+    protected void setEnFuncion(boolean enFuncion) {
+        this.enFuncion = enFuncion;
+    }
+
+    protected boolean isEnBucle() {
+        return enBucle;
+    }
+
+    protected void setEnBucle(boolean enBucle) {
+        this.enBucle = enBucle;
+    }
 
     protected int getID(){
         iden+=1;
@@ -128,15 +146,19 @@ public abstract class Visitor<T> {
     }
 
     public T visit(While aWhile) throws ExcepcionDeAlcance {
+        setEnBucle(true);
         T exp = aWhile.getCondicion().accept(this);
         T bloque = aWhile.getBloque().accept(this);
+        setEnBucle(false);
         return procesarWhile(aWhile, exp, bloque);
     }
 
     public T visit(DeclaracionFuncion declaracionFuncion) throws ExcepcionDeAlcance {
+        setEnFuncion(true);
         T id = declaracionFuncion.getIdentificador().accept(this);
         if(declaracionFuncion.getParametros().isEmpty()){
             T bloque = declaracionFuncion.getBloque().accept(this);
+            setEnFuncion(false);
             return procesarDeclaracionFuncion(declaracionFuncion,id,bloque);
         } else{
             ArrayList<T> parametros = new ArrayList<>();
@@ -144,6 +166,7 @@ public abstract class Visitor<T> {
                 parametros.add(parametro.accept(this));
             }
             T bloque = declaracionFuncion.getBloque().accept(this);
+            setEnFuncion(false);
             return procesarDeclaracionFuncion(declaracionFuncion,id,parametros,bloque);
         }
     }

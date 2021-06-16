@@ -21,8 +21,6 @@ public class ASTGraphviz extends Visitor<String>{
     /* cuando un nodo se grafique ,antes de que llame al graficado de sus hijos, va a apilar su ID
      * para que los hijos miren esa pila y sepan a quien engancharse dentro del grafico (lenguaje DOT) */
     private int current_id = 0; // id del nodo actual
-    private int cont = 0;   //contador para los break y continue, no utilizo un flag booleano x situaciones de while anidados
-    private boolean isFunc = false; //logica para validar el return
 
     public ASTGraphviz() {
         this.parents = new ArrayDeque<>();
@@ -105,10 +103,8 @@ public class ASTGraphviz extends Visitor<String>{
         current_id = this.getID();
         resultado.append(this.procesarNodo(declaracionFuncion));
         parents.push(current_id);
-        isFunc=true;    //logica para validar el return
         resultado.append(super.visit(declaracionFuncion)); //invoco los visit de sus nodos atributos
         parents.pop();
-        isFunc=false;   //logica para validar el return
         return resultado.toString();
     }
 
@@ -150,10 +146,8 @@ public class ASTGraphviz extends Visitor<String>{
         current_id = this.getID();
         resultado.append(this.procesarNodo(aWhile));
         parents.push(current_id);
-        cont++; //logica para sentencia break y continue
         resultado.append(super.visit(aWhile)); //invoco los visit de sus nodos atributos
         parents.pop();
-        cont--; //logica para sentencia break y continue
         return resultado.toString();
     }
 
@@ -215,9 +209,6 @@ public class ASTGraphviz extends Visitor<String>{
 
     @Override
     public String visit(Continue c) throws ExcepcionDeAlcance {
-        if (cont == 0){ //logica para que el continue este en un while si o si
-            throw new ExcepcionDeAlcance("CONINUE en lugar inapropiado");
-        }
         StringBuilder resultado = new StringBuilder();
         current_id = this.getID();
         resultado.append(this.procesarNodo(c));
@@ -228,9 +219,6 @@ public class ASTGraphviz extends Visitor<String>{
 
     @Override
     public String visit(Break b) throws ExcepcionDeAlcance {
-        if (cont == 0){ //logica para que el break este en un while si o si
-            throw new ExcepcionDeAlcance("BREAK en lugar inapropiado");
-        }
         StringBuilder resultado = new StringBuilder();
         current_id = this.getID();
         resultado.append(this.procesarNodo(b));
@@ -242,9 +230,6 @@ public class ASTGraphviz extends Visitor<String>{
     //graficar nodo return
     @Override
     public String visit(Return r) throws ExcepcionDeAlcance{
-        if (!isFunc){
-            throw new ExcepcionDeAlcance("RETURN en lugar inapropiado");
-        }
         StringBuilder resultado = new StringBuilder();
         current_id = this.getID();
         resultado.append(this.procesarNodo(r));

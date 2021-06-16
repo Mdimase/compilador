@@ -67,4 +67,5 @@ for j from 1 to 6 by 2 do
 when j
         is > 100 then write("j>100")
         is < 100 then write("j<100");
+break;
 end.
