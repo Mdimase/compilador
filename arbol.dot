@@ -399,24 +399,28 @@ graph G {1 [label="Programa"]
 198 -- 200
 201 [label=">"]
 200 -- 201
-202 [label="Const 100 INTEGER"]
+202 [label="+ UNKNOWN"]
 200 -- 202
-203 [label="BLOQUE_WHEN_IS"]
-200 -- 203
-204 [label="Write String"]
-203 -- 204
-205 [label="j>100"]
-204 -- 205
-206 [label="WhenIs"]
-198 -- 206
-207 [label="<"]
+203 [label="Const 100.23 FLOAT"]
+202 -- 203
+204 [label="Ident j UNKNOWN"]
+202 -- 204
+205 [label="BLOQUE_WHEN_IS"]
+200 -- 205
+206 [label="Write String"]
+205 -- 206
+207 [label="j>100"]
 206 -- 207
-208 [label="Const 100 INTEGER"]
-206 -- 208
-209 [label="BLOQUE_WHEN_IS"]
-206 -- 209
-210 [label="Write String"]
-209 -- 210
-211 [label="j<100"]
-210 -- 211
+208 [label="WhenIs"]
+198 -- 208
+209 [label="<"]
+208 -- 209
+210 [label="Const 253.98 FLOAT"]
+208 -- 210
+211 [label="BLOQUE_WHEN_IS"]
+208 -- 211
+212 [label="Write String"]
+211 -- 212
+213 [label="j<100"]
+212 -- 213
 }

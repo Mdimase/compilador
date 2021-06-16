@@ -10,9 +10,6 @@ import compilador.ast.instrucciones.*;
 import compilador.ast.operaciones.binarias.*;
 import compilador.ast.operaciones.unarias.*;
 
-import java.util.Collections;
-import java.util.List;
-
 public class ValidadorTipos extends Transformer{
 
     private Alcance alcance_actual; //bloque actual, si no esta aca, busco en el padre hasta llegar a null
@@ -56,31 +53,13 @@ public class ValidadorTipos extends Transformer{
     @Override
     public When transform(When aWhen) throws ExcepcionDeTipos {
         super.transform(aWhen);
-        for (WhenIs whenIs: aWhen.getWhenIs()){
-            if(whenIs.getSimboloCmp().getComparador() == Comparador.MENOR){
-                Menor menor = new Menor(aWhen.getExpresionBase(),whenIs.getExpresion());
-                this.transform(menor);
+        for(WhenIs whenIs:aWhen.getWhenIs()){
+            if(whenIs.getSimboloCmp().getComparador() != Comparador.DISTINTO && whenIs.getSimboloCmp().getComparador() != Comparador.IGUALIGUAL){
+                if(whenIs.getExpresion().getTipo() == Tipo.BOOL || aWhen.getExpresionBase().getTipo() == Tipo.BOOL){
+                    throw new ExcepcionDeTipos("No se puede comparar <,>,<=,>= con operandos booleanos");
+                }
             }
-            if(whenIs.getSimboloCmp().getComparador() == Comparador.MAYOR){
-                Mayor mayor = new Mayor(aWhen.getExpresionBase(),whenIs.getExpresion());
-                this.transform(mayor);
-            }
-            if(whenIs.getSimboloCmp().getComparador() == Comparador.MENORIGUAL){
-                MenorIgual menorIgual = new MenorIgual(aWhen.getExpresionBase(),whenIs.getExpresion());
-                this.transform(menorIgual);
-            }
-            if(whenIs.getSimboloCmp().getComparador() == Comparador.MAYORIGUAL){
-                MayorIgual mayorIgual = new MayorIgual(aWhen.getExpresionBase(),whenIs.getExpresion());
-                this.transform(mayorIgual);
-            }
-            if(whenIs.getSimboloCmp().getComparador() == Comparador.IGUALIGUAL){
-                IgualIgual igualIgual = new IgualIgual(aWhen.getExpresionBase(),whenIs.getExpresion());
-                this.transform(igualIgual);
-            }
-            if(whenIs.getSimboloCmp().getComparador() == Comparador.DISTINTO){
-                Distinto distinto = new Distinto(aWhen.getExpresionBase(),whenIs.getExpresion());
-                this.transform(distinto);
-            }
+            whenIs.setExpresion(convertir_a_tipo(whenIs.getExpresion(),aWhen.getExpresionBase().getTipo()));
         }
         return aWhen;
     }
@@ -127,28 +106,26 @@ public class ValidadorTipos extends Transformer{
         return read;
     }
 
-    private OperacionUnaria transformarOperacionUnaria(OperacionUnaria ou) throws ExcepcionDeTipos{
+    private void transformarOperacionUnaria(OperacionUnaria ou) throws ExcepcionDeTipos{
         if(ou.getTipo() == Tipo.UNKNOWN){
             ou.setTipo(ou.getExpresion().getTipo());
         }else{
             ou.setExpresion(convertir_a_tipo(ou.getExpresion(), ou.getTipo()));
         }
-        return ou;
     }
 
-    private OperacionBinaria transformarOperacionBinaria(OperacionBinaria ob) throws ExcepcionDeTipos{
+    private void transformarOperacionBinaria(OperacionBinaria ob) throws ExcepcionDeTipos{
         Tipo tipo_en_comun = tipo_comun(ob.getIzquierda().getTipo(), ob.getDerecha().getTipo());
         ob.setIzquierda(convertir_a_tipo(ob.getIzquierda(),tipo_en_comun));
         ob.setDerecha(convertir_a_tipo(ob.getDerecha(), tipo_en_comun));
         ob.setTipo(tipo_en_comun);
-        return ob;
     }
 
     @Override
     public Expresion transform(Division d) throws ExcepcionDeTipos {
         Division nueva_op = (Division) super.transform(d);
         if (d.getIzquierda().getTipo() != Tipo.BOOL && d.getDerecha().getTipo() != Tipo.BOOL){
-            nueva_op = (Division) transformarOperacionBinaria(nueva_op);
+            transformarOperacionBinaria(nueva_op);
             return nueva_op;
         } else {
             throw new ExcepcionDeTipos("No se puede Dividir operandos logicos");
@@ -159,7 +136,7 @@ public class ValidadorTipos extends Transformer{
     public Expresion transform(Multiplicacion m) throws ExcepcionDeTipos {
         Multiplicacion nueva_op = (Multiplicacion) super.transform(m);
         if (m.getIzquierda().getTipo() != Tipo.BOOL && m.getDerecha().getTipo() != Tipo.BOOL){
-            nueva_op = (Multiplicacion) transformarOperacionBinaria(nueva_op);
+            transformarOperacionBinaria(nueva_op);
             return nueva_op;
         } else {
             throw new ExcepcionDeTipos("No se puede Multiplicar operandos logicos");
@@ -170,7 +147,7 @@ public class ValidadorTipos extends Transformer{
     public Expresion transform(Resta r) throws ExcepcionDeTipos {
         Resta nueva_op = (Resta) super.transform(r);
         if (r.getIzquierda().getTipo() != Tipo.BOOL && r.getDerecha().getTipo() != Tipo.BOOL){
-            nueva_op = (Resta) transformarOperacionBinaria(nueva_op);
+            transformarOperacionBinaria(nueva_op);
             return nueva_op;
         } else {
             throw new ExcepcionDeTipos("No se puede Restar operandos logicos");
@@ -181,7 +158,7 @@ public class ValidadorTipos extends Transformer{
     public Expresion transform(Suma s) throws ExcepcionDeTipos {
         Suma nueva_op = (Suma) super.transform(s);
         if (s.getIzquierda().getTipo() != Tipo.BOOL && s.getDerecha().getTipo() != Tipo.BOOL){
-            nueva_op = (Suma) transformarOperacionBinaria(nueva_op);
+            transformarOperacionBinaria(nueva_op);
             return nueva_op;
         } else {
             throw new ExcepcionDeTipos("No se puede Sumar operandos logicos");
@@ -192,7 +169,7 @@ public class ValidadorTipos extends Transformer{
     public Expresion transform(And and) throws ExcepcionDeTipos {
         And nueva_op = (And) super.transform(and);
         if(and.getIzquierda().getTipo() == Tipo.BOOL && and.getDerecha().getTipo() == Tipo.BOOL){
-            nueva_op = (And) transformarOperacionBinaria(nueva_op);
+            transformarOperacionBinaria(nueva_op);
             return nueva_op;
         } else{
             throw new ExcepcionDeTipos("No se puede operar un AND con operadores aritmeticos");
@@ -203,7 +180,7 @@ public class ValidadorTipos extends Transformer{
     public Expresion transform(Or or) throws ExcepcionDeTipos {
         Or nueva_op = (Or) super.transform(or);
         if(or.getIzquierda().getTipo() == Tipo.BOOL && or.getDerecha().getTipo() == Tipo.BOOL){
-            nueva_op = (Or) transformarOperacionBinaria(nueva_op);
+            transformarOperacionBinaria(nueva_op);
             return nueva_op;
         } else{
             throw new ExcepcionDeTipos("No se puede operar un OR con operadores aritmeticos");
@@ -214,7 +191,7 @@ public class ValidadorTipos extends Transformer{
     public Expresion transform(Menor menor) throws ExcepcionDeTipos {
         Menor nueva_op = (Menor) super.transform(menor);
         if(menor.getIzquierda().getTipo() != Tipo.BOOL && menor.getDerecha().getTipo() != Tipo.BOOL){
-            nueva_op = (Menor) transformarOperacionBinaria(nueva_op);
+            transformarOperacionBinaria(nueva_op);
             nueva_op.setTipo(Tipo.BOOL);
             return nueva_op;
         } else{
@@ -226,7 +203,7 @@ public class ValidadorTipos extends Transformer{
     public Expresion transform(Mayor mayor) throws ExcepcionDeTipos {
         Mayor nueva_op = (Mayor) super.transform(mayor);
         if(mayor.getIzquierda().getTipo() != Tipo.BOOL && mayor.getDerecha().getTipo() != Tipo.BOOL){
-            nueva_op = (Mayor) transformarOperacionBinaria(nueva_op);
+            transformarOperacionBinaria(nueva_op);
             nueva_op.setTipo(Tipo.BOOL);
             return nueva_op;
         } else{
@@ -238,7 +215,7 @@ public class ValidadorTipos extends Transformer{
     public Expresion transform(MayorIgual mayorIgual) throws ExcepcionDeTipos {
         MayorIgual nueva_op = (MayorIgual) super.transform(mayorIgual);
         if(mayorIgual.getIzquierda().getTipo() != Tipo.BOOL && mayorIgual.getDerecha().getTipo() != Tipo.BOOL){
-            nueva_op = (MayorIgual) transformarOperacionBinaria(nueva_op);
+            transformarOperacionBinaria(nueva_op);
             nueva_op.setTipo(Tipo.BOOL);
             return nueva_op;
         } else{
@@ -250,7 +227,7 @@ public class ValidadorTipos extends Transformer{
     public Expresion transform(MenorIgual menorIgual) throws ExcepcionDeTipos {
         MenorIgual nueva_op = (MenorIgual) super.transform(menorIgual);
         if(menorIgual.getIzquierda().getTipo() != Tipo.BOOL && menorIgual.getDerecha().getTipo() != Tipo.BOOL){
-            nueva_op = (MenorIgual) transformarOperacionBinaria(nueva_op);
+            transformarOperacionBinaria(nueva_op);
             nueva_op.setTipo(Tipo.BOOL);
             return nueva_op;
         } else{
@@ -278,7 +255,7 @@ public class ValidadorTipos extends Transformer{
     public Expresion transform(Not not) throws ExcepcionDeTipos {
         Not nueva_op = (Not) super.transform(not);
         if(not.getExpresion().getTipo() == Tipo.BOOL){
-            nueva_op = (Not) transformarOperacionUnaria(nueva_op);
+            transformarOperacionUnaria(nueva_op);
             return nueva_op;
         } else {
             throw new ExcepcionDeTipos(
@@ -290,7 +267,7 @@ public class ValidadorTipos extends Transformer{
     public MenosUnario transform(MenosUnario menosUnario) throws ExcepcionDeTipos {
         MenosUnario nueva_op = super.transform(menosUnario);
         if(menosUnario.getExpresion().getTipo() != Tipo.BOOL){
-            nueva_op = (MenosUnario) transformarOperacionUnaria(nueva_op);
+            transformarOperacionUnaria(nueva_op);
             return nueva_op;
         } else {
             throw new ExcepcionDeTipos(
@@ -300,16 +277,12 @@ public class ValidadorTipos extends Transformer{
 
     @Override
     public Expresion transform(FlotanteAEntero fae) throws ExcepcionDeTipos {
-        FlotanteAEntero nueva_op = (FlotanteAEntero) super.transform(fae);
-        //nueva_op = (FlotanteAEntero) transformarOperacionUnaria(nueva_op);
-        return nueva_op;
+        return super.transform(fae);
     }
 
     @Override
     public Expresion transform(EnteroAFlotante eaf) throws ExcepcionDeTipos {
-        EnteroAFlotante nueva_op = (EnteroAFlotante) super.transform(eaf);
-        //nueva_op = (EnteroAFlotante) transformarOperacionUnaria(nueva_op);
-        return nueva_op;
+        return super.transform(eaf);
     }
 
     @Override
@@ -390,12 +363,7 @@ public class ValidadorTipos extends Transformer{
     public Return transform(Return aReturn) throws ExcepcionDeTipos {
         super.transform(aReturn);
         if(aReturn.getExpresion().getTipo() != tipoRetorno){
-            if(aReturn.getExpresion().getTipo() == Tipo.FLOAT || aReturn.getExpresion().getTipo() == Tipo.INTEGER){
-                aReturn.setExpresion(convertir_a_tipo(aReturn.getExpresion(),tipoRetorno));
-            } else {
-                throw new ExcepcionDeTipos(
-                        String.format("Tipo de retorno %1$s incompatible %2$s\n",aReturn.getExpresion().getTipo(), tipoRetorno));
-            }
+            aReturn.setExpresion(convertir_a_tipo(aReturn.getExpresion(),tipoRetorno));
         }
         return aReturn;
     }

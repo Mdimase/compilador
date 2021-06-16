@@ -40,7 +40,7 @@ public class Rewriter extends Transformer{
             condicion = new Distinto(expresionBase, whenIs.getExpresion());
         }
         assert condicion != null;
-        condicion.setTipo(expresionBase.getTipo());
+        condicion.setTipo(Tipo.BOOL);
         return condicion;
     }
 
