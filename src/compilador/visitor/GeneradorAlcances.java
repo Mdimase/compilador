@@ -115,14 +115,20 @@ public class GeneradorAlcances extends Visitor<Void> {
         alcance_actual = new Alcance("BLOQUE_FUNCION",alcance_global);  //esto para que meta los parametros en un diccionario perteneciente al bloque funcion como pedia el enunciado que los parametros tengan la misma validez que una variable local al bloque
         if(!declaracionFuncion.getParametros().isEmpty()){
             for (Parametro parametro:declaracionFuncion.getParametros()){
-                Object resultP = this.agregarSimbolo(parametro.getIdentificador().getNombre(), parametro);
-                if(resultP!=null){   //repetido
-                    throw new ExcepcionDeAlcance(String.format("El nombre del parametro %1$s de tipo %2$s fue utilizado previamente\"]\n",
-                            parametro.getIdentificador().getNombre(), parametro.getTipo()));
-                }
+                this.visit(parametro);
             }
         }
-        super.visit(declaracionFuncion);
+        this.visit(declaracionFuncion.getBloque());
+        return null;
+    }
+
+    @Override
+    public Void visit(Parametro parametro) throws ExcepcionDeAlcance {
+        Object resultP = this.agregarSimbolo(parametro.getIdentificador().getNombre(), parametro);
+        if(resultP!=null){   //repetido
+            throw new ExcepcionDeAlcance(String.format("El nombre del parametro %1$s de tipo %2$s fue utilizado previamente\"]\n",
+                    parametro.getIdentificador().getNombre(), parametro.getTipo()));
+        }
         return null;
     }
 
