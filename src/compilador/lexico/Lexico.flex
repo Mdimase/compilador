@@ -60,6 +60,9 @@ ComentarioSimple = "#" {Caracter}* {FinLinea}?
 /*Cierra inesperado*/
 CierreInesperado = \}|\*\);
 
+/*String*/
+string = \"|\\\"
+
 /* enteros */
 Digito = [0-9]
 Natural = [1-9]{Digito}*

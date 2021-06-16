@@ -56,10 +56,9 @@ public class Main {
             Runtime.getRuntime().exec(cmd);
 
             //generar codigo IR para el LLVM
-            /*
             GeneradorCodigo generadorCodigo = new GeneradorCodigo(ga.getAlcance_global());
             System.out.println(generadorCodigo.procesar(programa,"Programa.ll"));
-            */
+
         } catch(Exception e){
             System.out.println(e);
         }    

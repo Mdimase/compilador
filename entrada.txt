@@ -46,7 +46,7 @@ variable p is integer = 15 + hj;
 variable poyo is float = rt - jk;
 variable b is boolean;
 variable asd is float = -1.23;
-variable nm is integer = 56;
+variable nm is integer = 560;
 variable l is boolean=not d;
 variable kl is boolean = hj != df;
 variable po is float = 12 + nm;
@@ -60,12 +60,14 @@ variable zz is boolean;
 variable int is integer = j + 500;
 int = int + 1;
 write(2);
-writeln("hola");
+writeln("Esto es \"un\"ejemplo");
 for j from 1 to 6 by 2 do
     begin
         write("daleee");
     end;
+{
 when j
         is > 100.23 + j then write("j>100")
         is < 253.98 then write("j<100");
+        }
 end.

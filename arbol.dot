@@ -263,7 +263,7 @@ graph G {1 [label="Programa"]
 2 -- 132
 133 [label="Ident nm INTEGER"]
 132 -- 133
-134 [label="Const 56 INTEGER"]
+134 [label="Const 560 INTEGER"]
 132 -- 134
 135 [label="DeclaracionVariable"]
 2 -- 135
@@ -357,7 +357,7 @@ graph G {1 [label="Programa"]
 178 -- 179
 180 [label="WriteLn String"]
 161 -- 180
-181 [label="hola"]
+181 [label="Esto es "un"ejemplo"]
 180 -- 181
 182 [label="FOR->WHILE"]
 161 -- 182
@@ -391,36 +391,4 @@ graph G {1 [label="Programa"]
 195 -- 196
 197 [label="Const 2 INTEGER"]
 195 -- 197
-198 [label="When"]
-161 -- 198
-199 [label="Ident j UNKNOWN"]
-198 -- 199
-200 [label="WhenIs"]
-198 -- 200
-201 [label=">"]
-200 -- 201
-202 [label="+ UNKNOWN"]
-200 -- 202
-203 [label="Const 100.23 FLOAT"]
-202 -- 203
-204 [label="Ident j UNKNOWN"]
-202 -- 204
-205 [label="BLOQUE_WHEN_IS"]
-200 -- 205
-206 [label="Write String"]
-205 -- 206
-207 [label="j>100"]
-206 -- 207
-208 [label="WhenIs"]
-198 -- 208
-209 [label="<"]
-208 -- 209
-210 [label="Const 253.98 FLOAT"]
-208 -- 210
-211 [label="BLOQUE_WHEN_IS"]
-208 -- 211
-212 [label="Write String"]
-211 -- 212
-213 [label="j<100"]
-212 -- 213
 }
