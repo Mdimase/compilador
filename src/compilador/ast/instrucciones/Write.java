@@ -12,6 +12,7 @@ public class Write extends Sentencia{
     private Boolean esString=false;
     private Boolean esLn=false;
     private Mensaje mensaje;
+    private String IrRefStr;
 
     public Write(Expresion expresion) {
         super("Write");
@@ -67,6 +68,14 @@ public class Write extends Sentencia{
 
     public void setMensaje(Mensaje mensaje) {
         this.mensaje = mensaje;
+    }
+
+    public String getIrRefStr() {
+        return IrRefStr;
+    }
+
+    public void setIrRefStr(String irRefStr) {
+        IrRefStr = irRefStr;
     }
 
     @Override

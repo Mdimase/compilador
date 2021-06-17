@@ -449,4 +449,8 @@ graph G {1 [label="Programa"]
 224 -- 225
 226 [label="Const false BOOL"]
 224 -- 226
+227 [label="WriteLn String"]
+169 -- 227
+228 [label="hola k ase"]
+227 -- 228
 }

@@ -15,6 +15,7 @@ public class GeneradorCodigo extends Visitor<String>{
     private StringBuilder resultado = new StringBuilder();
     private StringBuilder inicializaciones = new StringBuilder();
     private StringBuilder globalVar = new StringBuilder();
+    private StringBuilder str = new StringBuilder();
 
     public GeneradorCodigo(Alcance alcance_global) {
         this.alcance_global = alcance_actual = alcance_global;
@@ -38,6 +39,10 @@ public class GeneradorCodigo extends Visitor<String>{
 
     public String getIRGlobalName(Identificador identificador){
         return String.format("@%1$s", identificador.getNombre());
+    }
+
+    public String getStrName(){
+        return String.format("@str.%1$s",String.valueOf(getID()));
     }
 
     public String newTempId(){
@@ -69,7 +74,7 @@ public class GeneradorCodigo extends Visitor<String>{
         } else{
            resultado.append(this.visit(programa));
         }
-        return globalVar.toString() +/* @str.n  + */ resultado;
+        return globalVar.toString() + str + resultado;
     }
 
     @Override
@@ -137,7 +142,7 @@ public class GeneradorCodigo extends Visitor<String>{
     @Override
     public String visit(DeclaracionVariable declaracionVariable) throws ExcepcionDeAlcance {
         String tipoLlvm = this.LLVM_IR_TYPE_INFO.get(declaracionVariable.getTipo()).get(0);
-        if(alcance_actual == alcance_global){ //ya declaradas
+        if(alcance_actual == alcance_global){ //variables globales
             declaracionVariable.setIrName(this.getIRGlobalName(declaracionVariable.getId()));
             String valor_ir = LLVM_IR_TYPE_INFO.get(declaracionVariable.getTipo()).get(1);
             globalVar.append(String.format("%1$s = global %2$s %3$s\n", declaracionVariable.getIrName(), tipoLlvm, valor_ir));
@@ -281,34 +286,51 @@ public class GeneradorCodigo extends Visitor<String>{
     public String visit(Write w) throws ExcepcionDeAlcance {
         String variable_print;
         if(w.getEsString()){
-            String tipo_llvm="string";
-            //variable_print = "@.str";
-            //TERMINAR ESTO
+            this.generarCodigoWriteString(w);
         } else {
             this.generarCodigoWriteExp(w);
         }
         return "";
     }
 
+    public void generarCodigoWriteString(Write w){
+        // constante global a imprimir
+        int longitud = w.getMensaje().getCadena().length() + 2; // por el \00
+        w.setIrRefStr(this.getStrName());
+        String fin = "\\00\"\n";
+        if(w.getEsLn()){    //agrego el salto de linea
+            longitud +=2;   //por el \0A
+            fin = "\\0A\\00\"\n";
+        }
+        str.append(String.format("%1$s = private constant [%2$s x i8] c\"%3$s%4$s",
+                w.getIrRefStr(), String.valueOf(longitud),w.getMensaje().getCadena(),fin));
+
+        //call
+        resultado.append(String.format("  %1$s = call i32 @puts(i8* getelementptr ([%2$s x i8], [%2$s x i8] * %3$s, i32 0, i32 0))\n",
+                this.newTempId(),String.valueOf(longitud),w.getIrRefStr()));
+    }
+
+
     public void generarCodigoWriteExp(Write w) throws ExcepcionDeAlcance {
         String variable_print;
         resultado.append(w.getExpresion().accept(this));
         String tipo_llvm = this.LLVM_IR_TYPE_INFO.get(w.getExpresion().getTipo()).get(0);
-        if(w.getEsLn()){
-            variable_print = "@.integerN";
-        } else {
-            variable_print = "@.integer";
-        }
         String ref_to_print = w.getExpresion().getIrRef();
         if (w.getExpresion().getTipo() == Tipo.FLOAT){
             String temp_ref_to_print = this.newTempId();
             resultado.append(String.format("  %1$s = fpext float %2$s to double\n", temp_ref_to_print, ref_to_print));
             ref_to_print = temp_ref_to_print;
             tipo_llvm = "double";
-            if(w.getEsLn()){
+            if(w.getEsLn()){    //modificacion para el salto de linea
                 variable_print = "@.floatN";
             } else {
                 variable_print = "@.float";
+            }
+        } else {    //integer
+            if(w.getEsLn()){    //modificacion para el salto de linea
+                variable_print = "@.integerN";
+            } else {
+                variable_print = "@.integer";
             }
         }
         resultado.append(String.format("  %1$s = call i32 (i8*, ...) @printf(i8* getelementptr([4 x i8], [4 x i8]* %2$s, i32 0, i32 0), %3$s %4$s)\n",

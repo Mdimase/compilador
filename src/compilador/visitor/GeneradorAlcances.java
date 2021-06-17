@@ -36,6 +36,7 @@ public class GeneradorAlcances extends Visitor<Void> {
         this.visit(programa);   // como aca no hay visit(programa) usa de la superclase
     }
 
+    //mejor ahora, no?
     @Override
     public Void visit(Bloque bloque) throws ExcepcionDeAlcance {
         if(bloque.getNombre().equals("DECLARACIONES")){
