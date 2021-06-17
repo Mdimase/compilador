@@ -1,7 +1,6 @@
 
 variable d is boolean = false;
 variable hj is integer = 1+65;
-{
 variable rt is float=5.56;
 variable bv is boolean = rt == 5.56;
 variable fghjl is boolean = d or true;
@@ -11,7 +10,7 @@ variable df is integer = 1 + rt;
 
 function prueba_Funciones (c is integer, j is boolean=false) return float
     begin
-        #variable x is integer;
+        variable x is integer;
         if j == true then
             begin
                 c=c-5;
@@ -25,7 +24,10 @@ function pepe (a is float) return integer
         salamin(a);
         variable aux is integer= -p / a + salamin(prueba_Funciones(a)); # en esta invocacion ocurren varias conversiones de tipos
             if b == false and aux < 10-8 then
-                write(4)
+                begin
+                    variable aba is boolean;
+                    if a == 12.35 then variable wp is boolean;
+                end
             else
                 salamin(a);
     end;
@@ -48,7 +50,7 @@ variable nm is integer = 560;
 variable l is boolean=not d;
 variable kl is boolean = hj != df;
 variable po is float = 12 + nm;
-}
+
 function hola(g21 is float,yupi is integer) return integer
     hj=hj+1;
 
@@ -56,7 +58,7 @@ main is
 
 variable j is integer = 56;
 j = j +123;
-{variable zz is boolean;
+variable zz is boolean;
 variable int is integer = j + 500;
 int = int + 1;
 
@@ -64,7 +66,6 @@ for hj from 1 to 6 by 2 do
     begin
         write("daleee");
     end;
-}
 
 when j
         is > 100.23 + j then write("j>100")

@@ -13,6 +13,7 @@ public class DeclaracionFuncion extends Declaracion{
     private Tipo tipoRetorno;
     private List<Parametro> parametros = new ArrayList<>();
     private Bloque bloque;
+    private Alcance alcance;    //para no renegar con los parametros
 
     public DeclaracionFuncion(Identificador identificador, Tipo tipoRetorno, List<Parametro> parametros, Bloque bloque) {
         this.identificador = identificador;
@@ -72,6 +73,14 @@ public class DeclaracionFuncion extends Declaracion{
 
     public void setBloque(Bloque bloque) {
         this.bloque = bloque;
+    }
+
+    public Alcance getAlcance() {
+        return alcance;
+    }
+
+    public void setAlcance(Alcance alcance) {
+        this.alcance = alcance;
     }
 
     @Override

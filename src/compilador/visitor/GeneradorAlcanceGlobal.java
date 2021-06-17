@@ -17,6 +17,8 @@ public class GeneradorAlcanceGlobal extends Visitor<Void>{
     public void procesar(Programa programa) throws ExcepcionDeAlcance{
         if(programa.getDeclaraciones() != null){
             this.visit(programa.getDeclaraciones());
+        } else {
+            alcance_global = new Alcance("global"); //lo va a devolver vacio
         }
     }
 

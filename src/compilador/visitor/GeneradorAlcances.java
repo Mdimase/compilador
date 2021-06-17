@@ -18,7 +18,6 @@ import java.util.Stack;
 // clase que se encargara de recorrer el AST y setear los valores de alcance correspondientes
 public class GeneradorAlcances extends Visitor<Void> {
 
-    private boolean bloqueF = false;
     private Stack<Bloque> alcances = new Stack<Bloque>();
     private Alcance alcance_actual; //alcance actual de un bloque determinado
     private Alcance alcance_global; //alcance al que todos pueden acceder
@@ -30,6 +29,27 @@ public class GeneradorAlcances extends Visitor<Void> {
     public Alcance getAlcance_global() {
         return alcance_global;
     }
+
+    // dispara toda la generacion de alcances del AST
+    public void procesar(Programa programa) throws ExcepcionDeAlcance{
+        alcance_actual = alcance_global;
+        this.visit(programa);   // como aca no hay visit(programa) usa de la superclase
+    }
+
+    @Override
+    public Void visit(Bloque bloque) throws ExcepcionDeAlcance {
+        if(bloque.getNombre().equals("DECLARACIONES")){
+            super.visit(bloque);
+        } else {
+            alcance_actual = new Alcance(bloque.getNombre(), alcance_actual);
+            bloque.setAlcance(alcance_actual);
+            super.visit(bloque);
+            alcance_actual = alcance_actual.getPadre(); //esta fue parte de la solucion
+        }
+        return null;
+    }
+
+    /*
 
     //seteo main como hijo de global
     private void mainConDeclaraciones (Bloque bloque){
@@ -43,11 +63,6 @@ public class GeneradorAlcances extends Visitor<Void> {
         bloque.setAlcance(new Alcance("main",alcance_global));  //seteo su padre, que sera el alcance global
         this.alcance_actual = bloque.getAlcance();
         alcances.push(new Bloque(new ArrayList<Sentencia>(),"DECLARACIONES",false,alcance_global)); //error empty stack
-    }
-
-    // dispara toda la generacion de alcances del AST
-    public void procesar(Programa programa) throws ExcepcionDeAlcance{
-        this.visit(programa);   // como aca no hay visit(programa) usa de la superclase
     }
 
     @Override
@@ -86,7 +101,7 @@ public class GeneradorAlcances extends Visitor<Void> {
             this.alcance_actual = alcances.peek().getAlcance();
         }
         return null;
-    }
+    } */
 
     // cuando llegue a visit(decaracionVariable) aca si esta, por ende, usa este y no el de la superclase
     @Override
@@ -112,13 +127,15 @@ public class GeneradorAlcances extends Visitor<Void> {
 
     @Override
     public Void visit(DeclaracionFuncion declaracionFuncion) throws ExcepcionDeAlcance{
-        alcance_actual = new Alcance("BLOQUE_FUNCION",alcance_global);  //esto para que meta los parametros en un diccionario perteneciente al bloque funcion como pedia el enunciado que los parametros tengan la misma validez que una variable local al bloque
+        alcance_actual = new Alcance("BLOQUE_FUNCION",alcance_actual);
+        declaracionFuncion.setAlcance(alcance_actual); //esta fue parte de la solucion , asi no renegamos con los parametros
         if(!declaracionFuncion.getParametros().isEmpty()){
             for (Parametro parametro:declaracionFuncion.getParametros()){
                 this.visit(parametro);
             }
         }
         this.visit(declaracionFuncion.getBloque());
+        alcance_actual = alcance_actual.getPadre(); //esta fue parte de la solucion
         return null;
     }
 
