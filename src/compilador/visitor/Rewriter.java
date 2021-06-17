@@ -53,34 +53,48 @@ public class Rewriter extends Transformer{
 
     @Override
     public Sentencia transform(When when) throws ExcepcionDeTipos {
-        when = (When) super.transform(when);    //tuve que hacer que el transform(when) retorne una sentencia, por eso ahora casteo
-        List<Sentencia> sentencias = new ArrayList<>();
-        Identificador identificador = new Identificador(crearNombreUnico(),when.getExpresionBase().getTipo());
-        DeclaracionVariable dv = new DeclaracionVariable(identificador,when.getExpresionBase().getTipo(),when.getExpresionBase());  //expresion que se comparara
-        sentencias.add(dv);//sentencias del bloque a retornar
         If current_if = null;
         If global_if = null;
+        List<Sentencia> sentencias = new ArrayList<>(); //sentencias del bloque a retornar
+        when = (When) super.transform(when);    //tuve que hacer que el transform(when) retorne una sentencia, por eso ahora casteo
+
+        Identificador identificador = new Identificador(crearNombreUnico(),when.getExpresionBase().getTipo());
+        DeclaracionVariable dv = new DeclaracionVariable(identificador,when.getExpresionBase().getTipo(),when.getExpresionBase());  //expresion que se comparara
+        sentencias.add(dv); //agrego la declaracion de variable inicial del bloque
+        Bloque bloqueTransformado = new Bloque(sentencias,"When -> If",new Alcance("When->If"));
+
+        //engancho el padre
+        Alcance alcancePadre = when.getWhenIs().get(0).getBloque().getAlcance().getPadre();
+        bloqueTransformado.getAlcance().setPadre(alcancePadre);
+
         for(WhenIs wi: when.getWhenIs()){
-            if(current_if == null){ //primera comparacion
-                current_if = new If(resolverCondicion(when.getExpresionBase(), wi),new Bloque(wi.getBloque().getSentencias(),"THEN",false));
+            Comparacion cmp = this.resolverCondicion(when.getExpresionBase(), wi);
+            if(current_if == null){ //primera comparacion -> If principal
+                wi.getBloque().getAlcance().setPadre(bloqueTransformado.getAlcance());
+                current_if = new If(cmp, wi.getBloque());
+                current_if.getBloqueThen().setNombre("BLOQUE_THEN");
                 global_if = current_if;
-            } else {    //a partir de la segunda comparacion
-                If newIf = new If(resolverCondicion(when.getExpresionBase(),wi),new Bloque(wi.getBloque().getSentencias(),"THEN",false));
+            } else {    //a partir de la segunda comparacion -> empiezan las cadenas de else/if
+                If newIf = new If(cmp,wi.getBloque());
+                newIf.getBloqueThen().setNombre("BLOQUE_THEN");
                 List<Sentencia> ls = new ArrayList<>();
                 ls.add(newIf);
-                current_if.setBloqueElse(new Bloque(ls,"ELSE",false));  //else if
+                Bloque bloqueElse = new Bloque(ls,"BLOQUE_ELSE");
+                bloqueElse.setAlcance(wi.getBloque().getAlcance());
+                bloqueElse.getAlcance().setPadre(bloqueTransformado.getAlcance());
+                current_if.setBloqueElse(bloqueElse);  //else if
                 current_if=newIf;
             }
         }
-        // para el else del final que era opcional
+
+        // para el else del final(opcional)
         if(current_if != null && when.getBloqueElse() != null){
-            //String al = when.getBloqueElse().getAlcance().getPadre().getNombre();
-            current_if.setBloqueElse(new Bloque(when.getBloqueElse().getSentencias(),"ELSE"));
+            current_if.setBloqueElse(when.getBloqueElse());
+            current_if.getBloqueElse().setNombre("BLOQUE_ELSE");
+            current_if.getBloqueElse().getAlcance().setPadre(bloqueTransformado.getAlcance());
         }
-        sentencias.add(global_if);
-        //retorno un bloque que contiene la declaracion de variable temp + los if anidados
-        Bloque b = new Bloque(sentencias,"When -> If");
-        return b;
+        bloqueTransformado.getSentencias().add(global_if);
+        return bloqueTransformado;
     }
 
     //CONSTANT FOLDING con conversiones implicitas entre int y float

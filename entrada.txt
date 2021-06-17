@@ -65,10 +65,10 @@ for hj from 1 to 6 by 2 do
         write("daleee");
     end;
 }
-{
+
 when j
         is > 100.23 + j then write("j>100")
         is < 253.98 then write("j<100")
         else variable kaka is boolean;
-}
+
 end.
