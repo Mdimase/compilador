@@ -14,8 +14,6 @@ public class ValidadorTipos extends Transformer{
 
     private Alcance alcance_actual; //bloque actual, si no esta aca, busco en el padre hasta llegar a null
     private Tipo tipoRetorno;   //tipo de retorno de una funcion
-    private boolean masFunciones = true;    //flag que indica si es posible que vengan mas declaraciones de funciones
-    private boolean hayInvocaciones = false;
     private boolean hayReturn = false;
 
     //inicio de ejecucion del validador de tipos
@@ -26,9 +24,6 @@ public class ValidadorTipos extends Transformer{
     @Override
     public Bloque transform(Bloque bloque) throws ExcepcionDeTipos {
         this.alcance_actual = bloque.getAlcance();
-        if(alcance_actual.getNombre().equals("main")){
-            masFunciones=false; //a partir de aca no habra mas declaraciones de funciones
-        }
         super.transform(bloque);
         return bloque;
     }
@@ -302,6 +297,7 @@ public class ValidadorTipos extends Transformer{
 
     @Override
     public DeclaracionFuncion transform(DeclaracionFuncion declaracionFuncion) throws ExcepcionDeTipos {
+        alcance_actual = declaracionFuncion.getBloque().getAlcance();
         super.transform(declaracionFuncion);
         if(!hayReturn){ // agrego return implicito
             Return r = new Return(new Constante("unknown",Tipo.UNKNOWN));
@@ -317,12 +313,12 @@ public class ValidadorTipos extends Transformer{
             declaracionFuncion.getBloque().getSentencias().add(r);
         }
         hayReturn = false;  //dejo en falso para la proxima funcion
+        alcance_actual = declaracionFuncion.getBloque().getAlcance().getPadre();
         return declaracionFuncion;
     }
 
     @Override
     public InvocacionFuncion transform(InvocacionFuncion invocacionFuncion) throws ExcepcionDeTipos {
-        hayInvocaciones=true;
         super.transform(invocacionFuncion);
         invocacionFuncion.setTipo(invocacionFuncion.getIdentificador().getTipo());
         DeclaracionFuncion declaracionFuncion = (DeclaracionFuncion) alcance_actual.resolver(invocacionFuncion.getIdentificador().getNombre());
@@ -369,15 +365,8 @@ public class ValidadorTipos extends Transformer{
             tipo = ((DeclaracionVariable) elemento).getTipo();
         }
         if(elemento instanceof DeclaracionFuncion){
-                if(masFunciones && !hayInvocaciones){
-                    tipo = ((DeclaracionFuncion) elemento).getTipoRetorno();
-                    tipoRetorno = tipo;
-                    alcance_actual = ((DeclaracionFuncion) elemento).getBloque().getAlcance();
-                } else{ //invocaciones objetivo
-                    tipo = ((DeclaracionFuncion) elemento).getTipoRetorno();
-                    //tipoRetorno = tipo;
-                    hayInvocaciones=false;
-                }
+            tipo = ((DeclaracionFuncion) elemento).getTipoRetorno();
+            tipoRetorno = tipo;
         }
         if(elemento instanceof Parametro){
             tipo = ((Parametro) elemento).getTipo();
@@ -388,5 +377,4 @@ public class ValidadorTipos extends Transformer{
         }
         throw new ExcepcionDeTipos(String.format("No se declaró el nombre %1$s\n", identificador.getNombre()));
     }
-
 }

@@ -116,7 +116,7 @@ public abstract class Visitor<T> {
         } else{
             List<T> parametros = new ArrayList<>();
             for (Expresion parametro : invocacionFuncion.getParams()){
-                parametros.add(parametro.accept(this)); //acepto cada una de las sentencias que estan en el bloque if
+                parametros.add(parametro.accept(this));
             }
             return procesarInvocacionFuncion(invocacionFuncion,id,parametros);
         }

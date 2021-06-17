@@ -97,7 +97,7 @@ public class GeneradorCodigo extends Visitor<String>{
     @Override
     public String visit(DeclaracionFuncion declaracionFuncion) throws ExcepcionDeAlcance {
         resultado.append("\n");
-        alcance_actual = declaracionFuncion.getBloque().getAlcance();
+        //alcance_actual = declaracionFuncion.getBloque().getAlcance();
         String tipoLlvm = this.LLVM_IR_TYPE_INFO.get(declaracionFuncion.getTipoRetorno()).get(0);
         StringBuilder params = new StringBuilder();
         if(!declaracionFuncion.getParametros().isEmpty()){
@@ -108,7 +108,7 @@ public class GeneradorCodigo extends Visitor<String>{
         this.inicializarParametros(declaracionFuncion.getParametros());
         //CUERPO DE LA FUNCION Y RETURN
         resultado.append("}\n");
-        alcance_actual = alcance_global;
+        //alcance_actual = alcance_global;
         return "";
     }
 
@@ -270,7 +270,6 @@ public class GeneradorCodigo extends Visitor<String>{
     @Override
     public String visit(Asignacion asignacion) throws ExcepcionDeAlcance {
         resultado.append(asignacion.getExpresion().accept(this));
-        //System.out.println(alcance_actual.getNombre());
         DeclaracionVariable dv = (DeclaracionVariable) this.alcance_actual.resolver(asignacion.getIdentificador().getNombre());
         String tipo_llvm = this.LLVM_IR_TYPE_INFO.get(dv.getTipo()).get(0);
         resultado.append(String.format("  store %1$s %2$s, %1$s* %3$s ; %3$s = %2$s\n",

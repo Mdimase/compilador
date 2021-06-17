@@ -74,11 +74,13 @@ public class Rewriter extends Transformer{
         }
         // para el else del final que era opcional
         if(current_if != null && when.getBloqueElse() != null){
-            current_if.setBloqueElse(new Bloque(when.getBloqueElse().getSentencias(),"ELSE",false));
+            //String al = when.getBloqueElse().getAlcance().getPadre().getNombre();
+            current_if.setBloqueElse(new Bloque(when.getBloqueElse().getSentencias(),"ELSE"));
         }
         sentencias.add(global_if);
         //retorno un bloque que contiene la declaracion de variable temp + los if anidados
-        return new Bloque(sentencias,"When -> If",false);
+        Bloque b = new Bloque(sentencias,"When -> If");
+        return b;
     }
 
     //CONSTANT FOLDING con conversiones implicitas entre int y float

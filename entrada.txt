@@ -1,19 +1,17 @@
 
-variable d is boolean = not false;
+variable d is boolean = false;
 variable hj is integer = 1+65;
-
+{
 variable rt is float=5.56;
 variable bv is boolean = rt == 5.56;
 variable fghjl is boolean = d or true;
-
 variable jk is float;
 variable df is integer = 1 + rt;
 #variable yu is float = read_float(); HACER ESTO EN IRGLOBALVARIABLES
 
-function prueba_Funciones (c is integer, j is boolean=false) return float #a partir de la variable j, los demas parametros deben ser con valor por defecto, caso contrario, da error
+function prueba_Funciones (c is integer, j is boolean=false) return float
     begin
-        #puedo declarar variables locales a la funcion, siempre y cuando no pisen algun nombre de variables globales
-        variable x is integer;
+        #variable x is integer;
         if j == true then
             begin
                 c=c-5;
@@ -50,24 +48,27 @@ variable nm is integer = 560;
 variable l is boolean=not d;
 variable kl is boolean = hj != df;
 variable po is float = 12 + nm;
-
+}
 function hola(g21 is float,yupi is integer) return integer
     hj=hj+1;
 
 main is
+
 variable j is integer = 56;
-variable zz is boolean;
+j = j +123;
+{variable zz is boolean;
 variable int is integer = j + 500;
 int = int + 1;
-write(2);
-writeln("Esto es \"un\"ejemplo");
-for j from 1 to 6 by 2 do
+
+for hj from 1 to 6 by 2 do
     begin
         write("daleee");
     end;
+}
 {
 when j
         is > 100.23 + j then write("j>100")
-        is < 253.98 then write("j<100");
-        }
+        is < 253.98 then write("j<100")
+        else variable kaka is boolean;
+}
 end.
