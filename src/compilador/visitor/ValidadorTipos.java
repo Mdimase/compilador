@@ -25,6 +25,7 @@ public class ValidadorTipos extends Transformer{
     public Bloque transform(Bloque bloque) throws ExcepcionDeTipos {
         this.alcance_actual = bloque.getAlcance();
         super.transform(bloque);
+        this.alcance_actual = bloque.getAlcance().getPadre();   //mejora
         return bloque;
     }
 
@@ -95,11 +96,6 @@ public class ValidadorTipos extends Transformer{
         Asignacion asignacion = super.transform(a);
         asignacion.setExpresion(convertir_a_tipo(asignacion.getExpresion(), asignacion.getIdentificador().getTipo()));
         return asignacion;
-    }
-
-    @Override
-    public Read transform(Read read){
-        return read;
     }
 
     private void transformarOperacionUnaria(OperacionUnaria ou) throws ExcepcionDeTipos{
@@ -297,7 +293,7 @@ public class ValidadorTipos extends Transformer{
 
     @Override
     public DeclaracionFuncion transform(DeclaracionFuncion declaracionFuncion) throws ExcepcionDeTipos {
-        alcance_actual = declaracionFuncion.getBloque().getAlcance();
+        alcance_actual = declaracionFuncion.getAlcance();   //mejora
         super.transform(declaracionFuncion);
         if(!hayReturn){ // agrego return implicito
             Return r = new Return(new Constante("unknown",Tipo.UNKNOWN));
@@ -313,7 +309,7 @@ public class ValidadorTipos extends Transformer{
             declaracionFuncion.getBloque().getSentencias().add(r);
         }
         hayReturn = false;  //dejo en falso para la proxima funcion
-        alcance_actual = declaracionFuncion.getBloque().getAlcance().getPadre();
+        alcance_actual = declaracionFuncion.getAlcance().getPadre(); // mejora
         return declaracionFuncion;
     }
 
