@@ -457,8 +457,8 @@ graph G {1 [label="Programa"]
 227 -- 229
 230 [label="="]
 172 -- 230
-231 [label="Ident j UNKNOWN"]
+231 [label="Ident poyo UNKNOWN"]
 230 -- 231
-232 [label="READ_INTEGER"]
+232 [label="READ_FLOAT"]
 230 -- 232
 }

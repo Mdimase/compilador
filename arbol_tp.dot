@@ -493,8 +493,8 @@ graph G {233 [label="Programa"]
 477 -- 479
 480 [label="="]
 415 -- 480
-481 [label="Ident j INTEGER"]
+481 [label="Ident poyo FLOAT"]
 480 -- 481
-482 [label="READ_INTEGER"]
+482 [label="READ_FLOAT"]
 480 -- 482
 }

@@ -356,7 +356,6 @@ public class GeneradorCodigo extends Visitor<String>{
 
     public String generarCodigoRead(Read read){
         StringBuilder aux = new StringBuilder();
-        // %dest = alloca tipo
         read.setIrRef(this.newTempId());
         String tipoLlvm = this.LLVM_IR_TYPE_INFO.get(read.getTipo()).get(0);
         aux.append(String.format("  %1$s = alloca %2$s ; alloca = %1$s\n", read.getIrRef(), tipoLlvm));
@@ -364,11 +363,24 @@ public class GeneradorCodigo extends Visitor<String>{
             aux.append(String.format("  %1$s = call i32 (i8*, ...) @scanf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @int_read_format, i64 0, i64 0), %2$s* %3$s)\n",
                     this.newTempId(),tipoLlvm,read.getIrRef()));
         } else {    // read_float()
-
+            aux.append(this.generarCodigoReadFloat(read,read.getIrRef()));
         }
         return aux.toString();
     }
 
+    public String generarCodigoReadFloat(Read read,String irRef){
+        StringBuilder rf = new StringBuilder();
+        String irName = this.newTempId();   // alloca double
+        rf.append(String.format("  %1$s = alloca double ; alloca = %1$s\n", irName));
+        rf.append(String.format("  %1$s = call i32 (i8*, ...) @scanf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @double_read_format, i64 0, i64 0), double* %2$s)\n",
+                this.newTempId(),irName));
+        String tempDouble = this.newTempId();
+        rf.append(String.format("  %1$s = load double, double* %2$s\n",tempDouble,irName));
+        String tempFloat = this.newTempId();
+        rf.append(String.format("  %1$s = fptrunc double %2$s to float\n",tempFloat,tempDouble));
+        rf.append(String.format("  %1$s = store float %2$s, float* %3$s\n",irRef,tempFloat,irRef));
+        return rf.toString();
+    }
 
     @Override
     protected String procesarWhenIs(WhenIs whenIs,String simboloCpm, String expresion, String bloque) {
