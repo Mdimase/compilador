@@ -6,7 +6,7 @@ variable bv is boolean = rt == 5.56;
 variable fghjl is boolean = d or true;
 variable jk is float;
 variable df is integer = 1 + rt;
-#variable yu is float = read_float(); HACER ESTO EN IRGLOBALVARIABLES
+variable yu is integer = read_integer(); #HACER ESTO EN GLOBALVARIABLES
 
 function prueba_Funciones (c is integer, j is boolean=false) return float
     begin
@@ -71,5 +71,5 @@ when j
         is > 100.23 + j then write("j>100")
         is < 253.98 then write("j<100")
         else variable kaka is boolean;
-writeln("hola k ase");
+j = read_integer();
 end.

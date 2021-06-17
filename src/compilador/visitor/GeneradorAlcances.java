@@ -18,7 +18,7 @@ import java.util.Stack;
 // clase que se encargara de recorrer el AST y setear los valores de alcance correspondientes
 public class GeneradorAlcances extends Visitor<Void> {
 
-    private Stack<Bloque> alcances = new Stack<Bloque>();
+    //private Stack<Bloque> alcances = new Stack<Bloque>();
     private Alcance alcance_actual; //alcance actual de un bloque determinado
     private Alcance alcance_global; //alcance al que todos pueden acceder
 
