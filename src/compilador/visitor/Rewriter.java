@@ -86,7 +86,6 @@ public class Rewriter extends Transformer{
                 current_if=newIf;
             }
         }
-
         // para el else del final(opcional)
         if(current_if != null && when.getBloqueElse() != null){
             current_if.setBloqueElse(when.getBloqueElse());

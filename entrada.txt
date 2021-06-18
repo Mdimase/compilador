@@ -72,4 +72,5 @@ when j
         is < 253.98 then write("j<100")
         else variable kaka is boolean;
 poyo = read_float();
+#write(\" es un \");
 end.
