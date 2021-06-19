@@ -7,6 +7,7 @@ import compilador.visitor.*;
 
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 
 public class Main {
@@ -57,7 +58,16 @@ public class Main {
 
             //generar codigo IR para el LLVM
             GeneradorCodigo generadorCodigo = new GeneradorCodigo(ga.getAlcance_global());
-            System.out.println(generadorCodigo.procesar(programa,"Programa.ll"));
+            pw = new PrintWriter(new FileWriter("programa.ll"));
+            pw.println(generadorCodigo.procesar(programa, "programa.ll"));
+            pw.close();
+            System.out.println("Código generado");
+            String cmd2 = "clang -c -o programa.o programa.ll";
+            String cmd3 = "clang -o programa.exe programa.o scanf.o";
+            Runtime.getRuntime().exec(cmd2);
+            Runtime.getRuntime().exec(cmd3);
+            System.out.println("Ejecutable generado");
+            //System.out.println(generadorCodigo.procesar(programa,"Programa.ll"));   //muestra por consola
 
         } catch(Exception e){
             System.out.println(e);
