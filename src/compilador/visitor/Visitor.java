@@ -8,7 +8,8 @@ package compilador.visitor;
 import compilador.ast.base.*;
 import compilador.ast.instrucciones.*;
 import compilador.ast.operaciones.binarias.OperacionBinaria;
-import compilador.ast.operaciones.unarias.OperacionUnaria;
+import compilador.ast.operaciones.unarias.*;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

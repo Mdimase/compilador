@@ -7,7 +7,7 @@ variable fghjl is boolean = d or true;
 variable jk is float;
 variable df is integer = 1 + rt;
 variable yu is integer = read_integer(); #HACER ESTO EN GLOBALVARIABLES
-
+{
 function prueba_Funciones (c is integer, j is boolean=false) return float
     begin
         variable x is integer;
@@ -31,7 +31,7 @@ function pepe (a is float) return integer
             else
                 salamin(a);
     end;
-
+}
 function salamin(z is integer) return float
     begin
         while z < 12 do # las condiciones siempre evaluan que su resultado sea un bool
@@ -45,7 +45,6 @@ function salamin(z is integer) return float
 variable p is integer = 15 + hj;
 variable poyo is float = rt - jk;
 variable b is boolean;
-variable asd is float = -1.23;
 variable nm is integer = 560;
 variable l is boolean=not d;
 variable kl is boolean = hj != df;
@@ -58,19 +57,30 @@ main is
 
 variable j is integer = 56;
 j = j +123;
+variable asd is float = -1.23;
 variable zz is boolean;
 variable int is integer = j + 500;
 int = int + 1;
 
+{
 for hj from 1 to 6 by 2 do
     begin
         write("daleee");
     end;
-
+}
+{
 when j
         is > 100.23 + j then write("j>100")
         is < 253.98 then write("j<100")
         else variable kaka is boolean;
-poyo = read_float();
-#write(\" es un \");
+        }
+#poyo = read_float();
+{
+if j == 56 and int < 100 then int = int + 2.23
+    else write("hola");
+
+writeln(int);
+}
+variable fa is boolean = not zz;
+
 end.

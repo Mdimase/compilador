@@ -2,7 +2,9 @@ package compilador.visitor;
 
 import compilador.ast.base.*;
 import compilador.ast.instrucciones.*;
+import compilador.ast.operaciones.binarias.And;
 import compilador.ast.operaciones.binarias.OperacionBinaria;
+import compilador.ast.operaciones.binarias.Or;
 import compilador.ast.operaciones.unarias.*;
 
 import java.util.*;
@@ -12,6 +14,7 @@ public class GeneradorCodigo extends Visitor<String>{
     private String nombreArchivo;
     private Alcance alcance_global;
     private Alcance alcance_actual;
+    private Stack<ArrayList<String>> etiquetasSalto = new Stack<>();
     private StringBuilder resultado = new StringBuilder();
     private StringBuilder inicializaciones = new StringBuilder();
     private StringBuilder globalVar = new StringBuilder();
@@ -22,7 +25,8 @@ public class GeneradorCodigo extends Visitor<String>{
     }
 
     // la lista tendra en .get(0)=tipoir y en .get(1)=valor
-    private final Map<Tipo, ArrayList<String>> LLVM_IR_TYPE_INFO = new HashMap<Tipo, ArrayList<String>>() {{
+    // no use tuplas por problemas con el IDE
+    private final Map<Tipo, ArrayList<String>> LLVM_IR_TYPE_INFO = new HashMap<>() {{
         ArrayList<String> listBool = new ArrayList<>();
         ArrayList<String> listInteger = new ArrayList<>();
         ArrayList<String> listFloat = new ArrayList<>();
@@ -50,7 +54,21 @@ public class GeneradorCodigo extends Visitor<String>{
     }
 
     public String newTempLabel(){
-        return String.format("label$%1$s", String.valueOf(getID()));
+        return String.format("%%label$%1$s", String.valueOf(getID()));
+    }
+
+    //funcion que recibe un %label y devuelve un label:
+    public String reFormatLabel(String label){
+        label = label.replace("%","");  //elimino el %
+        return label.concat(":");  //agrego el :
+    }
+
+    public ArrayList<String> initElementoPila (String expV, String expF){
+        ArrayList<String> elementPila = new ArrayList<>();
+        elementPila.add(expV);
+        elementPila.add(expF);
+        return  elementPila;
+        // [expV,expF] -> [0] = expV ; [1] -> expF
     }
 
     public String procesar(Programa programa,String nombreArchivo) throws ExcepcionDeAlcance {
@@ -201,11 +219,13 @@ public class GeneradorCodigo extends Visitor<String>{
         return "";
     }
 
+    // genera el codigo de toda operacion binaria
+    // en el caso de And y Or genera la instruccion sin cortocircuito para casos donde no son condiciones de estructuras de control
     public void generarCodigoOperacionBinaria(OperacionBinaria s) throws ExcepcionDeAlcance {
         StringBuilder aux = new StringBuilder();
         aux.append(super.visit(s));
         s.setIrRef(this.newTempId());
-        String tipoLlvm = this.LLVM_IR_TYPE_INFO.get(s.getIzquierda().getTipo()).get(0);
+        String tipoLlvm = this.LLVM_IR_TYPE_INFO.get(s.getTipo()).get(0);
         aux.append(String.format("  %1$s = %2$s %3$s %4$s, %5$s\n", s.getIrRef(),
                 s.get_llvm_op_code(), tipoLlvm, s.getIzquierda().getIrRef(), s.getDerecha().getIrRef()));
         if(alcance_actual == alcance_global){
@@ -215,29 +235,107 @@ public class GeneradorCodigo extends Visitor<String>{
         }
     }
 
-    @Override
-    public String visit(OperacionBinaria ob) throws ExcepcionDeAlcance {
-        this.generarCodigoOperacionBinaria(ob);
+    public String visit(Or or) throws ExcepcionDeAlcance {
+        if (this.etiquetasSalto.size() > 0){    // condicion de un if o while
+            String etiquetaDerecha = this.newTempLabel();
+            ArrayList<String> elementoPila = this.initElementoPila(etiquetasSalto.peek().get(0),etiquetaDerecha);
+            etiquetasSalto.push(elementoPila);  //true,derecha
+            resultado.append(or.getIzquierda().accept(this));
+            elementoPila = etiquetasSalto.pop();    // ya evaluada la izquierda del OR
+            String etiquetaTrue = elementoPila.get(0);
+            String etiquetaFalse = elementoPila.get(1);
+            resultado.append(String.format("  br i1 %1$s, label %2$s, label %3$s\n\n",or.getIzquierda().getIrRef(),etiquetaTrue,etiquetaFalse)); //salto segun resultado Or.iz
+            resultado.append(String.format("  %1$s\n",this.reFormatLabel(etiquetaDerecha)));  // etDer:
+            resultado.append(or.getDerecha().accept(this));
+            or.setIrRef(or.getDerecha().getIrRef());
+        } else {    //asignaciones o inicializaciones de variable por ej
+            this.generarCodigoOperacionBinaria(or);
+        }
         return "";
     }
 
-    public void generarCodigoConversion(OperacionConversion o) throws ExcepcionDeAlcance {
-        StringBuilder aux = new StringBuilder();
-        aux.append(super.visit(o));
-        o.setIrRef(this.newTempId());
-        if(o.getClass() == EnteroAFlotante.class){
-            aux.append(String.format("  %1$s = sitofp i32 %2$s to float\n", o.getIrRef(), o.getExpresion().getIrRef()));
-        } else{
-            aux.append(String.format("  %1$s = sitofp float %2$s to i32\n", o.getIrRef(), o.getExpresion().getIrRef()));
+    public String visit(And and) throws ExcepcionDeAlcance {
+        if (this.etiquetasSalto.size() > 0){    // condicion de un if o while
+            String etiquetaDerecha = this.newTempLabel();
+            ArrayList<String> elementoPila = this.initElementoPila(etiquetaDerecha,etiquetasSalto.peek().get(1));
+            etiquetasSalto.push(elementoPila);  // derecha,false
+            resultado.append(and.getIzquierda().accept(this));
+            elementoPila = etiquetasSalto.pop();    // ya evaluada la izquierda del And
+            String etiquetaTrue = elementoPila.get(0);
+            String etiquetaFalse = elementoPila.get(1);
+            resultado.append(String.format("  br i1 %1$s, label %2$s, label %3$s\n\n",and.getIzquierda().getIrRef(),etiquetaTrue,etiquetaFalse)); //salto segun resultado Or.iz
+            resultado.append(String.format("  %1$s\n",this.reFormatLabel(etiquetaDerecha)));  // etDer:
+            resultado.append(and.getDerecha().accept(this));
+            and.setIrRef(and.getDerecha().getIrRef());  //guardo el nombre del %RV de la exp derecho en el and
+        } else {    //asignaciones o inicializaciones de variable por ej
+            this.generarCodigoOperacionBinaria(and);
         }
+        return "";
+    }
+
+
+    @Override
+    public String visit(OperacionBinaria ob) throws ExcepcionDeAlcance {
+        if(ob.getClass() == Or.class){
+            this.visit( (Or) ob);
+            return "";
+        }
+        if(ob.getClass() == And.class){
+            this.visit( (And) ob);
+            return "";
+        }
+        this.generarCodigoOperacionBinaria(ob); //todos los que no sean Or o And
+        return "";
+    }
+
+
+    //esto quedo asi para no tener que modificar el visitor abstractco ni todos los que lo implementaban
+    // ya que quitar esto implicaria crear los 4 visit correspondientes en Visitor y en ASTgraf como minimo
+    @Override
+    public String visit(OperacionUnaria ou) throws ExcepcionDeAlcance {
+        if(ou.getClass() == EnteroAFlotante.class){
+            this.visit( (EnteroAFlotante) ou);
+        }
+        if(ou.getClass() == FlotanteAEntero.class){
+            this.visit( (FlotanteAEntero) ou);
+        }
+        if(ou.getClass() == MenosUnario.class){
+            this.visit( (MenosUnario) ou);
+        }
+        if(ou.getClass() == Not.class){
+            this.visit((Not) ou);
+        }
+        return "";
+    }
+
+    public String visit(EnteroAFlotante eaf) throws ExcepcionDeAlcance {
+        StringBuilder aux = new StringBuilder();
+        aux.append(super.visit(eaf));
+        eaf.setIrRef(this.newTempId());
+        aux.append(String.format("  %1$s = sitofp i32 %2$s to float\n", eaf.getIrRef(), eaf.getExpresion().getIrRef()));
         if(alcance_actual == alcance_global){
             inicializaciones.append(aux);
         } else {
             resultado.append(aux);
         }
+        return "";
     }
 
-    public void generarCodigoMenosUnario(MenosUnario menosUnario) throws ExcepcionDeAlcance {
+
+    public String visit(FlotanteAEntero fae) throws ExcepcionDeAlcance {
+        StringBuilder aux = new StringBuilder();
+        aux.append(super.visit(fae));
+        fae.setIrRef(this.newTempId());
+        aux.append(String.format("  %1$s = sitofp float %2$s to i32\n", fae.getIrRef(), fae.getExpresion().getIrRef()));
+        if(alcance_actual == alcance_global){
+            inicializaciones.append(aux);
+        } else {
+            resultado.append(aux);
+        }
+        return "";
+    }
+
+    public String visit (MenosUnario menosUnario) throws ExcepcionDeAlcance {
         StringBuilder aux = new StringBuilder();
         aux.append(super.visit(menosUnario));
         menosUnario.setIrRef(this.newTempId());
@@ -251,8 +349,25 @@ public class GeneradorCodigo extends Visitor<String>{
         } else {
             resultado.append(aux);
         }
+        return "";
     }
 
+    public String visit(Not not) throws ExcepcionDeAlcance {
+        if (this.etiquetasSalto.size() > 0) {    // condicion de un if o while
+            ArrayList<String> elementoPila = etiquetasSalto.pop();
+            String etiquetaTrue = elementoPila.get(0);
+            String etiquetaFalse = elementoPila.get(1);
+            elementoPila = this.initElementoPila(etiquetaFalse,etiquetaTrue); // ya realizado el inverso
+            etiquetasSalto.push(elementoPila);
+            resultado.append(not.getExpresion().accept(this));
+            not.setIrRef(not.getExpresion().getIrRef());    //guardo el %rv de la expresion en el NOT
+        } else {
+            this.generarCodigoNot(not);
+        }
+        return "";
+    }
+
+    //instruccion xor que implementa el not
     public void generarCodigoNot(Not not) throws ExcepcionDeAlcance {
         StringBuilder aux = new StringBuilder();
         aux.append(super.visit(not));
@@ -266,24 +381,33 @@ public class GeneradorCodigo extends Visitor<String>{
     }
 
     @Override
-    public String visit(OperacionUnaria ou) throws ExcepcionDeAlcance {
-        if(ou.getClass() == EnteroAFlotante.class || ou.getClass() == FlotanteAEntero.class){
-           this.generarCodigoConversion((OperacionConversion) ou);
-        }
-        if(ou.getClass() == MenosUnario.class){
-            this.generarCodigoMenosUnario((MenosUnario) ou);
-        }
-        if(ou.getClass() == Not.class){
-            this.generarCodigoNot((Not) ou);
-        }
+    public String visit(If iF) throws ExcepcionDeAlcance {
+        System.out.println(alcance_actual);
+        String etiquetaThen = this.newTempLabel();
+        String etiquetaElse = this.newTempLabel();
+        String etiquetaFin = this.newTempLabel();
+        ArrayList<String> elementoPila = this.initElementoPila(etiquetaThen,etiquetaElse);
+        etiquetasSalto.push(elementoPila);
+        resultado.append(iF.getCondicion().accept(this));
+        elementoPila = etiquetasSalto.pop();    //elemento de pila con la condicion evaluada
+        String etiquetaTrue = elementoPila.get(0);
+        String etiquetaFalse = elementoPila.get(1);
+        resultado.append(String.format("  br i1 %1$s, label %2$s, label %3$s\n\n", iF.getCondicion().getIrRef(),etiquetaTrue,etiquetaFalse));
+        resultado.append(String.format("  %1$s\n",this.reFormatLabel(etiquetaThen)));   // etThen:
+        resultado.append(iF.getBloqueThen().accept(this));
+        resultado.append(String.format("  br label %1$s\n\n",this.reFormatLabel(etiquetaFin)));   // jump etFin
+        resultado.append(String.format("  %1$s\n",this.reFormatLabel(etiquetaElse)));   //etElse:
+        resultado.append(iF.getBloqueElse().accept(this));
+        resultado.append(String.format("  br label %1$s\n\n",this.reFormatLabel(etiquetaFin)));   // jump etFin
+        resultado.append(String.format("  %1$s\n",this.reFormatLabel(etiquetaFin)));   // etFin:
         return "";
     }
 
     @Override
     public String visit(Asignacion asignacion) throws ExcepcionDeAlcance {
-        resultado.append(asignacion.getExpresion().accept(this));
         DeclaracionVariable dv = (DeclaracionVariable) this.alcance_actual.resolver(asignacion.getIdentificador().getNombre());
         String tipo_llvm = this.LLVM_IR_TYPE_INFO.get(dv.getTipo()).get(0);
+        resultado.append(asignacion.getExpresion().accept(this));   //genero exp
         resultado.append(String.format("  store %1$s %2$s, %1$s* %3$s ; %3$s = %2$s\n",
                 tipo_llvm, asignacion.getExpresion().getIrRef(), dv.getIrName()));
         return resultado.toString();
@@ -378,7 +502,7 @@ public class GeneradorCodigo extends Visitor<String>{
         rf.append(String.format("  %1$s = load double, double* %2$s\n",tempDouble,irName));
         String tempFloat = this.newTempId();
         rf.append(String.format("  %1$s = fptrunc double %2$s to float\n",tempFloat,tempDouble));
-        rf.append(String.format("  %1$s = store float %2$s, float* %3$s\n",irRef,tempFloat,irRef));
+        rf.append(String.format("  store float %1$s, float* %2$s\n",tempFloat,irRef));
         return rf.toString();
     }
 
