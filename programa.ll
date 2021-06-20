@@ -22,17 +22,17 @@ declare i32 @scanf(i8* %0, ...)
 @fghjl = global i1 0
 @jk = global float 0.0
 @df = global i32 0
-@str.31 = private constant [6 x i8] c"soy t\00"
-@str.33 = private constant [6 x i8] c"soy f\00"
 
-define i32 @hola (float %t$8,i32 %t$9) {
-  %t$10 = alloca float ; alloca = %t$10
-  store float %t$8, float* %t$10 ; %t$10 = %t$8
-  %t$11 = alloca i32 ; alloca = %t$11
-  store i32 %t$9, i32* %t$11 ; %t$11 = %t$9
-  %t$12 = load float, float* %t$10 ; %t$12 = g21
-  %t$13 = fptosi float %t$12 to i32
-  ret i32 %t$13
+define float @hola (i32 %t$8,float %t$9) {
+  %t$10 = alloca i32 ; alloca = %t$10
+  store i32 %t$8, i32* %t$10 ; %t$10 = %t$8
+  %t$11 = alloca float ; alloca = %t$11
+  store float %t$9, float* %t$11 ; %t$11 = %t$9
+  %t$12 = load i32, i32* %t$10 ; %t$12 = hugo
+  %t$13 = sitofp i32 %t$12 to float
+  %t$14 = load float, float* %t$11 ; %t$14 = juan
+  %t$15 = fadd float %t$13, %t$14
+  ret float %t$15
 }
 
 define i32 @main(i32, i8**) {
@@ -50,37 +50,24 @@ define i32 @main(i32, i8**) {
   %t$6 = fadd float 1.0, %t$5
   %t$7 = fptosi float %t$6 to i32
   store i32 %t$7, i32* @df ; @df = %t$7
-  %t$14 = alloca i32 ; alloca = %t$14
-  store i32 50, i32* %t$14 ; %t$14 = 50
-  %t$15 = alloca float ; alloca = %t$15
-  %t$16 = fneg float 1.2300000190734863
-  store float %t$16, float* %t$15 ; %t$15 = %t$16
-  %t$17 = alloca i1 ; alloca = %t$17
-  store i1 0, i1* %t$17 ; %t$17 = 0
-  %t$18 = alloca i32 ; alloca = %t$18
-  %t$19 = load i32, i32* %t$14 ; %t$19 = j
-  %t$20 = add i32 %t$19, 500
-  store i32 %t$20, i32* %t$18 ; %t$18 = %t$20
-  %t$21 = load i32, i32* %t$18 ; %t$21 = int
-  %t$22 = add i32 %t$21, 1
-  store i32 %t$22, i32* %t$18 ; %t$18 = %t$22
-  %t$27 = load i32, i32* %t$14 ; %t$27 = j
-  %t$28 = icmp eq i32 %t$27, 56
-  br i1 %t$28, label %label$26, label %label$24
-
-  label$26:
-  %t$29 = load i32, i32* %t$18 ; %t$29 = int
-  %t$30 = icmp slt i32 %t$29, 100
-  br i1 %t$30, label %label$23, label %label$24
-
-  label$23:
-  %t$32 = call i32 @puts(i8* getelementptr ([6 x i8], [6 x i8] * @str.31, i32 0, i32 0))
-  br label %label$25
-
-  label$24:
-  %t$34 = call i32 @puts(i8* getelementptr ([6 x i8], [6 x i8] * @str.33, i32 0, i32 0))
-  br label %label$25
-
-  label$25:
+  %t$16 = alloca i32 ; alloca = %t$16
+  store i32 50, i32* %t$16 ; %t$16 = 50
+  %t$17 = alloca float ; alloca = %t$17
+  %t$18 = fneg float 1.2300000190734863
+  store float %t$18, float* %t$17 ; %t$17 = %t$18
+  %t$19 = alloca i1 ; alloca = %t$19
+  store i1 0, i1* %t$19 ; %t$19 = 0
+  %t$20 = alloca i32 ; alloca = %t$20
+  %t$21 = load i32, i32* %t$16 ; %t$21 = j
+  %t$22 = add i32 %t$21, 500
+  store i32 %t$22, i32* %t$20 ; %t$20 = %t$22
+  %t$23 = load i32, i32* %t$20 ; %t$23 = int
+  %t$24 = add i32 %t$23, 1
+  store i32 %t$24, i32* %t$20 ; %t$20 = %t$24
+  %t$26 = load i32, i32* @hj ; %t$26 = hj
+  %t$27 = add i32 %t$26, 4
+  %t$25 = call float @hola(i32 %t$27, float 1.5 )
+  %t$28 = fpext float %t$25 to double
+  %t$29 = call i32 (i8*, ...) @printf(i8* getelementptr([3 x i8], [3 x i8]* @.float, i32 0, i32 0), double %t$28)
 ret i32 0
 }

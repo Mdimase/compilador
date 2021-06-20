@@ -122,15 +122,35 @@ public class GeneradorCodigo extends Visitor<String>{
     }
 
     @Override
+    public String visit(InvocacionFuncion invocacionFuncion) throws ExcepcionDeAlcance {
+        Object res = alcance_actual.resolver(invocacionFuncion.getIdentificador().getNombre());
+        DeclaracionFuncion df = (DeclaracionFuncion) res;
+        invocacionFuncion.setIrRef(this.newTempId());   //rg resultado de la invocacion
+        String tipoLlvm = this.LLVM_IR_TYPE_INFO.get(df.getTipoRetorno()).get(0);   //tipo retorno
+        String p = this.conseguirParametrosInvocacion(invocacionFuncion);
+        resultado.append(String.format("  %1$s = call %2$s %3$s(%4$s)\n",invocacionFuncion.getIrRef(),tipoLlvm,df.getIdentificador().getIrRef(),p));
+        return "";
+    }
+
+    public String conseguirParametrosInvocacion(InvocacionFuncion invocacionFuncion) throws ExcepcionDeAlcance {
+        StringBuilder aux = new StringBuilder();
+        StringBuilder params = new StringBuilder();
+        for(Expresion p:invocacionFuncion.getParams()){
+            resultado.append(p.accept(this)); //codigo del parametros
+            String tipoPLlvm = this.LLVM_IR_TYPE_INFO.get(p.getTipo()).get(0);   //tipo retorno
+            params.append(String.format("%1$s %2$s, ",tipoPLlvm,p.getIrRef()));
+        }
+        return params.deleteCharAt(params.lastIndexOf(",")).toString();    //le borro la coma que me genera al final
+    }
+
+    @Override
     public String visit(DeclaracionFuncion declaracionFuncion) throws ExcepcionDeAlcance {
         resultado.append("\n");
         String tipoLlvm = this.LLVM_IR_TYPE_INFO.get(declaracionFuncion.getTipoRetorno()).get(0);
-        String params ="";
-        if(!declaracionFuncion.getParametros().isEmpty()){  //si hay parametros los consigo
-           params = this.conseguirParametros(declaracionFuncion.getParametros());
-        }
+        declaracionFuncion.getIdentificador().setIrRef(this.getIRGlobalName(declaracionFuncion.getIdentificador()));
+        String params = this.conseguirParametros(declaracionFuncion.getParametros());
         resultado.append(String.format("define %1$s %2$s (%3$s) {\n",   //firma de la funcion
-                tipoLlvm, this.getIRGlobalName(declaracionFuncion.getIdentificador()), params));
+                tipoLlvm,declaracionFuncion.getIdentificador().getIrRef() , params));
         this.inicializarParametros(declaracionFuncion.getParametros()); //inicializacion de los parametros
         resultado.append(declaracionFuncion.getBloque().accept(this));
         resultado.append("}\n");

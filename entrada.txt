@@ -50,8 +50,8 @@ variable l is boolean=not d;
 variable kl is boolean = hj != df;
 variable po is float = 12 + nm;
 }
-function hola(g21 is float,yupi is integer) return integer
-    return g21;
+function hola(hugo is integer,juan is float) return float
+        return hugo + juan;
 
 main is
 
@@ -75,9 +75,9 @@ when j
         else variable kaka is boolean;
 }
 #poyo = read_float();
-
+{
 if j == 56 and int < 100
-    then write("soy t") else write("soy f");
+    then write("soy t") else write("soy f");}
 
 #variable yu is float = read_float();
 
@@ -90,4 +90,6 @@ while j != 55 do
         write("no sale");
     end;
     }
+
+write(hola(hj+4,1.5));
 end.
