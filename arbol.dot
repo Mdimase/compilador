@@ -137,4 +137,16 @@ graph G {1 [label="Programa"]
 67 -- 69
 70 [label="Const 1.5 FLOAT"]
 65 -- 70
+71 [label="DeclaracionVariable"]
+43 -- 71
+72 [label="Ident día BOOL"]
+71 -- 72
+73 [label="Const false BOOL"]
+71 -- 73
+74 [label="DeclaracionVariable"]
+43 -- 74
+75 [label="Ident dia BOOL"]
+74 -- 75
+76 [label="Const false BOOL"]
+74 -- 76
 }

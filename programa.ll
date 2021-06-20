@@ -69,5 +69,9 @@ define i32 @main(i32, i8**) {
   %t$25 = call float @hola(i32 %t$27, float 1.5 )
   %t$28 = fpext float %t$25 to double
   %t$29 = call i32 (i8*, ...) @printf(i8* getelementptr([3 x i8], [3 x i8]* @.float, i32 0, i32 0), double %t$28)
+  %t$30 = alloca i1 ; alloca = %t$30
+  store i1 0, i1* %t$30 ; %t$30 = 0
+  %t$31 = alloca i1 ; alloca = %t$31
+  store i1 0, i1* %t$31 ; %t$31 = 0
 ret i32 0
 }
