@@ -5,10 +5,7 @@ import compilador.lexico.Lexico;
 import compilador.sintactico.Sintactico;
 import compilador.visitor.*;
 
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 
 public class Main {
 
@@ -62,13 +59,32 @@ public class Main {
             pw.println(generadorCodigo.procesar(programa, "programa.ll"));
             pw.close();
             System.out.println("Código generado");
-            String cmd2 = "clang -c -o programa.o programa.ll";
-            String cmd3 = "clang -o programa.exe programa.o scanf.o";
-            Runtime.getRuntime().exec(cmd2);
-            Runtime.getRuntime().exec(cmd3);
-            System.out.println("Ejecutable generado");
-            //System.out.println(generadorCodigo.procesar(programa,"Programa.ll"));   //muestra por consola
 
+            Process process = Runtime.getRuntime().exec("clang -c -o programa.o programa.ll");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
+            }
+
+            Process process2 = Runtime.getRuntime().exec("clang -o programa.exe programa.o scanf.o");
+            BufferedReader reader2 = new BufferedReader(new InputStreamReader(process2.getInputStream()));
+            String line2;
+            while ((line2 = reader2.readLine()) != null) {
+                System.out.println(line2);
+            }
+
+            System.out.println("Ejecutable generado");
+            System.out.println("Ejecutando programa.exe ......");
+
+            Process process3 = Runtime.getRuntime().exec("programa.exe");
+            BufferedReader reader3 = new BufferedReader(new InputStreamReader(process3.getInputStream()));
+            String line3;
+            while ((line3 = reader3.readLine()) != null) {
+                System.out.println(line3);
+            }
+
+            //System.out.println(generadorCodigo.procesar(programa,"Programa.ll"));   //muestra por consola
         } catch(Exception e){
             System.out.println(e);
         }    

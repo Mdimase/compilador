@@ -1,23 +1,24 @@
-
 variable d is boolean = false;
+variable entero? is integer = 12;
 variable hj is integer = 1+65;
 variable rt is float=5.56;
 variable bv is boolean = rt == 5;
 variable fghjl is boolean = d or true;
 variable jk is float;
 variable df is integer = 1 + rt;
-{
-function prueba_Funciones (c is integer, j is boolean=false) return float
-    begin
-        variable x is integer;
-        if j == true then
-            begin
-                c=c-5;
-                j = j or d;
-            end;
-        return c; # se convierte c de integer a float para que coincida con el tipo de retorno de la funcion
-    end;
 
+function prueba_Funcion (a is integer) return integer
+begin
+    if entero? >= 10 then
+        begin
+            a=5;
+            write(a);
+        end
+        else
+            writeln("Estoy en el else");
+    return a;
+end;
+{
 function pepe (a is float) return integer
     begin
         salamin(a);
@@ -30,6 +31,7 @@ function pepe (a is float) return integer
             else
                 salamin(a);
     end;
+
 }
 {
 function salamin(z is integer) return float
@@ -41,27 +43,33 @@ function salamin(z is integer) return float
             end;
             # como no tiene un return, le agregamos uno implicitamente que retorna un valor por defecto segun el tipo de retorno de la funcion.
     end;
+}
 
 variable p is integer = 15 + hj;
+{
 variable poyo is float = rt - jk;
-variable b is boolean;
+#variable b is boolean;
 variable nm is integer = 560;
 variable l is boolean=not d;
 variable kl is boolean = hj != df;
 variable po is float = 12 + nm;
 }
-function hola(hugo is integer,juan is float) return float
-        return hugo + juan;
-
+{
+function hola(hugo is integer,juan is float,sokete is boolean=true) return boolean
+        begin
+        sokete=false;
+        return sokete;
+        end;
+}
 main is
-
+{
 variable j is integer = 50;
 #j = j +123;
 variable asd is float = -1.23;
 variable zz is boolean;
 variable int is integer = j + 500;
 int = int + 1;
-
+}
 {
 for hj from 1 to 6 by 2 do
     begin
@@ -91,7 +99,8 @@ while j != 55 do
     end;
     }
 
-write(hola(hj+4,1.5));
-variable día is boolean;
-variable dia is boolean;
+#write(hola(10,50));
+prueba_Funcion(64);
+#variable día is boolean;
+#variable dia is boolean;
 end.
