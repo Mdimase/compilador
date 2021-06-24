@@ -259,8 +259,10 @@ while::= WHILE condicion:c DO instruccion:i {:
 for::= FOR IDENTIFICADOR:id FROM INTEGER_LITERAL:f TO INTEGER_LITERAL:t BY INTEGER_LITERAL:b DO instruccion:i{:
             Expresion from = new Constante(f, Tipo.INTEGER);    //constante from
             Identificador identificador = new Identificador(id);    //identificador
-            Sentencia as = new Asignacion(identificador,from);  //primera asignacion id=f;
-            Bloque cuerpoFor = as.toBloque(); //bloque principal
+            //Sentencia as = new Asignacion(identificador,from);  //primera asignacion id=f;
+            //Bloque cuerpoFor = as.toBloque(); //bloque principal
+            Sentencia dv = new DeclaracionVariable(identificador,Tipo.INTEGER,from);
+            Bloque cuerpoFor = dv.toBloque();
             cuerpoFor.setNombre("FOR->WHILE");
             Expresion by = new Constante(b, Tipo.INTEGER);  //constante by
             Expresion to = new Constante(t,Tipo.INTEGER);   //constante to

@@ -18,9 +18,9 @@ public class GeneradorCodigo extends Visitor<String>{
     private String condicion;   // necesario para hacer el br en el visit(Continue)
     private Stack<ArrayList<String>> etiquetasSalto = new Stack<>();
     private StringBuilder resultado = new StringBuilder();
-    private StringBuilder inicializaciones = new StringBuilder();
+    private StringBuilder inicializaciones = new StringBuilder();   //contiene la inicializacion de las variables globales
     private StringBuilder globalVar = new StringBuilder();
-    private StringBuilder str = new StringBuilder();
+    private StringBuilder str = new StringBuilder();    //contiene las constantes string de los WRITE(String)
 
     public GeneradorCodigo(Alcance alcance_global) {
         this.alcance_global = alcance_actual = alcance_global;
@@ -47,6 +47,7 @@ public class GeneradorCodigo extends Visitor<String>{
         return String.format("@.%1$s", this.getGlobalID());
     }
 
+    //simplemente para que las locales no compartan la misma numeracion que las globales
     public int getGlobalID(){
         id+=1;
         return id;
@@ -70,6 +71,7 @@ public class GeneradorCodigo extends Visitor<String>{
         return label.concat(":");  //agrego el :
     }
 
+    // crea un array con formato acorde a la pila de etiquetas
     public ArrayList<String> initElementoPila (String expV, String expF){
         ArrayList<String> elementPila = new ArrayList<>();
         elementPila.add(expV);
@@ -78,30 +80,51 @@ public class GeneradorCodigo extends Visitor<String>{
         // [expV,expF] -> [0] = expV ; [1] -> expF
     }
 
+    //setea los nombres globales de funciones y variables
+    public void setGlobalNames(){
+        for(Object res: alcance_global.values()){
+            if(res instanceof DeclaracionVariable){
+                ((DeclaracionVariable) res).setIrName(this.getIRGlobalName());
+            }
+            if(res instanceof DeclaracionFuncion){
+                ((DeclaracionFuncion) res).getIdentificador().setIrRef(this.getIRGlobalName());
+            }
+        }
+    }
+
+    public void insertInToStringBuilder(String str){
+        if(alcance_actual == alcance_global){
+            inicializaciones.append(str);
+        } else {
+            resultado.append(str);
+        }
+    }
+
     public String procesar(Programa programa,String nombreArchivo) throws ExcepcionDeAlcance {
         this.nombreArchivo = nombreArchivo;
         globalVar.append(String.format("source_filename = \"%1$s\"\n", nombreArchivo));
 
-        //CAMBIAR LOS TARGET
+        //CAMBIAR LOS TARGET de ser necesario
         globalVar.append("target datalayout = \"e-m:w-p270:32:32-p271:32:32-p272:64:64-i64:64-f80:128-n8:16:32:64-S128\"\n");
         globalVar.append("target triple = \"x86_64-pc-windows-msvc19.29.30038\"\n\n");
 
         globalVar.append("declare i32 @puts(i8*)\n");
         globalVar.append("declare i32 @printf(i8*, ...)\n");
         globalVar.append("declare i32 @scanf(i8* %0, ...)\n\n");
-        //globalVar.append("@.true = private constant[4 x i8] c\".T.\\00\"\n");
-        //globalVar.append("@.false = private constant[4 x i8] c\".F.\\00\"\n");
-        //globalVar.append("@.truen = private constant[5 x i8] c\".T.\\00\"\n");
-        //globalVar.append("@.falsen = private constant[5 x i8] c\".F.\\0A\\00\"\n");
         globalVar.append("@.bool = private constant [3 x i8] c\"%d\\00\"\n");
         globalVar.append("@.booln = private constant [4 x i8] c\"%d\\0A\\00\"\n");
         globalVar.append("@.integer = private constant [3 x i8] c\"%d\\00\"\n");
         globalVar.append("@.float = private constant [3 x i8] c\"%f\\00\"\n");
         globalVar.append("@.integern = private constant [4 x i8] c\"%d\\0A\\00\"\n");
         globalVar.append("@.floatn = private constant [4 x i8] c\"%f\\0A\\00\"\n");
+        globalVar.append("@.inputFloat = private constant [18 x i8] c\"Ingrese un Float:\\00\"\n");
+        globalVar.append("@.inputInteger = private constant [20 x i8] c\"Ingrese un Integer:\\00\"\n");
+        globalVar.append("@.inputBool = private constant [26 x i8] c\"Ingrese un Bool(0=f/1=t):\\00\"\n");
+        globalVar.append("@.bool_read_format = unnamed_addr constant [3 x i8] c\"%d\\00\"\n");
         globalVar.append("@.int_read_format = unnamed_addr constant [3 x i8] c\"%d\\00\"\n");
         globalVar.append("@.double_read_format = unnamed_addr constant [4 x i8] c\"%lf\\00\"\n\n");
 
+        this.setGlobalNames();  //creo todos los irName de variables globales y nombres de funciones
         if(programa.getDeclaraciones() == null){
            resultado.append(this.visit(programa.getCuerpo()));   //dispara el visit(bloqueMain)
         } else{
@@ -127,6 +150,7 @@ public class GeneradorCodigo extends Visitor<String>{
             resultado.append("}");
         } else{
             resultado.append(super.visit(bloque));
+            alcance_actual = bloque.getAlcance().getPadre();
         }
         return "";
     }
@@ -141,7 +165,7 @@ public class GeneradorCodigo extends Visitor<String>{
         if(df.getParametros().size() > invocacionFuncion.getParams().size()){
             for(int i=invocacionFuncion.getParams().size();i<df.getParametros().size();i++){
                 Parametro param = df.getParametros().get(i);
-                String tipoPLlvm = this.LLVM_IR_TYPE_INFO.get(param.getTipo()).get(0);   //tipo retorno
+                String tipoPLlvm = this.LLVM_IR_TYPE_INFO.get(param.getTipo()).get(0);   // tipo del parametro
                 param.getValorDefecto().accept(this);
                 p.append(String.format(", %1$s %2$s",tipoPLlvm,param.getValorDefecto().getIrRef()));
             }
@@ -165,7 +189,6 @@ public class GeneradorCodigo extends Visitor<String>{
     public String visit(DeclaracionFuncion declaracionFuncion) throws ExcepcionDeAlcance {
         resultado.append("\n");
         String tipoLlvm = this.LLVM_IR_TYPE_INFO.get(declaracionFuncion.getTipoRetorno()).get(0);
-        declaracionFuncion.getIdentificador().setIrRef(this.getIRGlobalName());
         String params = this.conseguirParametros(declaracionFuncion.getParametros());
         resultado.append(String.format("define %1$s %2$s (%3$s) {\n",   //firma de la funcion
                 tipoLlvm,declaracionFuncion.getIdentificador().getIrRef() , params));
@@ -176,7 +199,7 @@ public class GeneradorCodigo extends Visitor<String>{
         return "";
     }
 
-    // se encarga de inicializar los parametros
+    // se encarga de inicializar los parametros dentro de una declaracion de funcion
     public void inicializarParametros(List<Parametro> parametros){
         for(Parametro p: parametros){
             String tipoLlvm = this.LLVM_IR_TYPE_INFO.get(p.getTipo()).get(0);
@@ -202,7 +225,7 @@ public class GeneradorCodigo extends Visitor<String>{
     @Override
     public String visit(Return r) throws ExcepcionDeAlcance {
         resultado.append(r.getExpresion().accept(this));
-        String tipoLlvm = this.LLVM_IR_TYPE_INFO.get(r.getExpresion().getTipo()).get(0);
+        String tipoLlvm = this.LLVM_IR_TYPE_INFO.get(r.getExpresion().getTipo()).get(0);    //como esta chequeado que coincida con el tipo de retorno de la funcion, puedo usar el tipo de l expresion
         resultado.append(String.format("  ret %1$s %2$s\n",tipoLlvm,r.getExpresion().getIrRef()));
         return "";
     }
@@ -211,10 +234,9 @@ public class GeneradorCodigo extends Visitor<String>{
     public String visit(DeclaracionVariable declaracionVariable) throws ExcepcionDeAlcance {
         String tipoLlvm = this.LLVM_IR_TYPE_INFO.get(declaracionVariable.getTipo()).get(0);
         if(alcance_actual == alcance_global){ //variables globales
-            declaracionVariable.setIrName(this.getIRGlobalName());
-            String valor_ir = LLVM_IR_TYPE_INFO.get(declaracionVariable.getTipo()).get(1);
+            String valor_ir = LLVM_IR_TYPE_INFO.get(declaracionVariable.getTipo()).get(1);  //valor por default
             globalVar.append(String.format("%1$s = global %2$s %3$s\n", declaracionVariable.getIrName(), tipoLlvm, valor_ir));
-            inicializaciones.append(declaracionVariable.getExpresion().accept(this));
+            declaracionVariable.getExpresion().accept(this);   //sacarlo de inicializaciones?
             inicializaciones.append(String.format("  store %1$s %2$s, %1$s* %3$s ; %3$s = %2$s\n",
                     tipoLlvm, declaracionVariable.getExpresion().getIrRef(), declaracionVariable.getIrName()));
         } else {    //variables locales
@@ -229,11 +251,11 @@ public class GeneradorCodigo extends Visitor<String>{
 
     @Override
     public String visit(Constante c) {
-        if(c.getValor().equals("false")){
+        if(c.getValor().equals("false")){   //convierto el string false -> 0
             c.setIrRef("0");
             return "";
         }
-        if(c.getValor().equals("true")){
+        if(c.getValor().equals("true")){    //convierto el string true -> 1
             c.setIrRef("1");
             return "";
         }
@@ -253,11 +275,7 @@ public class GeneradorCodigo extends Visitor<String>{
             String tipoLlvm = this.LLVM_IR_TYPE_INFO.get(dv.getTipo()).get(0);
             String inicializacion = String.format("  %1$s = load %2$s, %2$s* %3$s ; %1$s = %4$s\n",
                     identificador.getIrRef(), tipoLlvm, dv.getIrName(), identificador.getNombre());
-            if(alcance_actual == alcance_global){ //variable global
-                inicializaciones.append(inicializacion);
-            } else {    // variable local
-                resultado.append(inicializacion);
-            }
+            this.insertInToStringBuilder(inicializacion);
         }
         if( res instanceof Parametro parametro){
             String tipoLlvm = this.LLVM_IR_TYPE_INFO.get(parametro.getTipo()).get(0);
@@ -276,13 +294,10 @@ public class GeneradorCodigo extends Visitor<String>{
         String tipoLlvm = this.LLVM_IR_TYPE_INFO.get(s.getIzquierda().getTipo()).get(0);    //estaba sin izquierda
         aux.append(String.format("  %1$s = %2$s %3$s %4$s, %5$s\n", s.getIrRef(),
                 s.get_llvm_op_code(), tipoLlvm, s.getIzquierda().getIrRef(), s.getDerecha().getIrRef()));
-        if(alcance_actual == alcance_global){
-            inicializaciones.append(aux);
-        } else {
-            resultado.append(aux);
-        }
+        this.insertInToStringBuilder(aux.toString());
     }
 
+    //OR con cortocircuito booleano
     public String visit(Or or) throws ExcepcionDeAlcance {
         if (this.etiquetasSalto.size() > 0){    // condicion de un if o while
             String etiquetaDerecha = this.newTempLabel();
@@ -302,6 +317,7 @@ public class GeneradorCodigo extends Visitor<String>{
         return "";
     }
 
+    //AND con cortocircuito booleano
     public String visit(And and) throws ExcepcionDeAlcance {
         if (this.etiquetasSalto.size() > 0){    // condicion de un if o while
             String etiquetaDerecha = this.newTempLabel();
@@ -316,7 +332,7 @@ public class GeneradorCodigo extends Visitor<String>{
             resultado.append(and.getDerecha().accept(this));
             and.setIrRef(and.getDerecha().getIrRef());  //guardo el nombre del %RV de la exp derecho en el and
         } else {    //asignaciones o inicializaciones de variable por ej
-            this.generarCodigoOperacionBinaria(and);
+            this.generarCodigoOperacionBinaria(and);    //OR o AND donde no estan en condiciones de estructuras de control. por ej una asignacion
         }
         return "";
     }
@@ -365,11 +381,7 @@ public class GeneradorCodigo extends Visitor<String>{
         aux.append(super.visit(eaf));
         eaf.setIrRef(this.newTempId());
         aux.append(String.format("  %1$s = sitofp i32 %2$s to float\n", eaf.getIrRef(), eaf.getExpresion().getIrRef()));
-        if(alcance_actual == alcance_global){
-            inicializaciones.append(aux);
-        } else {
-            resultado.append(aux);
-        }
+        this.insertInToStringBuilder(aux.toString());
         return "";
     }
 
@@ -379,11 +391,7 @@ public class GeneradorCodigo extends Visitor<String>{
         aux.append(super.visit(fae));
         fae.setIrRef(this.newTempId());
         aux.append(String.format("  %1$s = fptosi float %2$s to i32\n", fae.getIrRef(), fae.getExpresion().getIrRef()));
-        if(alcance_actual == alcance_global){
-            inicializaciones.append(aux);
-        } else {
-            resultado.append(aux);
-        }
+        this.insertInToStringBuilder(aux.toString());
         return "";
     }
 
@@ -396,11 +404,7 @@ public class GeneradorCodigo extends Visitor<String>{
         } else{ //integer  %rv=sub i32 0,%rv
             aux.append(String.format("  %1$s = sub i32 0, %2$s\n", menosUnario.getIrRef(), menosUnario.getExpresion().getIrRef()));
         }
-        if (alcance_actual == alcance_global) {
-            inicializaciones.append(aux);
-        } else {
-            resultado.append(aux);
-        }
+        this.insertInToStringBuilder(aux.toString());
         return "";
     }
 
@@ -425,11 +429,7 @@ public class GeneradorCodigo extends Visitor<String>{
         aux.append(super.visit(not));
         not.setIrRef(this.newTempId());
         aux.append(String.format("  %1$s = xor i1 %2$s, 1\n", not.getIrRef(), not.getExpresion().getIrRef()));
-        if (alcance_actual == alcance_global) {
-            inicializaciones.append(aux);
-        } else {
-            resultado.append(aux);
-        }
+        this.insertInToStringBuilder(aux.toString());
     }
 
     public void generarCodigoIfElse(If iF) throws ExcepcionDeAlcance {
@@ -501,12 +501,14 @@ public class GeneradorCodigo extends Visitor<String>{
 
     @Override
     public String visit(Continue c){
+        // salto a la condicion del while
         resultado.append(String.format("  br label %1$s",condicion));
         return "";
     }
 
     @Override
     public String visit(Break b){
+        //salto a la etiqueta false -> [true, false]
         resultado.append(String.format("  br label %1$s",etiquetasSalto.peek().get(1)));
         return "";
     }
@@ -526,12 +528,11 @@ public class GeneradorCodigo extends Visitor<String>{
             resultado.append(String.format("  store %1$s %2$s, %1$s* %3$s ; %3$s = %2$s\n",
                     tipo_llvm, asignacion.getExpresion().getIrRef(), p.getIrRef()));
         }
-        return resultado.toString();
+        return "";
     }
 
     @Override
     public String visit(Write w) throws ExcepcionDeAlcance {
-        String variable_print;
         if(w.getEsString()){
             this.generarCodigoWriteString(w);
         } else {
@@ -552,9 +553,6 @@ public class GeneradorCodigo extends Visitor<String>{
         str.append(String.format("%1$s = private constant [%2$s x i8] c\"%3$s%4$s",
                 w.getIrRefStr(), String.valueOf(longitud),w.getMensaje().getCadena(),fin));
         //call
-        /*
-        resultado.append(String.format("  %1$s = call i32 @puts(i8* getelementptr ([%2$s x i8], [%2$s x i8] * %3$s, i32 0, i32 0))\n",
-                this.newTempId(),String.valueOf(longitud),w.getIrRefStr())); */
         resultado.append(String.format("  %1$s = call i32 (i8*, ...) @printf(i8* getelementptr([%2$s x i8], [%2$s x i8]* %3$s, i32 0, i32 0))\n",
                 this.newTempId(),String.valueOf(longitud), w.getIrRefStr()));
     }
@@ -600,11 +598,7 @@ public class GeneradorCodigo extends Visitor<String>{
 
     @Override
     public String visit(Read read){
-        if(alcance_actual == alcance_global){   // read guardado en una variable global
-            inicializaciones.append(this.generarCodigoRead(read));
-        } else {
-            resultado.append(this.generarCodigoRead(read));
-        }
+        this.insertInToStringBuilder(this.generarCodigoRead(read));
         return "";
     }
 
@@ -613,10 +607,19 @@ public class GeneradorCodigo extends Visitor<String>{
         String temp = this.newTempId();
         String tipoLlvm = this.LLVM_IR_TYPE_INFO.get(read.getTipo()).get(0);
         aux.append(String.format("  %1$s = alloca %2$s ; alloca = %1$s\n", temp, tipoLlvm));
-        if (read.getTipo() != Tipo.FLOAT){
-            aux.append(String.format("  %1$s = call i32 (i8*, ...) @scanf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.int_read_format, i64 0, i64 0), %2$s* %3$s)\n",
-                    this.newTempId(),tipoLlvm,temp));
-        } else {    // read_float()
+        if(read.getTipo() == Tipo.INTEGER){ //esto es simplemente para que en la consola ante un read_integer() genere un mensajito que diga ingrese un integer:
+            aux.append(String.format("  %1$s = call i32 (i8*, ...) @printf(i8* getelementptr([20 x i8], [20 x i8]* @.inputInteger, i32 0, i32 0))\n",this.newTempId())); //Ingrese un Integer:
+            aux.append(String.format("  %1$s = call i32 (i8*, ...) @scanf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.int_read_format, i64 0, i64 0), %2$s* %3$s)\n", this.newTempId(),tipoLlvm,temp));
+        }
+        if(read.getTipo() == Tipo.BOOL){
+            // si ingresa un numero > 1 tener en cuenta que almacena un unico bit (el ultimo) de su representacion asociado a su paridad,los pares los almacena como 0 y los impares como 1
+            // ej 23 -> 1 o 4 -> 0
+            // por eso en el input se recomienda usar 0 o 1. caso contrario estara haciendo un mal uso de la herramienta y puede obtener resultados confusos o inesperados
+            aux.append(String.format("  %1$s = call i32 (i8*, ...) @printf(i8* getelementptr([26 x i8], [26 x i8]* @.inputBool, i32 0, i32 0))\n",this.newTempId())); //Ingrese un Bool(0-1):
+            aux.append(String.format("  %1$s = call i32 (i8*, ...) @scanf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.bool_read_format, i32 0, i32 0), i1* %2$s)\n", this.newTempId(),temp));
+        }
+        if (read.getTipo() == Tipo.FLOAT){    // read_float()
+            aux.append(String.format("  %1$s = call i32 (i8*, ...) @printf(i8* getelementptr([18 x i8], [18 x i8]* @.inputFloat, i32 0, i32 0))\n",this.newTempId())); //Ingrese un Float:
             aux.append(this.generarCodigoReadFloat(read,temp));
         }
         read.setIrRef(this.newTempId());

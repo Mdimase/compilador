@@ -11,29 +11,27 @@ function prueba_Funcion (a is integer) return integer
 begin
     if entero? >= 10 then
         begin
-            a=5;
-            write(a);
+            if hj == 66 then
+                writeln(a/2);
         end
         else
             writeln("Estoy en el else");
     return a;
 end;
-{
+
 function pepe (a is float) return integer
     begin
-        salamin(a);
-        variable aux is integer= -p / a + salamin(prueba_Funciones(a)); # en esta invocacion ocurren varias conversiones de tipos
-            if b == false and aux < 10-8 then
+        salamin(a+8);
+        variable aux is integer = 4000;
+        writeln(aux+p);
+            if aux > 10-8 then
                 begin
                     variable aba is boolean;
-                    if a == 12.35 then variable wp is boolean;
                 end
             else
-                salamin(a);
+                salamin(a+5);
     end;
 
-}
-{
 function salamin(z is integer) return float
     begin
         while z < 12 do # las condiciones siempre evaluan que su resultado sea un bool
@@ -43,64 +41,62 @@ function salamin(z is integer) return float
             end;
             # como no tiene un return, le agregamos uno implicitamente que retorna un valor por defecto segun el tipo de retorno de la funcion.
     end;
-}
 
 variable p is integer = 15 + hj;
-{
+variable xz is integer = 100;
 variable poyo is float = rt - jk;
-#variable b is boolean;
+variable b is boolean;
 variable nm is integer = 560;
+variable rty is integer;
 variable l is boolean=not d;
 variable kl is boolean = hj != df;
 variable po is float = 12 + nm;
-}
-{
-function hola(hugo is integer,juan is float,sokete is boolean=true) return boolean
+
+function hola(queso is integer,jamon is float,skt is boolean=true) return boolean
         begin
-        sokete=false;
-        return sokete;
+        skt=false;
+        return skt;
         end;
-}
+
 main is
-{
+
 variable j is integer = 50;
-#j = j +123;
+j = j + 120-20;
 variable asd is float = -1.23;
 variable zz is boolean;
 variable int is integer = j + 500;
 int = int + 1;
-}
-{
-for hj from 1 to 6 by 2 do
+
+for t8 from 6 to 1 by 2 do
     begin
-        write("daleee");
+        writeln("daleee");
+        writeln(t8);
     end;
-}
-{
+
 when j
-        is > 100.23 + j then write("j>100")
-        is < 253.98 then write("j<100")
-        else variable kaka is boolean;
-}
-#poyo = read_float();
-{
+        is > 100.23 + j then writeln("j>100.23+j")
+        is < 253.98 then writeln("j<253.98")
+        else writeln("sino");
+
 if j == 56 and int < 100
-    then write("soy t") else write("soy f");}
+    then writeln("soy t") else writeln("soy f");
 
-#variable yu is float = read_float();
+variable ju is integer = 50;
 
-{
-while j != 55 do
+while ju != 55 do
     begin
-        write("pepe");
-        j=j+1;
+        writeln("pepe");
+        ju=ju+1;
         break;
-        write("no sale");
+        #continue;
+        writeln("no sale");
     end;
-    }
 
-#write(hola(10,50));
-prueba_Funcion(64);
-#variable día is boolean;
-#variable dia is boolean;
+writeln(hola(10,50));
+variable vbn is boolean = read_boolean();
+writeln(vbn);
+variable aw is integer = read_integer();
+prueba_Funcion(aw);
+#salamin(1);
+#pepe(1.5);
 end.

@@ -73,16 +73,7 @@ public class Main {
             while ((line2 = reader2.readLine()) != null) {
                 System.out.println(line2);
             }
-
             System.out.println("Ejecutable generado");
-            System.out.println("Ejecutando programa.exe ......");
-
-            Process process3 = Runtime.getRuntime().exec("programa.exe");
-            BufferedReader reader3 = new BufferedReader(new InputStreamReader(process3.getInputStream()));
-            String line3;
-            while ((line3 = reader3.readLine()) != null) {
-                System.out.println(line3);
-            }
 
             //System.out.println(generadorCodigo.procesar(programa,"Programa.ll"));   //muestra por consola
         } catch(Exception e){

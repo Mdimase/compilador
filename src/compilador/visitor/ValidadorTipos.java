@@ -297,13 +297,13 @@ public class ValidadorTipos extends Transformer{
         super.transform(declaracionFuncion);
         if(!hayReturn){ // agrego return implicito
             Return r = new Return(new Constante("unknown",Tipo.UNKNOWN));
-            if (tipoRetorno == Tipo.BOOL){
+            if (declaracionFuncion.getTipoRetorno() == Tipo.BOOL){
                 r = new Return(new Constante("false",Tipo.BOOL));
             }
-            if (tipoRetorno == Tipo.INTEGER){
+            if (declaracionFuncion.getTipoRetorno() == Tipo.INTEGER){
                 r = new Return(new Constante("0",Tipo.INTEGER));
             }
-            if (tipoRetorno == Tipo.FLOAT){
+            if (declaracionFuncion.getTipoRetorno() == Tipo.FLOAT){
                 r = new Return(new Constante("0.0",Tipo.FLOAT));
             }
             declaracionFuncion.getBloque().getSentencias().add(r);
