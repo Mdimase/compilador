@@ -54,7 +54,7 @@ public class Rewriter extends Transformer{
     @Override
     public Sentencia transform(When when) throws ExcepcionDeTipos {
         If current_if = null;
-        If global_if = null;
+        If global_if = null;    //if principal
         List<Sentencia> sentencias = new ArrayList<>(); //sentencias del bloque a retornar
         when = (When) super.transform(when);    //tuve que hacer que el transform(when) retorne una sentencia, por eso ahora casteo
 
@@ -100,9 +100,10 @@ public class Rewriter extends Transformer{
 
     public Constante evaluarAritmeticosBinarios(OperacionBinaria operacionBinaria) {
         String result = "";
-        Tipo tipo = Tipo.UNKNOWN;
+        Tipo tipo;
         Constante constanteIz = (Constante) operacionBinaria.getIzquierda();
         Constante constanteDer = (Constante) operacionBinaria.getDerecha();
+        // separo los integer de los float unicamente por el ParseInt o ParseFloat
         if (constanteIz.getTipo().equals(Tipo.INTEGER) && constanteDer.getTipo().equals(Tipo.INTEGER)) {
             Integer valorIz = Integer.parseInt((String) constanteIz.getValor());
             Integer valorDer = Integer.parseInt((String) constanteDer.getValor());
@@ -379,16 +380,10 @@ public class Rewriter extends Transformer{
         if(igualIgual.getIzquierda().getClass() == Constante.class && igualIgual.getDerecha().getClass() == Constante.class){
             Constante constanteIz = (Constante) igualIgual.getIzquierda();
             Constante constanteDer = (Constante) igualIgual.getDerecha();
-            if(constanteIz.getValor().equals("true") && constanteDer.getValor().equals("true")){
+            if(constanteIz.getValor().equals(constanteDer.getValor())){
                 return new Constante("true",Tipo.BOOL);
             }
-            if(constanteIz.getValor().equals("false") && constanteDer.getValor().equals("false")){
-                return new Constante("true",Tipo.BOOL);
-            }
-            if(constanteIz.getValor().equals("true") && constanteDer.getValor().equals("false")){
-                return new Constante("false",Tipo.BOOL);
-            }
-            if(constanteIz.getValor().equals("false") && constanteDer.getValor().equals("true")){
+            if (!constanteIz.getValor().equals(constanteDer.getValor())) {
                 return new Constante("false",Tipo.BOOL);
             }
             if(constanteIz.getTipo().equals(Tipo.INTEGER) && constanteDer.getTipo().equals(Tipo.INTEGER)){
@@ -421,16 +416,10 @@ public class Rewriter extends Transformer{
         if(distinto.getIzquierda().getClass() == Constante.class && distinto.getDerecha().getClass() == Constante.class){
             Constante constanteIz = (Constante) distinto.getIzquierda();
             Constante constanteDer = (Constante) distinto.getDerecha();
-            if(constanteIz.getValor().equals("true") && constanteDer.getValor().equals("true")){
+            if(constanteIz.getValor().equals(constanteDer.getValor())){
                 return new Constante("false",Tipo.BOOL);
             }
-            if(constanteIz.getValor().equals("false") && constanteDer.getValor().equals("false")){
-                return new Constante("false",Tipo.BOOL);
-            }
-            if(constanteIz.getValor().equals("true") && constanteDer.getValor().equals("false")){
-                return new Constante("true",Tipo.BOOL);
-            }
-            if(constanteIz.getValor().equals("false") && constanteDer.getValor().equals("true")){
+            if (!constanteIz.getValor().equals(constanteDer.getValor())) {
                 return new Constante("true",Tipo.BOOL);
             }
             if(constanteIz.getTipo().equals(Tipo.INTEGER) && constanteDer.getTipo().equals(Tipo.INTEGER)){

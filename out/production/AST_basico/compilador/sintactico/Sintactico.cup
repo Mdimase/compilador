@@ -48,10 +48,8 @@ non terminal Asignacion asignacion;
 non terminal Tipo tipo;
 non terminal Write write, writeln;
 non terminal While while;
-//non terminal For for;
 non terminal If if;
 non terminal Constante valor_defecto;
-//non terminal InvocacionFuncion invocacion_funciones; TUVIMOS QUE HACER QUE SEA EXPRESION Y QUE EXPRESION EXTIENDA DE SENTENCIA PARA SOLUCIONAR PROBLEMAS DE TIPOS ENEL PARSING
 non terminal When when;
 non terminal List<WhenIs> comparaciones_is;
 non terminal WhenIs comparacion_is;
@@ -260,7 +258,6 @@ for::= FOR IDENTIFICADOR:id FROM INTEGER_LITERAL:f TO INTEGER_LITERAL:t BY INTEG
             Expresion from = new Constante(f, Tipo.INTEGER);    //constante from
             Identificador identificador = new Identificador(id);    //identificador
             //Sentencia as = new Asignacion(identificador,from);  //primera asignacion id=f;
-            //Bloque cuerpoFor = as.toBloque(); //bloque principal
             Sentencia dv = new DeclaracionVariable(identificador,Tipo.INTEGER,from);
             Bloque cuerpoFor = dv.toBloque();
             cuerpoFor.setNombre("FOR->WHILE");
@@ -296,8 +293,9 @@ for::= FOR IDENTIFICADOR:id FROM INTEGER_LITERAL:f TO INTEGER_LITERAL:t BY INTEG
 for::= FOR IDENTIFICADOR:id FROM INTEGER_LITERAL:f TO INTEGER_LITERAL:t DO instruccion:i{:
             Expresion from = new Constante(f, Tipo.INTEGER);    //constante from
             Identificador identificador = new Identificador(id);    //identificador
-            Sentencia as = new Asignacion(identificador,from);  //primera asignacion id=f;
-            Bloque cuerpoFor = as.toBloque(); //bloque principal
+            //Sentencia as = new Asignacion(identificador,from);  //primera asignacion id=f;
+            Sentencia dv = new DeclaracionVariable(identificador,Tipo.INTEGER,from);
+            Bloque cuerpoFor = dv.toBloque(); //bloque principal
             cuerpoFor.setNombre("FOR->WHILE");
 
             Expresion by = new Constante(String.valueOf(1), Tipo.INTEGER);  //constante by

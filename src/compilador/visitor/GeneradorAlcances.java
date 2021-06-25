@@ -18,7 +18,6 @@ import java.util.Stack;
 // clase que se encargara de recorrer el AST y setear los valores de alcance correspondientes
 public class GeneradorAlcances extends Visitor<Void> {
 
-    //private Stack<Bloque> alcances = new Stack<Bloque>();
     private Alcance alcance_actual; //alcance actual de un bloque determinado
     private Alcance alcance_global; //alcance al que todos pueden acceder
 
@@ -45,66 +44,11 @@ public class GeneradorAlcances extends Visitor<Void> {
             alcance_actual = new Alcance(bloque.getNombre(), alcance_actual);
             bloque.setAlcance(alcance_actual);
             super.visit(bloque);
-            alcance_actual = alcance_actual.getPadre(); //esta fue parte de la solucion
+            alcance_actual = alcance_actual.getPadre();
         }
         return null;
     }
 
-    /*
-
-    //seteo main como hijo de global
-    private void mainConDeclaraciones (Bloque bloque){
-        bloque.setAlcance(new Alcance("main",alcance_global));  //seteo su padre, que sera el alcance global
-        this.alcance_actual = bloque.getAlcance();
-    }
-
-    //seteo main como hijo de global
-    private void mainSinDeclaraciones (Bloque bloque){
-        alcance_global = new Alcance("global");
-        bloque.setAlcance(new Alcance("main",alcance_global));  //seteo su padre, que sera el alcance global
-        this.alcance_actual = bloque.getAlcance();
-        alcances.push(new Bloque(new ArrayList<Sentencia>(),"DECLARACIONES",false,alcance_global)); //error empty stack
-    }
-
-    @Override
-    public Void visit(Bloque bloque) throws ExcepcionDeAlcance {
-        if(bloque.getNombre().equals("DECLARACIONES")){
-            alcance_actual = alcance_global;
-            alcances.push(bloque);
-            super.visit(bloque);
-            return null;
-        }
-        if (alcance_global == null){    //no hay declaraciones de funciones ni variables globales
-            this.mainSinDeclaraciones(bloque);
-        } else{ // si hay declaraciones
-            if (bloque.esProgramaPrincipal()){  // bloque main con declaraciones previas
-                this.mainConDeclaraciones(bloque);
-            }
-            if(alcance_actual.getNombre().equals("BLOQUE_FUNCION") && !bloqueF){ // cuando llegue el bloque funcion va a entrar aca
-                if(bloque.getNombre().equals("BLOQUE_ELSE")){
-                    bloque.setAlcance(new Alcance(bloque.getNombre(),alcances.peek().getAlcance()));
-                    alcance_actual = bloque.getAlcance();
-                } else {
-                    bloque.setAlcance(alcance_actual);
-                    alcance_actual = bloque.getAlcance();
-                    bloqueF=true;   // seteo flag para que el proximo bloque no entre aca, ya que seran if o while. si no hay if o while internos, lo soluciona el flag en el pop()
-                }
-            } else{
-                bloque.setAlcance(new Alcance(bloque.getNombre(),alcances.peek().getAlcance()));
-                alcance_actual = bloque.getAlcance();
-                }
-            }
-        alcances.push(bloque);
-        super.visit(bloque);    //visito a visit(Bloque) de Visitor, para recorrer las sentencias de este bloque
-        if(!alcances.peek().getAlcance().getNombre().equals("global")){
-            alcances.pop();
-            bloqueF=false;  // despues de sacar el bloque funcion, vuelvo a setear el flag por si viene otra funcion
-            this.alcance_actual = alcances.peek().getAlcance();
-        }
-        return null;
-    } */
-
-    // cuando llegue a visit(decaracionVariable) aca si esta, por ende, usa este y no el de la superclase
     @Override
     public Void visit(DeclaracionVariable dv) throws ExcepcionDeAlcance{
         if(alcance_actual != alcance_global){
@@ -129,14 +73,14 @@ public class GeneradorAlcances extends Visitor<Void> {
     @Override
     public Void visit(DeclaracionFuncion declaracionFuncion) throws ExcepcionDeAlcance{
         alcance_actual = new Alcance("BLOQUE_FUNCION",alcance_actual);
-        declaracionFuncion.setAlcance(alcance_actual); //esta fue parte de la solucion , asi no renegamos con los parametros
+        declaracionFuncion.setAlcance(alcance_actual); //asi no renegamos con los parametros
         if(!declaracionFuncion.getParametros().isEmpty()){
             for (Parametro parametro:declaracionFuncion.getParametros()){
                 this.visit(parametro);
             }
         }
         this.visit(declaracionFuncion.getBloque());
-        alcance_actual = alcance_actual.getPadre(); //esta fue parte de la solucion
+        alcance_actual = alcance_actual.getPadre();
         return null;
     }
 

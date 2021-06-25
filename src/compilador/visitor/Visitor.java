@@ -17,8 +17,8 @@ import java.util.List;
 public abstract class Visitor<T> {
 
     private int iden=0;
-    private boolean enFuncion;
-    private boolean enBucle;
+    private boolean enFuncion;  //flags para controlar el return
+    private boolean enBucle;    //flag para controlar el continue y el break
 
     protected boolean isEnFuncion() {
         return enFuncion;

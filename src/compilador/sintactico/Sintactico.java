@@ -1230,7 +1230,6 @@ class CUP$Sintactico$actions {
             Identificador identificador = new Identificador(id);    //identificador
             //Sentencia as = new Asignacion(identificador,from);  //primera asignacion id=f;
             Sentencia dv = new DeclaracionVariable(identificador,Tipo.INTEGER,from);
-            //Bloque cuerpoFor = as.toBloque(); //bloque principal
             Bloque cuerpoFor = dv.toBloque();
             cuerpoFor.setNombre("FOR->WHILE");
             Expresion by = new Constante(b, Tipo.INTEGER);  //constante by
@@ -1284,8 +1283,9 @@ class CUP$Sintactico$actions {
 		
             Expresion from = new Constante(f, Tipo.INTEGER);    //constante from
             Identificador identificador = new Identificador(id);    //identificador
-            Sentencia as = new Asignacion(identificador,from);  //primera asignacion id=f;
-            Bloque cuerpoFor = as.toBloque(); //bloque principal
+            //Sentencia as = new Asignacion(identificador,from);  //primera asignacion id=f;
+            Sentencia dv = new DeclaracionVariable(identificador,Tipo.INTEGER,from);
+            Bloque cuerpoFor = dv.toBloque(); //bloque principal
             cuerpoFor.setNombre("FOR->WHILE");
 
             Expresion by = new Constante(String.valueOf(1), Tipo.INTEGER);  //constante by

@@ -3,7 +3,6 @@ package compilador.ast.base;
 import compilador.ast.instrucciones.Sentencia;
 
 //tuvimos que hacer que extienda de sentencia, por problemas de tipos en .cup al tener invocaciones a funciones como sentencias o partes de una expresion
-// no funciono lo de sentencia es una interfaz
 public abstract class Expresion extends Sentencia {
     
     private Tipo tipo;

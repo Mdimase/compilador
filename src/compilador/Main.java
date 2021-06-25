@@ -20,7 +20,7 @@ public class Main {
             pw.println(graficador.visit(programa)); //empiezo a visitar desde el raiz con mi graficador
             pw.close();
             String cmd = "dot -Tpng arbol.dot -o arbol.png";        //comando consola
-            Runtime.getRuntime().exec(cmd); //genero archivos dot y png
+            Runtime.getRuntime().exec(cmd);
 
             //alcance global
             GeneradorAlcanceGlobal gb = new GeneradorAlcanceGlobal();
@@ -60,6 +60,15 @@ public class Main {
             pw.close();
             System.out.println("Código generado");
 
+            /*
+            *                                               IMPORTANTE
+            *               los process siguientes compilan el programa cada vez que se runea main,
+            *               pero si hubiera algun error en el LLVM que impidiera compilar, al runear main,
+            *               aparenta terminar normalmente, pero no re-compila el archivo y tampoco muestra el error.
+            *               Para ello no queda otra que ejecutar los comandos clang en consola para comprobar dichos errores
+            * */
+
+            //compilar el programa
             Process process = Runtime.getRuntime().exec("clang -c -o programa.o programa.ll");
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line;
@@ -75,7 +84,7 @@ public class Main {
             }
             System.out.println("Ejecutable generado");
 
-            //System.out.println(generadorCodigo.procesar(programa,"Programa.ll"));   //muestra por consola
+            //System.out.println(generadorCodigo.procesar(programa,"Programa.ll"));   //muestra por consola de IDE
         } catch(Exception e){
             System.out.println(e);
         }    

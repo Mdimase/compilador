@@ -14,7 +14,7 @@ public class ValidadorTipos extends Transformer{
 
     private Alcance alcance_actual; //bloque actual, si no esta aca, busco en el padre hasta llegar a null
     private Tipo tipoRetorno;   //tipo de retorno de una funcion
-    private boolean hayReturn = false;
+    private boolean hayReturn = false;  //flag para indicar si hay un return en una funcion
 
     //inicio de ejecucion del validador de tipos
     public Programa procesar(Programa programa) throws ExcepcionDeTipos{
@@ -25,7 +25,7 @@ public class ValidadorTipos extends Transformer{
     public Bloque transform(Bloque bloque) throws ExcepcionDeTipos {
         this.alcance_actual = bloque.getAlcance();
         super.transform(bloque);
-        this.alcance_actual = bloque.getAlcance().getPadre();   //mejora
+        this.alcance_actual = bloque.getAlcance().getPadre();
         return bloque;
     }
 
@@ -293,9 +293,9 @@ public class ValidadorTipos extends Transformer{
 
     @Override
     public DeclaracionFuncion transform(DeclaracionFuncion declaracionFuncion) throws ExcepcionDeTipos {
-        alcance_actual = declaracionFuncion.getAlcance();   //mejora
+        alcance_actual = declaracionFuncion.getAlcance();
         super.transform(declaracionFuncion);
-        if(!hayReturn){ // agrego return implicito
+        if(!hayReturn){ // agrego return implicito si hace falta
             Return r = new Return(new Constante("unknown",Tipo.UNKNOWN));
             if (declaracionFuncion.getTipoRetorno() == Tipo.BOOL){
                 r = new Return(new Constante("false",Tipo.BOOL));
@@ -309,7 +309,7 @@ public class ValidadorTipos extends Transformer{
             declaracionFuncion.getBloque().getSentencias().add(r);
         }
         hayReturn = false;  //dejo en falso para la proxima funcion
-        alcance_actual = declaracionFuncion.getAlcance().getPadre(); // mejora
+        alcance_actual = declaracionFuncion.getAlcance().getPadre();
         return declaracionFuncion;
     }
 

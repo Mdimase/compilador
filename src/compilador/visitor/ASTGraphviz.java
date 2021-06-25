@@ -14,7 +14,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.List;
 
-// Visitor<String> me obliga a que todos mis metodos retornes un String
+// Visitor<String> me obliga a que todos mis metodos ,@override del Visitor, retornen un String
 public class ASTGraphviz extends Visitor<String>{
 
     private final Deque<Integer> parents;   //pila de IDs de los nodos
@@ -176,12 +176,12 @@ public class ASTGraphviz extends Visitor<String>{
 
     @Override
     //graficar nodo constante, es Hoja
+    //no ejecuta un super.visit xq no tiene atributos nodo. es una hoja
     public String visit(Constante c) {
         StringBuilder resultado = new StringBuilder();
         current_id = this.getID();
         resultado.append(this.procesarNodo(c));
         parents.push(current_id);
-        //no ejecuta un super.visit xq no tiene atributos nodo. es una hoja
         parents.pop();
         return resultado.toString();
     }
@@ -234,7 +234,7 @@ public class ASTGraphviz extends Visitor<String>{
         current_id = this.getID();
         resultado.append(this.procesarNodo(r));
         parents.push(current_id);
-        resultado.append(super.visit(r)); //invoco los visit de sus nodos atributos
+        resultado.append(super.visit(r));
         parents.pop();
         return resultado.toString();
     }
@@ -245,7 +245,7 @@ public class ASTGraphviz extends Visitor<String>{
         current_id = this.getID();
         resultado.append(this.procesarNodo(when));
         parents.push(current_id);
-        resultado.append(super.visit(when)); //invoco los visit de sus nodos atributos
+        resultado.append(super.visit(when));
         parents.pop();
         return resultado.toString();
     }
@@ -257,7 +257,7 @@ public class ASTGraphviz extends Visitor<String>{
         current_id = this.getID();
         resultado.append(this.procesarNodo(wi));
         parents.push(current_id);
-        resultado.append(super.visit(wi)); //invoco los visit de sus nodos atributos
+        resultado.append(super.visit(wi));
         parents.pop();
         return resultado.toString();
     }

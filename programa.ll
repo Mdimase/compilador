@@ -306,5 +306,5 @@ define i32 @main(i32, i8**) {
   store i32 %t$162, i32* %t$158 ; %t$158 = %t$162
   %t$164 = load i32, i32* %t$158 ; %t$164 = aw
   %t$163 = call i32 @.11(i32 %t$164 )
-ret i32 0
+  ret i32 0
 }

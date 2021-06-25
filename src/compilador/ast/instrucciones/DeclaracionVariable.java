@@ -12,7 +12,7 @@ import compilador.visitor.Visitor;
 public class DeclaracionVariable extends Declaracion{
     
     private Identificador id;   //identificador que estoy creando (seria con nombre solo aca, xq el tipo lo agrego abajo)
-    private Tipo tipo;      //tipo de dato, util para hacer el chequeo despues
+    private Tipo tipo;
     private Expresion expresion;
     private String irName;
     

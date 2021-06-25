@@ -66,50 +66,62 @@ public abstract class Transformer {
         return operacion;
     }
 
+    //retornan Expresion x el constant folding
     public Expresion transform(Division d) throws ExcepcionDeTipos {
         return transformar_operacion_binaria(d);
     }
 
+    //retornan Expresion x el constant folding
     public Expresion transform(Multiplicacion m) throws ExcepcionDeTipos {
         return transformar_operacion_binaria(m);
     }
 
+    //retornan Expresion x el constant folding
     public Expresion transform(Resta r) throws ExcepcionDeTipos {
         return transformar_operacion_binaria(r);
     }
 
+    //retornan Expresion x el constant folding
     public Expresion transform(Suma s) throws ExcepcionDeTipos {
         return transformar_operacion_binaria(s);
     }
 
+    //retornan Expresion x el constant folding
     public Expresion transform(Mayor mayor) throws ExcepcionDeTipos {
         return transformar_operacion_binaria(mayor);
     }
 
+    //retornan Expresion x el constant folding
     public Expresion transform(Menor menor) throws ExcepcionDeTipos {
         return transformar_operacion_binaria(menor);
     }
 
+    //retornan Expresion x el constant folding
     public Expresion transform(MayorIgual mayorIgual)  throws ExcepcionDeTipos {
         return transformar_operacion_binaria(mayorIgual);
     }
 
+    //retornan Expresion x el constant folding
     public Expresion transform(MenorIgual menorIgual)  throws ExcepcionDeTipos {
         return transformar_operacion_binaria(menorIgual);
     }
 
+    //retornan Expresion x el constant folding
     public Expresion transform(IgualIgual igualIgual)  throws ExcepcionDeTipos{
         return transformar_operacion_binaria(igualIgual);
     }
 
+    //retornan Expresion x el constant folding
     public Expresion transform(Distinto distinto)  throws ExcepcionDeTipos {
         return transformar_operacion_binaria(distinto);
     }
 
+    //retornan Expresion x el constant folding
     public Expresion transform(Or or) throws ExcepcionDeTipos {
         return transformar_operacion_binaria(or);
     }
 
+    //retornan Expresion x el constant folding
     public Expresion transform(And and) throws ExcepcionDeTipos {
         return transformar_operacion_binaria(and);
     }
@@ -123,6 +135,7 @@ public abstract class Transformer {
         return (MenosUnario) transformar_operacion_unaria(menosUnario);
     }
 
+    //retornan Expresion x el constant folding
     public Expresion transform(Not not) throws ExcepcionDeTipos {
         return transformar_operacion_unaria(not);
     }
@@ -133,6 +146,7 @@ public abstract class Transformer {
         return fae;
     }
 
+    //retornan Expresion x el constant folding
     public Expresion transform(EnteroAFlotante eaf) throws ExcepcionDeTipos {
         eaf.setExpresion(eaf.getExpresion().accept_transfomer(this));
         return eaf;
@@ -232,6 +246,7 @@ public abstract class Transformer {
         return whenIs;
     }
 
+    // retorna sentencia x el transform devuelve un Bloque en realidad
     public Sentencia transform(When when) throws ExcepcionDeTipos {
         Expresion e = when.getExpresionBase().accept_transfomer(this);
         ArrayList<WhenIs> list = new ArrayList<>();
