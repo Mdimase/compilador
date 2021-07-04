@@ -12,7 +12,7 @@ import compilador.ast.operaciones.unarias.*;
 
 public class ValidadorTipos extends Transformer{
 
-    private Alcance alcance_actual; //bloque actual, si no esta aca, busco en el padre hasta llegar a null
+    private Alcance alcance_actual; //alcance actual, si no esta aca, busco en el padre hasta llegar a null (resolucion estatica tipo Algol)
     private Tipo tipoRetorno;   //tipo de retorno de una funcion
     private boolean hayReturn = false;  //flag para indicar si hay un return en una funcion
 
@@ -29,6 +29,7 @@ public class ValidadorTipos extends Transformer{
         return bloque;
     }
 
+    // evaluamos si la condicion es boolean
     @Override
     public If transform(If aIf) throws ExcepcionDeTipos {
         super.transform(aIf);
@@ -38,6 +39,7 @@ public class ValidadorTipos extends Transformer{
         return aIf;
     }
 
+    // evaluamos si la condicion es boolean
     @Override
     public While transform(While aWhile) throws ExcepcionDeTipos {
         super.transform(aWhile);
@@ -61,61 +63,73 @@ public class ValidadorTipos extends Transformer{
         return aWhen;
     }
 
+    // pioridad los float
     private static Tipo tipo_comun(Tipo tipo_1, Tipo tipo_2) throws ExcepcionDeTipos{
-        if (tipo_1 == tipo_2){
+        if (tipo_1 == tipo_2){  //tipos iguales, da lo mismo cual retorno
             return tipo_1;
         }
         if(tipo_1 == Tipo.INTEGER && tipo_2 == Tipo.FLOAT){
-            return tipo_2;
+            return tipo_2;  //retorno float
         }
         if(tipo_1 == Tipo.FLOAT && tipo_2 == Tipo.INTEGER){
-            return tipo_1;
+            return tipo_1; //retorno float
         }
-        throw new ExcepcionDeTipos(
+        throw new ExcepcionDeTipos( //tipos incompaibles como boolean y float
                 String.format("No existe un tipo común entre %1$s y %2$s\n", tipo_1, tipo_2 ));
     }
 
     // recibe la expresion y el tipo al cual convertirla
     private static Expresion convertir_a_tipo(Expresion expresion, Tipo tipo_destino) throws ExcepcionDeTipos{
         Tipo tipo_origen = expresion.getTipo();
-        if(tipo_origen == tipo_destino){
+        if(tipo_origen == tipo_destino){    //no hace falta convertir nada
             return expresion;
         }
-        if(tipo_origen == Tipo.INTEGER && tipo_destino == Tipo.FLOAT){
+        if(tipo_origen == Tipo.INTEGER && tipo_destino == Tipo.FLOAT){  //convierto de integer a float
             return new EnteroAFlotante(expresion);
         }
-        if(tipo_origen == Tipo.FLOAT && tipo_destino == Tipo.INTEGER){
+        if(tipo_origen == Tipo.FLOAT && tipo_destino == Tipo.INTEGER){  //convierto de float a integer
             return new FlotanteAEntero(expresion);
         }
-        throw new ExcepcionDeTipos(
+        throw new ExcepcionDeTipos( //incompatibles como boolean y float
                 String.format("No existe un tipo común entre %1$s y %2$s\n", tipo_origen, tipo_destino ));
     }
 
     @Override
     public Asignacion transform(Asignacion a) throws ExcepcionDeTipos{
-        Asignacion asignacion = super.transform(a);
+        Asignacion asignacion = super.transform(a); //resolver tipos de la expresion
+        // convierto el tipo de la expresion al tipo del identificador de la asignacion
         asignacion.setExpresion(convertir_a_tipo(asignacion.getExpresion(), asignacion.getIdentificador().getTipo()));
-        return asignacion;
+        return asignacion;  //retorna la asignacion modificada
     }
 
     private void transformarOperacionUnaria(OperacionUnaria ou) throws ExcepcionDeTipos{
-        if(ou.getTipo() == Tipo.UNKNOWN){
-            ou.setTipo(ou.getExpresion().getTipo());
+        if(ou.getTipo() == Tipo.UNKNOWN){   //no tiene tipo
+            ou.setTipo(ou.getExpresion().getTipo());    //le seteo a la operacion el tipo de su expresion
         }else{
             ou.setExpresion(convertir_a_tipo(ou.getExpresion(), ou.getTipo()));
         }
     }
 
     private void transformarOperacionBinaria(OperacionBinaria ob) throws ExcepcionDeTipos{
-        Tipo tipo_en_comun = tipo_comun(ob.getIzquierda().getTipo(), ob.getDerecha().getTipo());
-        ob.setIzquierda(convertir_a_tipo(ob.getIzquierda(),tipo_en_comun));
-        ob.setDerecha(convertir_a_tipo(ob.getDerecha(), tipo_en_comun));
-        ob.setTipo(tipo_en_comun);
+        Tipo tipo_en_comun = tipo_comun(ob.getIzquierda().getTipo(), ob.getDerecha().getTipo());//tipo comun y compatible entre ambos operandos
+        //solo uno de los operandos se va a convertir
+        // ej izquierda=float y derecha=int => setIz no modifica y el setDer hace la conversion
+        ob.setIzquierda(convertir_a_tipo(ob.getIzquierda(),tipo_en_comun)); //operando izquierda con conversion
+        ob.setDerecha(convertir_a_tipo(ob.getDerecha(), tipo_en_comun));    //operando derecha  con conversion
+        ob.setTipo(tipo_en_comun);  //seteo tipo a la operacion con el tipo en comun de ambos operandos
     }
+
+    /**
+     *                                      ACLARACION
+     *  todos los if que tienen los visit de operaciones como division multiplicacion etc, estan de gusto, o
+     *  simplemente para dar un mensaje mas personalizado de error
+     *  al ejecutar tranformarOperacionBinaria en ellos llegaran a los metodos convertir_a_tipo y tipo_comun
+     *  que ya ellos haran el chequeo de tipos como tal
+     */
 
     @Override
     public Expresion transform(Division d) throws ExcepcionDeTipos {
-        Division nueva_op = (Division) super.transform(d);
+        Division nueva_op = (Division) super.transform(d);  //operandos resuelvan sus tipos
         if (d.getIzquierda().getTipo() != Tipo.BOOL && d.getDerecha().getTipo() != Tipo.BOOL){
             transformarOperacionBinaria(nueva_op);
             return nueva_op;
@@ -294,6 +308,7 @@ public class ValidadorTipos extends Transformer{
     @Override
     public DeclaracionFuncion transform(DeclaracionFuncion declaracionFuncion) throws ExcepcionDeTipos {
         alcance_actual = declaracionFuncion.getAlcance();
+        //tipoRetorno = declaracionFuncion.getTipoRetorno();    // para el return
         super.transform(declaracionFuncion);
         if(!hayReturn){ // agrego return implicito si hace falta
             Return r = new Return(new Constante("unknown",Tipo.UNKNOWN));
@@ -318,7 +333,7 @@ public class ValidadorTipos extends Transformer{
         super.transform(invocacionFuncion);
         invocacionFuncion.setTipo(invocacionFuncion.getIdentificador().getTipo());
         DeclaracionFuncion declaracionFuncion = (DeclaracionFuncion) alcance_actual.resolver(invocacionFuncion.getIdentificador().getNombre());
-        int cont =0;
+        int cont =0; //cantidad de parametros comunes
         for (Parametro parametro:declaracionFuncion.getParametros()){
             if(parametro.getValorDefecto() != null){
                 cont++;
@@ -348,11 +363,16 @@ public class ValidadorTipos extends Transformer{
         super.transform(aReturn);
         hayReturn=true; //hay return -> que no se agregue uno implicito
         if(aReturn.getExpresion().getTipo() != tipoRetorno){
-            aReturn.setExpresion(convertir_a_tipo(aReturn.getExpresion(),tipoRetorno));
+            aReturn.setExpresion(convertir_a_tipo(aReturn.getExpresion(),tipoRetorno)); //conversion del tipo a retornar
         }
         return aReturn;
     }
 
+    // aca se vuelve a verificar si el nombre fue declarado previamente (al pedo)
+    // se le asigna el tipo al identificador segun el tipo que tenia en su declaracion
+    // NOTA: esto deberia estar en la clase generadorAlcances, OJO con tipoRetorno, descomentar linea en visit(DeclaracionFuncion)
+    //       y puede que exista mas codigo a modificar, xq este visitor esta pensado con identificadores sin tipos en este punto
+    // como en el ejemplo de Juan estaba aca en validador de tipos me confundio
     @Override
     public Identificador transform(Identificador identificador) throws ExcepcionDeTipos{
         Object elemento = alcance_actual.resolver(identificador.getNombre());   //verifica si el nombre esta declarado
@@ -362,7 +382,7 @@ public class ValidadorTipos extends Transformer{
         }
         if(elemento instanceof DeclaracionFuncion){
             tipo = ((DeclaracionFuncion) elemento).getTipoRetorno();
-            tipoRetorno = tipo;
+            tipoRetorno = tipo; //para el return, quitarlo si se mueve esto a generadorAlcance
         }
         if(elemento instanceof Parametro){
             tipo = ((Parametro) elemento).getTipo();

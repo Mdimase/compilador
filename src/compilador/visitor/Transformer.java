@@ -14,6 +14,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+//  la secuencia de llamados sera igual a la del Visitor abstracto
+//  aca se va a poder modificar la estructura del AST, por eso en cada metodo se retorna el Nodo transformado
+//  por ende retorna un AST modificado a diferencia del Visitor comun que retorna nada o archivos externos como dot o llvm
+
 public abstract class Transformer {
 
     // retorna un Programa tranformado

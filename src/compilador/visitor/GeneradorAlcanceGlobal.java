@@ -6,9 +6,15 @@ import compilador.ast.operaciones.binarias.OperacionBinaria;
 
 import java.util.List;
 
+                                // GENERACION DE TABLA DE SIMBOLOS DE NOMBRES GLOBALES
+
+/*
+   cada vez que detecta una declaracion la guarda en el alcance, mi tabla de simbolos
+*/
+
 public class GeneradorAlcanceGlobal extends Visitor<Void>{
 
-    private Alcance alcance_global;
+    private Alcance alcance_global; //tabla de simbolos globales (variables + funciones)
 
     public Alcance getAlcance_global() {
         return alcance_global;
@@ -18,10 +24,11 @@ public class GeneradorAlcanceGlobal extends Visitor<Void>{
         if(programa.getDeclaraciones() != null){
             this.visit(programa.getDeclaraciones());
         } else {
-            alcance_global = new Alcance("global"); //lo va a devolver vacio
+            alcance_global = new Alcance("global"); //lo va a devolver vacio dado que no hay nada en el alcance global
         }
     }
 
+    // funcion que me permite agregar un simbolo a la tabla de simbolos
     // agregarSimbolo(nombre , declaracion)
     private Object agregarSimbolo(String nombre, Object s) throws ExcepcionDeAlcance {
         if(alcance_global.resolver(nombre) != null){    //retorna el repetido, si no esta -> null
@@ -60,6 +67,7 @@ public class GeneradorAlcanceGlobal extends Visitor<Void>{
         return null;
     }
 
+    //esto evita que en la inicializacion de una variable, se use un nombre no definido previamente
     @Override
     public Void visit(Identificador identificador) throws ExcepcionDeAlcance {
         if(this.alcance_global.resolver(identificador.getNombre()) == null){

@@ -15,6 +15,7 @@ public class Main {
         Sintactico sintactico= new Sintactico(lexico);
         Programa programa = (Programa) sintactico.parse().value;    //raiz del AST
         try{
+            //PRIMERA PASADA
             PrintWriter pw = new PrintWriter(new FileWriter("arbol.dot"));
             ASTGraphviz graficador = new ASTGraphviz(); //instancio el concrete visitor para graficar
             pw.println(graficador.visit(programa)); //empiezo a visitar desde el raiz con mi graficador
@@ -22,30 +23,36 @@ public class Main {
             String cmd = "dot -Tpng arbol.dot -o arbol.png";        //comando consola
             Runtime.getRuntime().exec(cmd);
 
+            //SEGUNDA PASADA
             //alcance global
             GeneradorAlcanceGlobal gb = new GeneradorAlcanceGlobal();
             gb.procesar(programa);
             System.out.println("Alcance global procesado");
 
+            //TERCERA PASADA
             //alcances locales
             GeneradorAlcances ga = new GeneradorAlcances(gb.getAlcance_global());
             ga.procesar(programa);
             System.out.println("Alcances procesados");
 
+            //CUARTA PASADA (podria haber sido la segunda tranquilamente)
             //control de sentencias return,break y continue que esten en lugares correctos
             Control control = new Control();
             control.procesar(programa);
 
+            //QUINTA PASADA
             //validador de tipos
             ValidadorTipos vt = new ValidadorTipos();
             vt.procesar(programa);
             System.out.println("Tipos validados");
 
+            //SEXTA PASADA
             // reescritura de When + constantFolding
             Rewriter rw = new Rewriter();
             rw.procesar(programa);
             System.out.println("Codigo transformado");
 
+            //SEPTIMA PASADA
             //graficar nuevamente
             pw = new PrintWriter(new FileWriter("arbol_tp.dot"));
             pw.println(graficador.visit(programa));
@@ -53,6 +60,7 @@ public class Main {
             cmd = "dot -Tpng arbol_tp.dot -o arbol_tp.png";
             Runtime.getRuntime().exec(cmd);
 
+            //OCTAVA PASADA
             //generar codigo IR para el LLVM
             GeneradorCodigo generadorCodigo = new GeneradorCodigo(ga.getAlcance_global());
             pw = new PrintWriter(new FileWriter("programa.ll"));

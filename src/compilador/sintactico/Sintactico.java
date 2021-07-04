@@ -497,17 +497,10 @@ public class Sintactico extends java_cup.runtime.lr_parser {
 
 
 
-    /*
-    public void syntax_error(Symbol s) {
-        System.out.println("Error en la línea " + (s.right+1) + ", columna " + s.left + ": "
-            + SintacticoSym.terminalNames[s.sym] + "(" + s.value + ") no reconocido.");
-    }   */
-
     public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{
             System.out.println("Error en la linea "+ (s.left+1)+ " Columna "+ s.right+ ". Valor simbolo '"
             +s.value+"' . Simbolo n° "+s.sym+ " no reconocido." );
         }
-
 
 
 /** Cup generated class to encapsulate user supplied action code.*/

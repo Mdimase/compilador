@@ -192,6 +192,7 @@ public class GeneradorCodigo extends Visitor<String>{
 
     @Override
     public String visit(DeclaracionFuncion declaracionFuncion) throws ExcepcionDeAlcance {
+        //alcance_actual = declaracionFuncion.getAlcance();
         resultado.append("\n");
         String tipoLlvm = this.LLVM_IR_TYPE_INFO.get(declaracionFuncion.getTipoRetorno()).get(0);   //tipo retorno
         String params = this.conseguirParametros(declaracionFuncion.getParametros());

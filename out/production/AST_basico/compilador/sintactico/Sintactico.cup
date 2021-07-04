@@ -1,37 +1,37 @@
 package compilador.sintactico;
 
+                                                //AREA DE IMPORTS
 import compilador.ast.base.*;
 import compilador.ast.instrucciones.*;
 import compilador.ast.operaciones.binarias.*;
 import compilador.ast.operaciones.unarias.*;
-
 import java.util.*;
-
 import java_cup.runtime.*;
 
-class Sintactico;
+class Sintactico;   // nombre de clase
 
 parser code
 {:
-    /*
-    public void syntax_error(Symbol s) {
-        System.out.println("Error en la línea " + (s.right+1) + ", columna " + s.left + ": "
-            + SintacticoSym.terminalNames[s.sym] + "(" + s.value + ") no reconocido.");
-    }   */
-
+    //codigo Java a utilizar en JCUP y se guarda en la misma clase
     public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{
             System.out.println("Error en la linea "+ (s.left+1)+ " Columna "+ s.right+ ". Valor simbolo '"
             +s.value+"' . Simbolo n° "+s.sym+ " no reconocido." );
         }
-
 :}
 
 action code
 {:
-
+            // variables o estructuras Java a utilizar en JCUP. se guarda en clase no publica separada del propio parser
 :}
 
+                                                    //LISTA DE SIMBOLOS
+
+// los terminales se tienen que corresponder con los TOKENS del lexico
+
+//tipo Object
 terminal MAIN,PUNTO,MAS, MENOS, MULTIPLICAR, DIVIDIR, APERTURA_PARENTESIS, CIERRE_PARENTESIS, MAYOR, MENOR, MAYOR_IGUAL, MENOR_IGUAL, IGUAL_IGUAL, DISTINTO, PUNTO_COMA, OR, AND, NOT, VARIABLE, IS, IGUAL,WHILE,DO,IF,THEN,ELSE,BEGIN,END,WRITE, WRITELN,READ_INTEGER,READ_BOOLEAN,READ_FLOAT,WHEN, BREAK,CONTINUE,FUNCTION,RETURN,COMA,FOR,BY,TO,FROM;
+
+//tipo String
 terminal String IDENTIFICADOR, INTEGER_LITERAL, FLOAT_LITERAL,TRUE,FALSE,INTEGER,FLOAT,BOOLEAN, STRING_LITERAL;
 
 non terminal Expresion invocacion_funciones,condicion,comparacion,expresion,exp_arit,exp_or,exp_and,exp_not, termino, factor;
@@ -55,10 +55,18 @@ non terminal List<WhenIs> comparaciones_is;
 non terminal WhenIs comparacion_is;
 non terminal SimboloCmp comparador;
 
-precedence left IS; //para evitar shift/reduce en el when sin else
-precedence left ELSE; // para evitar shift/reduce en el if
+//reglas de precedencia asociativos de izquierda a derecha
+/* el orden => prioridad siendo la ultima de mayor prioridad  */
 
-start with programa;
+precedence left IS;     //para evitar shift/reduce en el when sin else -> hace shift
+precedence left ELSE;   // para evitar shift/reduce en el if -> hace shift
+
+start with programa;    //simbolo inicial
+
+/*
+    IMPORTANTE: para aprovechar y ganar tiempo, a medida que verifico que sintacticamente esta bien,
+                voy generando mi AST con informacion que me sera util para validar cosas en el futuro.
+*/
 
 programa ::= declaraciones:d bloque_main:bm{:
             Bloque declaraciones = new Bloque(d,"DECLARACIONES",false);
@@ -429,6 +437,13 @@ comparador::= IGUAL_IGUAL {:
 comparador::= DISTINTO {:
             RESULT= new SimboloCmp( "!=",Comparador.DISTINTO);
         :};
+
+/*
+    tienen un conflicto de shift/reduce, dado que una vez que analizo if cond then i podria reducir a un if o
+    podria seguir apilando else i para recien ahi hacer un reduce a un if
+    para la entrada else en ese momento en la tabla hay 2 posibles salidas, con precedende ELSE, le indicamos que
+    siempre elija seguir observando, es decir, hace un shift
+*/
 
 // if una instruccion sin; + else una instruccion con ; al final(lo agrega la sentencia que engloba al if)
 if ::= IF condicion:c THEN instruccion:i1 ELSE instruccion:i2 {:

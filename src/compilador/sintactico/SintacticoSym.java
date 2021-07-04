@@ -7,7 +7,8 @@ package compilador.sintactico;
 
 /** CUP generated class containing symbol constants. */
 public class SintacticoSym {
-  /* terminals */
+
+  /* lista de terminales definidos en .cup */
   public static final int WHEN = 35;
   public static final int DISTINTO = 15;
   public static final int MULTIPLICAR = 6;

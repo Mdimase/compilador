@@ -58,10 +58,12 @@ public class GeneradorAlcances extends Visitor<Void> {
                         dv.getId().getNombre(), dv.getTipo() ));
             }
             super.visit(dv);
+            // dv.getExpresion().accept(this); //evaluo la expresion
         }
         return null;
     }
 
+    // esto evita que en la inicializacion de una variable, se use un nombre no definido previamente
     @Override
     public Void visit(Identificador identificador) throws ExcepcionDeAlcance {
         if(this.alcance_actual.resolver(identificador.getNombre()) == null){
@@ -72,7 +74,7 @@ public class GeneradorAlcances extends Visitor<Void> {
 
     @Override
     public Void visit(DeclaracionFuncion declaracionFuncion) throws ExcepcionDeAlcance{
-        alcance_actual = new Alcance("BLOQUE_FUNCION",alcance_actual);
+        alcance_actual = new Alcance("BLOQUE_FUNCION",alcance_actual);  //actual ahora vale funcion
         declaracionFuncion.setAlcance(alcance_actual); //asi no renegamos con los parametros
         if(!declaracionFuncion.getParametros().isEmpty()){
             for (Parametro parametro:declaracionFuncion.getParametros()){
@@ -80,7 +82,7 @@ public class GeneradorAlcances extends Visitor<Void> {
             }
         }
         this.visit(declaracionFuncion.getBloque());
-        alcance_actual = alcance_actual.getPadre();
+        alcance_actual = alcance_actual.getPadre(); //actual ahora vale global
         return null;
     }
 
