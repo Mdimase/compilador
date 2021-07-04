@@ -439,7 +439,7 @@ graph G {1 [label="Programa"]
 219 -- 220
 221 [label="j<253.98"]
 220 -- 221
-222 [label="BLOQUE"]
+222 [label="BLOQUE_ELSE"]
 206 -- 222
 223 [label="WriteLn String"]
 222 -- 223
@@ -541,4 +541,10 @@ graph G {1 [label="Programa"]
 270 -- 271
 272 [label="Ident aw UNKNOWN"]
 270 -- 272
+273 [label="DeclaracionVariable"]
+160 -- 273
+274 [label="Ident chuchu FLOAT"]
+273 -- 274
+275 [label="Const 99.35 FLOAT"]
+273 -- 275
 }

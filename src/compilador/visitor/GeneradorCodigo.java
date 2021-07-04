@@ -244,13 +244,13 @@ public class GeneradorCodigo extends Visitor<String>{
             globalVar.append(String.format("%1$s = global %2$s %3$s\n", declaracionVariable.getIrName(), tipoLlvm, valor_ir));
             declaracionVariable.getExpresion().accept(this);  //genero codigo de la expresion de inicializacion
             inicializaciones.append(String.format("  store %1$s %2$s, %1$s* %3$s ; %3$s = %2$s\n",
-                    tipoLlvm, declaracionVariable.getExpresion().getIrRef(), declaracionVariable.getIrName()));
+                    tipoLlvm, declaracionVariable.getExpresion().getIrRef(), declaracionVariable.getIrName())); //store del resultado de la expresion
         } else {    //variables locales
             declaracionVariable.setIrName(this.newTempId());
             resultado.append(String.format("  %1$s = alloca %2$s ; alloca = %1$s\n", declaracionVariable.getIrName(), tipoLlvm));
             resultado.append(declaracionVariable.getExpresion().accept(this));  //genero codigo de la expresion
             resultado.append(String.format("  store %1$s %2$s, %1$s* %3$s ; %3$s = %2$s\n"
-                    , tipoLlvm, declaracionVariable.getExpresion().getIrRef(), declaracionVariable.getIrName()));
+                    , tipoLlvm, declaracionVariable.getExpresion().getIrRef(), declaracionVariable.getIrName())); //store del resultado de la expresion
         }
         return "";
     }

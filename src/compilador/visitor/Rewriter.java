@@ -8,6 +8,8 @@ import compilador.ast.operaciones.binarias.*;
 import compilador.ast.operaciones.unarias.EnteroAFlotante;
 import compilador.ast.operaciones.unarias.FlotanteAEntero;
 import compilador.ast.operaciones.unarias.Not;
+
+import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +20,7 @@ public class Rewriter extends Transformer{
         return programa.accept_transfomer(this);
     }
 
+    //obtengo la condicion, segun la comparacion que tenga el whenIs
     // instancia la condicion correspondiente y le setea su tipo
     public Comparacion resolverCondicion(Expresion expresionBase, WhenIs whenIs){
         Comparacion condicion = null;
@@ -56,6 +59,7 @@ public class Rewriter extends Transformer{
         If current_if = null;
         If global_if = null;    //if principal
         List<Sentencia> sentencias = new ArrayList<>(); //sentencias del bloque a retornar
+        // sigo recorriendo el arbol por si hay when anidados. NOTA: deberia haber sido la primera linea de este metodo
         when = (When) super.transform(when);    //tuve que hacer que el transform(when) retorne una sentencia, por eso ahora casteo
 
         Identificador identificador = new Identificador(crearNombreUnico(),when.getExpresionBase().getTipo());
@@ -63,40 +67,76 @@ public class Rewriter extends Transformer{
         sentencias.add(dv); //agrego la declaracion de variable inicial del bloque
         Bloque bloqueTransformado = new Bloque(sentencias,"When -> If",new Alcance("When->If"));
 
-        //engancho el padre
+        //engancho el padre y acomodo el alcance
         Alcance alcancePadre = when.getWhenIs().get(0).getBloque().getAlcance().getPadre();
         bloqueTransformado.getAlcance().setPadre(alcancePadre);
 
-        for(WhenIs wi: when.getWhenIs()){
-            Comparacion cmp = this.resolverCondicion(when.getExpresionBase(), wi);
+        for(WhenIs wi: when.getWhenIs()){   //recorro los whenIs
+            Comparacion cmp = this.resolverCondicion(when.getExpresionBase(), wi); //obtengo la condicion, segun la comparacion que tenga el whenIs
             if(current_if == null){ //primera comparacion -> If principal
-                wi.getBloque().getAlcance().setPadre(bloqueTransformado.getAlcance());
-                current_if = new If(cmp, wi.getBloque());
+                wi.getBloque().getAlcance().setPadre(bloqueTransformado.getAlcance());  //acomodo el alcance
+                current_if = new If(cmp, wi.getBloque());   //creo el if principal, con bloque del primer whenIs
                 current_if.getBloqueThen().setNombre("BLOQUE_THEN");
                 global_if = current_if;
             } else {    //a partir de la segunda comparacion -> empiezan las cadenas de else/if
-                If newIf = new If(cmp,wi.getBloque());
+                If newIf = new If(cmp,wi.getBloque()); //creo el nuevo if
                 newIf.getBloqueThen().setNombre("BLOQUE_THEN");
                 List<Sentencia> ls = new ArrayList<>();
-                ls.add(newIf);
-                Bloque bloqueElse = new Bloque(ls,"BLOQUE_ELSE");
-                bloqueElse.setAlcance(wi.getBloque().getAlcance());
-                bloqueElse.getAlcance().setPadre(bloqueTransformado.getAlcance());
-                current_if.setBloqueElse(bloqueElse);  //else if
-                current_if=newIf;
+                ls.add(newIf);  //agrego el nuevo if a una lista
+                Bloque bloqueElse = new Bloque(ls,"BLOQUE_ELSE");   //meto la lista con el nuevo if en un bloqueElse
+                bloqueElse.setAlcance(wi.getBloque().getAlcance()); //acomodo el alcance
+                bloqueElse.getAlcance().setPadre(bloqueTransformado.getAlcance());  //seteo padre
+                current_if.setBloqueElse(bloqueElse);  //else if. seteo un bloqueElse al if actual
+                current_if=newIf;   //actualizo el current if
             }
         }
         // para el else del final(opcional)
         if(current_if != null && when.getBloqueElse() != null){
-            current_if.setBloqueElse(when.getBloqueElse());
+            current_if.setBloqueElse(when.getBloqueElse()); //seteo el bloqueElse al if mas interno
             current_if.getBloqueElse().setNombre("BLOQUE_ELSE");
-            current_if.getBloqueElse().getAlcance().setPadre(bloqueTransformado.getAlcance());
+            current_if.getBloqueElse().getAlcance().setPadre(bloqueTransformado.getAlcance());  //acomodo alcance
         }
-        bloqueTransformado.getSentencias().add(global_if);
+        bloqueTransformado.getSentencias().add(global_if);  //agrego al bloque (tenia solo la dv) todos los if anidados
         return bloqueTransformado;
     }
 
     //CONSTANT FOLDING con conversiones implicitas entre int y float
+    // EN TODOS LOS CASOS SI LOS OPERANDO/S NO SON CONSTANTES NO HAGO NADA, RETORNO EL OBJETO COMO ESTABA
+
+    // NOTA: SE PODRIA HABER IMPLEMENTADO DE OTRA FORMA, USANDO UN MISMO METODO DESDE ACA Y QUE LA LOGICA RECAIGA EN CADA OPERACION
+    //       PEERO NO SE SI ENTRA EN CONFLICTO CON LO QUE HABLAMOS DE QUE LOS NODOS NO TENGAN LOGICA DE ALGUNA OPERACION PUNTUAL
+
+    /*
+    el resto de operaciones serian iguales a esta
+    cada nodo operacion debera implementrar su propio resolverConstantes();
+    en la clase operacion binaria y unaria estara este metodo como abstract
+
+    @Override
+    public Expresion transform(Resta r) throws ExcepcionDeTipos {
+        r = (Resta) super.transform(r);
+        return r.resolverConstantes();
+    }*/
+
+    /*
+    // implementacion de resolverConstantes() para la resta. cada operacion tendra el suyo
+    @Override
+    public Expresion resolverConstantes(){
+        if(this.getIzquierda.resolverConstantes() instanceof Constante && this.getDerecha().resolverConstantes() instanceof Constante){
+            Constante constanteIzquierda = (Constante) this.getIzquierda.resolverConstantes();  //obtengo izquierda
+            Constante constanteDerecha = (Constante) this.getDerecha.resolverConstantes();  //obtengo derecha
+            float ci = Float.parseFloat((String) constanteIzquierda.getValor());    //parseo a flaot
+            float cd = Float.parseFloat((String) constanteDerecha.getValor());  //parseo a float
+            float result = ci-cd;   //resto
+            if(constanteIzquierda.getTipo() == Tipo.INTEGER && constanteDerecha.getTipo() == Tipo.INTEGER){ //son integer
+                int intResult = (int) result;   //convierto a int
+                return new Constante(Integer.toString(intResult),Tipo.INTEGER); //retorno la constante resutlado de tipo int
+            }
+            if(constanteIzquierda.getTipo() == Tipo.FLOAT && constanteDerecha.getTipo() == Tipo.FLOAT){ //son float
+                return new Constante(Float.toString(result),Tipo.FLOAT);    //retorno la constante resultado de tipo float
+            }
+        }
+        return this; //cuando no hay constantes
+    } */
 
     public Constante evaluarAritmeticosBinarios(OperacionBinaria operacionBinaria) {
         String result = "";
@@ -145,8 +185,8 @@ public class Rewriter extends Transformer{
         super.transform(eaf);
         if(eaf.getExpresion().getClass() == Constante.class){
             Constante constante = (Constante) eaf.getExpresion();
-            Float valorF = Float.parseFloat((String) constante.getValor());
-            return new Constante(String.valueOf(valorF) ,Tipo.FLOAT);
+            Float valorF = Float.parseFloat((String) constante.getValor()); //convierto a float
+            return new Constante(String.valueOf(valorF) ,Tipo.FLOAT);   //devuelvo la constante con el neuvo valor float
         } else {
             return eaf;
         }
@@ -154,12 +194,13 @@ public class Rewriter extends Transformer{
 
     @Override
     public Expresion transform(FlotanteAEntero fae) throws ExcepcionDeTipos {
-        super.transform(fae);
+        super.transform(fae);   //expresion asociada resolver
         if(fae.getExpresion().getClass() == Constante.class){
             Constante constante = (Constante) fae.getExpresion();
+            //Integer vi = Integer.parseInt((String) constante.getValor()); // si se podia, lo habre escrito mal
             float valorF = Float.parseFloat((String) constante.getValor()); //no se puede hacer un parseInt directo
-            Integer valorI = (int) valorF;
-            return new Constante(String.valueOf(valorI) ,Tipo.INTEGER);
+            Integer valorI = (int) valorF;  //convierto a int
+            return new Constante(String.valueOf(valorI) ,Tipo.INTEGER); // devuelvo la constante con el nuevo valor int
         } else {
             return fae;
         }
@@ -167,7 +208,7 @@ public class Rewriter extends Transformer{
 
     @Override
     public Expresion transform(Resta resta) throws ExcepcionDeTipos {
-        super.transform(resta);
+        super.transform(resta); //operandos resuelvanse
         if(resta.getIzquierda().getClass() == Constante.class && resta.getDerecha().getClass() == Constante.class){
             return this.evaluarAritmeticosBinarios(resta);
         } else { //no constantes
@@ -211,9 +252,9 @@ public class Rewriter extends Transformer{
         if(not.getExpresion().getClass() == Constante.class){
             Constante constante = (Constante) not.getExpresion();
             if (constante.getValor().equals("true")){
-                return new Constante("false",Tipo.BOOL);
+                return new Constante("false",Tipo.BOOL);    //retorno el inverso
             } else{
-                return new Constante("true",Tipo.BOOL);
+                return new Constante("true",Tipo.BOOL); // retorno el inverso
             }
         } else{
             return not;

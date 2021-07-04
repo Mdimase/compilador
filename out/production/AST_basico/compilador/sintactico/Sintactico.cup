@@ -390,6 +390,7 @@ tipo::= BOOLEAN:b {:
 
 when::= WHEN expresion:e comparaciones_is:ci ELSE instruccion:i{:
             Bloque bloque = i.toBloque();
+            bloque.setNombre("BLOQUE_ELSE");
             RESULT= new When("When/else",e,ci,bloque);
         :};
 

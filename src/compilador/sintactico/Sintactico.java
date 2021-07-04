@@ -497,6 +497,7 @@ public class Sintactico extends java_cup.runtime.lr_parser {
 
 
 
+    //codigo Java a utilizar en JCUP y se guarda en la misma clase
     public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{
             System.out.println("Error en la linea "+ (s.left+1)+ " Columna "+ s.right+ ". Valor simbolo '"
             +s.value+"' . Simbolo n° "+s.sym+ " no reconocido." );
@@ -508,7 +509,7 @@ public class Sintactico extends java_cup.runtime.lr_parser {
 class CUP$Sintactico$actions {
 
 
-
+            // variables o estructuras Java a utilizar en JCUP. se guarda en clase no publica separada del propio parser
 
   private final Sintactico parser;
 
@@ -1497,6 +1498,7 @@ class CUP$Sintactico$actions {
 		Sentencia i = (Sentencia)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
 		
             Bloque bloque = i.toBloque();
+            bloque.setNombre("BLOQUE_ELSE");
             RESULT= new When("When/else",e,ci,bloque);
         
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("when",32, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-4)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
