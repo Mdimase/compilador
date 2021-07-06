@@ -250,7 +250,8 @@ public abstract class Transformer {
         return whenIs;
     }
 
-    // retorna sentencia x el transform devuelve un Bloque en realidad
+    // retorna sentencia xq al reescribirlo en un if, dicho metodo retorna un Bloque
+    // y para tener un tipo compatible entre ambos visit, aca retorno Sentencia
     public Sentencia transform(When when) throws ExcepcionDeTipos {
         Expresion e = when.getExpresionBase().accept_transfomer(this);
         ArrayList<WhenIs> list = new ArrayList<>();
