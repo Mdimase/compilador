@@ -147,10 +147,11 @@ public abstract class Visitor<T> {
     }
 
     public T visit(While aWhile) throws ExcepcionDeAlcance {
+        boolean aux  = this.isEnBucle();
         setEnBucle(true);
         T exp = aWhile.getCondicion().accept(this);
         T bloque = aWhile.getBloque().accept(this);
-        setEnBucle(false);
+        setEnBucle(aux);
         return procesarWhile(aWhile, exp, bloque);
     }
 

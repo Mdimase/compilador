@@ -1,3 +1,4 @@
+{
 variable d is boolean = false;
 variable entero? is integer = 12;
 variable hj is integer = 1+65;
@@ -57,13 +58,15 @@ function hola(queso is integer,jamon is float,skt is boolean=true) return boolea
         skt=false;
         return skt;
         end;
-
+}
 main is
-
+{
 variable j is integer = 50;
 j = j + 120-20;
 variable asd is float = -1.23;
+}
 variable zz is boolean;
+{
 variable int is integer = j + 500;
 int = int + 1;
 
@@ -81,17 +84,14 @@ when j
 if j == 56 and int < 100
     then writeln("soy t") else writeln("soy f");
 
+}
 variable ju is integer = 50;
 
 while ju != 55 do
     begin
-        writeln("pepe");
-        ju=ju+1;
-        break;
-        #continue;
-        writeln("no sale");
+        zz = 5 < ju and zz ;
     end;
-
+{
 writeln(hola(10,50));
 variable vbn is boolean = read_boolean();
 writeln(vbn);
@@ -99,4 +99,5 @@ variable aw is integer = read_integer();
 prueba_Funcion(aw);
 #salamin(1);
 #pepe(1.5);
+}
 end.

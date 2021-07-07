@@ -541,13 +541,13 @@ public class GeneradorCodigo extends Visitor<String>{
         resultado.append(w.getCondicion().accept(this));    //codigo de la condicion
         String etiquetaTrue = etiquetasSalto.peek().get(0);
         String etiquetaFalse = etiquetasSalto.peek().get(1);
+        etiquetasSalto.pop();
         //salto condicional segun resultado de la condicion
         resultado.append(String.format("  br i1 %1$s, label %2$s, label %3$s\n\n", w.getCondicion().getIrRef(),etiquetaTrue,etiquetaFalse));
         resultado.append(String.format("  %1$s\n",this.reFormatLabel(etiquetaTrue)));   // etTrue:
         resultado.append(w.getBloque().accept(this));   //codigo del bloque del while
         resultado.append(String.format("  br label %1$s\n\n",etiquetaCondicion));   // br etCondicion   "para volver a evaluar la condicion"
         resultado.append(String.format("  %1$s\n",this.reFormatLabel(etiquetaFalse)));   //etFalse:     "fin del while"
-        etiquetasSalto.pop();
         return "";
     }
 

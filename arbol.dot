@@ -1,0 +1,40 @@
+graph G {1 [label="Programa"]
+2 [label="MAIN"]
+1 -- 2
+3 [label="DeclaracionVariable"]
+2 -- 3
+4 [label="Ident zz BOOL"]
+3 -- 4
+5 [label="Const false BOOL"]
+3 -- 5
+6 [label="DeclaracionVariable"]
+2 -- 6
+7 [label="Ident ju INTEGER"]
+6 -- 7
+8 [label="Const 50 INTEGER"]
+6 -- 8
+9 [label="WHILE"]
+2 -- 9
+10 [label="!= UNKNOWN"]
+9 -- 10
+11 [label="Ident ju UNKNOWN"]
+10 -- 11
+12 [label="Const 55 INTEGER"]
+10 -- 12
+13 [label="BLOQUE_WHILE"]
+9 -- 13
+14 [label="="]
+13 -- 14
+15 [label="Ident zz UNKNOWN"]
+14 -- 15
+16 [label="AND UNKNOWN"]
+14 -- 16
+17 [label="< UNKNOWN"]
+16 -- 17
+18 [label="Const 5 INTEGER"]
+17 -- 18
+19 [label="Ident ju UNKNOWN"]
+17 -- 19
+20 [label="Ident zz UNKNOWN"]
+16 -- 20
+}
