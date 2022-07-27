@@ -18,8 +18,6 @@ import java.util.Stack;
 // clase que se encargara de recorrer el AST y setear los valores de alcance correspondientes
 public class GeneradorAlcances extends Visitor<Void> {
 
-    private boolean bloqueF = false;
-    private Stack<Bloque> alcances = new Stack<Bloque>();
     private Alcance alcance_actual; //alcance actual de un bloque determinado
     private Alcance alcance_global; //alcance al que todos pueden acceder
 
@@ -27,90 +25,48 @@ public class GeneradorAlcances extends Visitor<Void> {
         this.alcance_global = alcance_global;
     }
 
-    //seteo main como hijo de global
-    private void mainConDeclaraciones (Bloque bloque){
-        bloque.setAlcance(new Alcance("main",alcance_global));  //seteo su padre, que sera el alcance global
-        this.alcance_actual = bloque.getAlcance();
-    }
-
-    //seteo main como hijo de global
-    private void mainSinDeclaraciones (Bloque bloque){
-        alcance_global = new Alcance("global");
-        bloque.setAlcance(new Alcance("main",alcance_global));  //seteo su padre, que sera el alcance global
-        this.alcance_actual = bloque.getAlcance();
+    public Alcance getAlcance_global() {
+        return alcance_global;
     }
 
     // dispara toda la generacion de alcances del AST
     public void procesar(Programa programa) throws ExcepcionDeAlcance{
+        alcance_actual = alcance_global;
         this.visit(programa);   // como aca no hay visit(programa) usa de la superclase
     }
 
+    //mejor ahora, no?
     @Override
     public Void visit(Bloque bloque) throws ExcepcionDeAlcance {
         if(bloque.getNombre().equals("DECLARACIONES")){
-            alcance_actual = alcance_global;
-            alcances.push(bloque);
             super.visit(bloque);
-            return null;
-        }
-        if (alcance_global == null){    //no hay declaraciones de funciones ni variables globales
-            this.mainSinDeclaraciones(bloque);
-        } else{ // si hay declaraciones
-            if (bloque.esProgramaPrincipal()){  // bloque main con declaraciones previas
-                this.mainConDeclaraciones(bloque);
-            }
-            if(alcance_actual.getNombre().equals("BLOQUE_FUNCION") && !bloqueF){ // cuando llegue el bloque funcion va a entrar aca
-                if(bloque.getNombre().equals("BLOQUE_ELSE")){
-                    bloque.setAlcance(new Alcance(bloque.getNombre(),alcances.peek().getAlcance()));
-                    alcance_actual = bloque.getAlcance();
-                } else {
-                    bloque.setAlcance(alcance_actual);
-                    alcance_actual = bloque.getAlcance();
-                    bloqueF=true;   // seteo flag para que el proximo bloque no entre aca, ya que seran if o while. si no hay if o while internos, lo soluciona el flag en el pop()
-                }
-            } else{
-                bloque.setAlcance(new Alcance(bloque.getNombre(),alcances.peek().getAlcance()));
-                alcance_actual = bloque.getAlcance();
-                }
-            }
-        alcances.push(bloque);
-        super.visit(bloque);    //visito a visit(Bloque) de Visitor, para recorrer las sentencias de este bloque
-        if(!alcances.peek().getAlcance().getNombre().equals("global")){
-            alcances.pop();
-            bloqueF=false;  // despues de sacar el bloque funcion, vuelvo a setear el flag por si viene otra funcion
-            this.alcance_actual = alcances.peek().getAlcance();
+        } else {
+            alcance_actual = new Alcance(bloque.getNombre(), alcance_actual);
+            bloque.setAlcance(alcance_actual);
+            super.visit(bloque);
+            alcance_actual = alcance_actual.getPadre();
         }
         return null;
     }
 
-    // cuando llegue a visit(decaracionVariable) aca si esta, por ende, usa este y no el de la superclase
     @Override
     public Void visit(DeclaracionVariable dv) throws ExcepcionDeAlcance{
-        if(alcance_actual == alcance_global){
-            return null;
+        if(alcance_actual != alcance_global){
+            Object result = this.agregarSimbolo(dv.getId().getNombre(), dv);
+            if(result!=null){   //repetido
+                throw new ExcepcionDeAlcance(String.format("El nombre de la variable %1$s de tipo %2$s fue utilizado previamente\"]\n",
+                        dv.getId().getNombre(), dv.getTipo() ));
+            }
+            super.visit(dv);
+            // dv.getExpresion().accept(this); //evaluo la expresion
         }
-        Variable var = new Variable(dv);    // var : declaracionVariable
-        Object result = this.agregarSimbolo(var.getDeclaracion().getId().getNombre(), dv);
-        if(result!=null){   //repetido
-            throw new ExcepcionDeAlcance(String.format("El nombre de la variable %1$s de tipo %2$s fue utilizado previamente\"]\n",
-                    dv.getId().getNombre(), dv.getTipo() ));
-        }
-        super.visit(dv);
         return null;
     }
 
-    public boolean estaDeclarado(Identificador identificador){
-        boolean esta=true;
-        Object elemento = alcance_actual.resolver(identificador.getNombre());
-        if(elemento == null){
-            esta=false;
-        }
-        return esta;
-    }
-
+    // esto evita que en la inicializacion de una variable, se use un nombre no definido previamente
     @Override
     public Void visit(Identificador identificador) throws ExcepcionDeAlcance {
-        if(!estaDeclarado(identificador)){
+        if(this.alcance_actual.resolver(identificador.getNombre()) == null){
             throw new ExcepcionDeAlcance(String.format("%1$s NO esta declarado previamente\"]\n",identificador.getNombre()));
         }
         return null;
@@ -118,17 +74,25 @@ public class GeneradorAlcances extends Visitor<Void> {
 
     @Override
     public Void visit(DeclaracionFuncion declaracionFuncion) throws ExcepcionDeAlcance{
-        alcance_actual = new Alcance("BLOQUE_FUNCION",alcance_global);  //esto para que meta los parametros en un diccionario perteneciente al bloque funcion como pedia el enunciado que los parametros tengan la misma validez que una variable local al bloque
+        alcance_actual = new Alcance("BLOQUE_FUNCION",alcance_actual);  //actual ahora vale funcion
+        declaracionFuncion.setAlcance(alcance_actual); //asi no renegamos con los parametros
         if(!declaracionFuncion.getParametros().isEmpty()){
             for (Parametro parametro:declaracionFuncion.getParametros()){
-                Object resultP = this.agregarSimbolo(parametro.getIdentificador().getNombre(), parametro);
-                if(resultP!=null){   //repetido
-                    throw new ExcepcionDeAlcance(String.format("El nombre del parametro %1$s de tipo %2$s fue utilizado previamente\"]\n",
-                            parametro.getIdentificador().getNombre(), parametro.getTipo()));
-                }
+                this.visit(parametro);
             }
         }
-        super.visit(declaracionFuncion);
+        this.visit(declaracionFuncion.getBloque());
+        alcance_actual = alcance_actual.getPadre(); //actual ahora vale global
+        return null;
+    }
+
+    @Override
+    public Void visit(Parametro parametro) throws ExcepcionDeAlcance {
+        Object resultP = this.agregarSimbolo(parametro.getIdentificador().getNombre(), parametro);
+        if(resultP!=null){   //repetido
+            throw new ExcepcionDeAlcance(String.format("El nombre del parametro %1$s de tipo %2$s fue utilizado previamente\"]\n",
+                    parametro.getIdentificador().getNombre(), parametro.getTipo()));
+        }
         return null;
     }
 
@@ -151,7 +115,7 @@ public class GeneradorAlcances extends Visitor<Void> {
     }
 
     @Override
-    protected Void procesarWhenIs(WhenIs whenIs, Void expresion, Void bloque) {
+    protected Void procesarWhenIs(WhenIs whenIs,Void simboloCpm, Void expresion, Void bloque) {
         return null;
     }
 
@@ -187,11 +151,6 @@ public class GeneradorAlcances extends Visitor<Void> {
 
     @Override
     protected Void procesarWhile(While aWhile, Void expresion, Void bloqueWhile) {
-        return null;
-    }
-
-    @Override
-    protected Void procesarFor(For aFor, Void identificador, Void bloque, Void from, Void to, Void by) {
         return null;
     }
 

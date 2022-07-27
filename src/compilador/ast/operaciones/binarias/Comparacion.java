@@ -20,4 +20,5 @@ public abstract class Comparacion extends OperacionBinaria {
     public Comparacion(Expresion izquierda, Expresion derecha, Tipo tipo, String nombre) {
         super(izquierda, derecha, tipo, nombre);
     }
+
 }

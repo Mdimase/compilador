@@ -497,17 +497,11 @@ public class Sintactico extends java_cup.runtime.lr_parser {
 
 
 
-    /*
-    public void syntax_error(Symbol s) {
-        System.out.println("Error en la línea " + (s.right+1) + ", columna " + s.left + ": "
-            + SintacticoSym.terminalNames[s.sym] + "(" + s.value + ") no reconocido.");
-    }   */
-
+    //codigo Java a utilizar en JCUP y se guarda en la misma clase
     public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{
             System.out.println("Error en la linea "+ (s.left+1)+ " Columna "+ s.right+ ". Valor simbolo '"
             +s.value+"' . Simbolo n° "+s.sym+ " no reconocido." );
         }
-
 
 
 /** Cup generated class to encapsulate user supplied action code.*/
@@ -515,7 +509,7 @@ public class Sintactico extends java_cup.runtime.lr_parser {
 class CUP$Sintactico$actions {
 
 
-
+            // variables o estructuras Java a utilizar en JCUP. se guarda en clase no publica separada del propio parser
 
   private final Sintactico parser;
 
@@ -684,9 +678,8 @@ class CUP$Sintactico$actions {
 		Sentencia s = (Sentencia)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
 		
             Identificador identificador = new Identificador(id,t);
-            List<Sentencia> aux = new ArrayList<Sentencia>();
-            aux.add(s);
-            Bloque bloque = new Bloque(aux,false);
+            Bloque bloque = s.toBloque();
+            bloque.setNombre("BLOQUE_FUNCION");
             RESULT= new DeclaracionFuncion(identificador,t,p,bloque);
         
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("declaracion_funcion",20, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-7)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
@@ -708,9 +701,8 @@ class CUP$Sintactico$actions {
 		Sentencia s = (Sentencia)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
 		
             Identificador identificador = new Identificador(id,t);
-            List<Sentencia> aux = new ArrayList<Sentencia>();
-            aux.add(s);
-            Bloque bloque = new Bloque(aux,false);
+            Bloque bloque = s.toBloque();
+            bloque.setNombre("BLOQUE_FUNCION");
             RESULT= new DeclaracionFuncion(identificador,t,bloque);
         
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("declaracion_funcion",20, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-6)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
@@ -728,7 +720,7 @@ class CUP$Sintactico$actions {
 		int ppright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
 		List<Parametro> pp = (List<Parametro>)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
 		
-            pp.add(p);
+            pp.add(0,p);
             RESULT = pp;
         
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("parametros",21, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
@@ -746,7 +738,7 @@ class CUP$Sintactico$actions {
 		int ppright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
 		List<Parametro> pp = (List<Parametro>)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
 		
-            pp.add(p);
+            pp.add(0,p);
             RESULT = pp;
         
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("parametros",21, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
@@ -780,7 +772,7 @@ class CUP$Sintactico$actions {
 		int ppright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
 		List<Parametro> pp = (List<Parametro>)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
 		
-            pp.add(p);
+            pp.add(0,p);
             RESULT=pp;
         
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("parametros_con_v_defecto",22, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
@@ -1200,9 +1192,8 @@ class CUP$Sintactico$actions {
 		int iright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
 		Sentencia i = (Sentencia)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
 		
-            List<Sentencia> aux = new ArrayList<Sentencia>();
-            aux.add(i);
-            Bloque bloque = new Bloque(aux,"BLOQUE_WHILE",false);
+            Bloque bloque = i.toBloque();
+            bloque.setNombre("BLOQUE_WHILE");
             RESULT= new While("WHILE",c, bloque);
         
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("while",29, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-3)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
@@ -1229,49 +1220,39 @@ class CUP$Sintactico$actions {
 		int iright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
 		Sentencia i = (Sentencia)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
 		
-/*
-            Identificador identificador = new Identificador(id);
-            Constante from = new Constante(f, Tipo.INTEGER);
-            Constante to = new Constante(t, Tipo.INTEGER);
-            Constante by = new Constante(b, Tipo.INTEGER);
-            List<Sentencia> aux = new ArrayList<Sentencia>();
-            aux.add(i);
-            Bloque bloque = new Bloque(aux,"FOR",false);
-            RESULT= new For(identificador,from,to,by,bloque);
-*/
-
-            List<Sentencia> cuerpoFor = new ArrayList<Sentencia>(); //lista de sentencias del bloque principal
             Expresion from = new Constante(f, Tipo.INTEGER);    //constante from
             Identificador identificador = new Identificador(id);    //identificador
-            Sentencia as = new Asignacion(identificador,from);  //primera asignacion id=f;
-            cuerpoFor.add(as);  //agrego esa sentencia al bloque principal
-            List<Sentencia> aux = new ArrayList<Sentencia>();   //lista de sentencias del bloque while interno
-            aux.add(i); //agrego todas las sentencias que eran del for original
+            //Sentencia as = new Asignacion(identificador,from);  //primera asignacion id=f;
+            Sentencia dv = new DeclaracionVariable(identificador,Tipo.INTEGER,from);
+            Bloque cuerpoFor = dv.toBloque();
+            cuerpoFor.setNombre("FOR->WHILE");
             Expresion by = new Constante(b, Tipo.INTEGER);  //constante by
             Expresion to = new Constante(t,Tipo.INTEGER);   //constante to
 
             if (Integer.valueOf(f) < Integer.valueOf(t)){
                 Expresion exp = new Suma(identificador,by); //expresion usada en la asignacion id+by;
                 Sentencia asig = new Asignacion(identificador,exp); // asignacion id=id+by;
-                aux.add(asig);  //agrego la asignacion a la lista de sentencias del bloque while interno
                 Expresion condicion = new MenorIgual(identificador,to); //condicion del while interno
 
-                Bloque bloque = new Bloque(aux,"BLOQUEAUX",false);  //bloque de sentencias del while interno
+                Bloque bloque = i.toBloque();  //bloque de sentencias del while interno
+                bloque.setNombre("BLOQUE_WHILE");
+                bloque.getSentencias().add(asig); //agrego la asignacion a la lista de sentencias del bloque while interno
 
                 While w = new While("WHILE",condicion,bloque);  // while interno completo
-                cuerpoFor.add(w);   //agrego el while completo a la lista de sentencias del cuerpo de mi for original
+                cuerpoFor.getSentencias().add(w);   //agrego el while completo a la lista de sentencias del cuerpo de mi for original
             } else {
                 Expresion exp = new Resta(identificador,by); //expresion usada en la asignacion id+by;
                 Sentencia asig = new Asignacion(identificador,exp); // asignacion id=id+by;
-                aux.add(asig);  //agrego la asignacion a la lista de sentencias del bloque while interno
                 Expresion condicion = new MenorIgual(to,identificador); //condicion del while interno
 
-                Bloque bloque = new Bloque(aux,"BLOQUE",false);  //bloque de sentencias del while interno
+                Bloque bloque = i.toBloque();
+                bloque.setNombre("BLOQUE_WHILE");
+                bloque.getSentencias().add(asig);
 
                 While w = new While("WHILE",condicion,bloque);  // while interno completo
-                cuerpoFor.add(w);   //agrego el while completo a la lista de sentencias del cuerpo de mi for original
+                cuerpoFor.getSentencias().add(w);   //agrego el while completo a la lista de sentencias del cuerpo de mi for original
             }
-            RESULT = new Bloque (cuerpoFor,"FOR->WHILE",false);
+            RESULT = cuerpoFor;
         
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("for",13, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-9)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
@@ -1294,51 +1275,40 @@ class CUP$Sintactico$actions {
 		int iright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
 		Sentencia i = (Sentencia)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
 		
-/*
-            Identificador identificador = new Identificador(id);
-            Constante from = new Constante(f, Tipo.INTEGER);
-            Constante to = new Constante(t, Tipo.INTEGER);
-            Constante by = new Constante(String.valueOf(1), Tipo.INTEGER);
-            List<Sentencia> aux = new ArrayList<Sentencia>();
-            aux.add(i);
-            Bloque bloque = new Bloque(aux,"FOR",false);
-            RESULT= new For(identificador,from,to,by,bloque);
-*/
-
-            List<Sentencia> cuerpoFor = new ArrayList<Sentencia>(); //lista de sentencias del bloque principal
             Expresion from = new Constante(f, Tipo.INTEGER);    //constante from
             Identificador identificador = new Identificador(id);    //identificador
-            Sentencia as = new Asignacion(identificador,from);  //primera asignacion id=f;
-            cuerpoFor.add(as);  //agrego esa sentencia al bloque principal
+            //Sentencia as = new Asignacion(identificador,from);  //primera asignacion id=f;
+            Sentencia dv = new DeclaracionVariable(identificador,Tipo.INTEGER,from);
+            Bloque cuerpoFor = dv.toBloque(); //bloque principal
+            cuerpoFor.setNombre("FOR->WHILE");
 
-            List<Sentencia> aux = new ArrayList<Sentencia>();   //lista de sentencias del bloque while interno
-            aux.add(i); //agrego todas las sentencias que eran del for original
             Expresion by = new Constante(String.valueOf(1), Tipo.INTEGER);  //constante by
             Expresion to = new Constante(t,Tipo.INTEGER);   //constante to
 
             if (Integer.valueOf(f) < Integer.valueOf(t)){
                 Expresion exp = new Suma(identificador,by); //expresion usada en la asignacion id+by;
                 Sentencia asig = new Asignacion(identificador,exp); // asignacion id=id+by;
-                aux.add(asig);  //agrego la asignacion a la lista de sentencias del bloque while interno
                 Expresion condicion = new MenorIgual(identificador,to); //condicion del while interno
 
-                Bloque bloque = new Bloque(aux,"BLOQUEAUX",false);  //bloque de sentencias del while interno
+                Bloque bloque = i.toBloque();  //bloque de sentencias del while interno
+                bloque.setNombre("BLOQUE_WHILE");
+                bloque.getSentencias().add(asig); //agrego la asignacion a la lista de sentencias del bloque while interno
 
                 While w = new While("WHILE",condicion,bloque);  // while interno completo
-                cuerpoFor.add(w);   //agrego el while completo a la lista de sentencias del cuerpo de mi for original
+                cuerpoFor.getSentencias().add(w);   //agrego el while completo a la lista de sentencias del cuerpo de mi for original
             } else {
                     Expresion exp = new Resta(identificador,by); //expresion usada en la asignacion id+by;
                     Sentencia asig = new Asignacion(identificador,exp); // asignacion id=id+by;
-                    aux.add(asig);  //agrego la asignacion a la lista de sentencias del bloque while interno
                     Expresion condicion = new MenorIgual(to,identificador); //condicion del while interno
 
-                    Bloque bloque = new Bloque(aux,"BLOQUE",false);  //bloque de sentencias del while interno
+                    Bloque bloque = i.toBloque();  //bloque de sentencias del while interno
+                    bloque.setNombre("BLOQUE_WHILE");
+                    bloque.getSentencias().add(asig); //agrego la asignacion a la lista de sentencias del bloque while interno
 
                     While w = new While("WHILE",condicion,bloque);  // while interno completo
-                    cuerpoFor.add(w);   //agrego el while completo a la lista de sentencias del cuerpo de mi for original
+                    cuerpoFor.getSentencias().add(w);   //agrego el while completo a la lista de sentencias del cuerpo de mi for original
             }
-
-            RESULT = new Bloque (cuerpoFor,"FOR->WHILE",false);
+            RESULT = cuerpoFor;
         
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("for",13, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-7)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
@@ -1429,8 +1399,11 @@ class CUP$Sintactico$actions {
           case 49: // write ::= WRITE APERTURA_PARENTESIS STRING_LITERAL CIERRE_PARENTESIS 
             {
               Write RESULT =null;
+		int sleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).left;
+		int sright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).right;
+		String s = (String)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).value;
 		
-            Write w = new Write();
+            Write w = new Write(s);
             w.setEsString(true);
             RESULT = w;
             
@@ -1456,8 +1429,11 @@ class CUP$Sintactico$actions {
           case 51: // writeln ::= WRITELN APERTURA_PARENTESIS STRING_LITERAL CIERRE_PARENTESIS 
             {
               Write RESULT =null;
+		int sleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).left;
+		int sright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).right;
+		String s = (String)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).value;
 		
-            Write w = new Write(true);
+            Write w = new Write(true,s);
             w.setEsString(true);
             RESULT = w;
             
@@ -1521,9 +1497,8 @@ class CUP$Sintactico$actions {
 		int iright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
 		Sentencia i = (Sentencia)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
 		
-            List<Sentencia> sentenciasWhenElse = new ArrayList<Sentencia>();
-            sentenciasWhenElse.add(i);
-            Bloque bloque = new Bloque(sentenciasWhenElse,"WhenElse",false);
+            Bloque bloque = i.toBloque();
+            bloque.setNombre("BLOQUE_ELSE");
             RESULT= new When("When/else",e,ci,bloque);
         
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("when",32, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-4)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
@@ -1587,7 +1562,7 @@ class CUP$Sintactico$actions {
               WhenIs RESULT =null;
 		int cleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-3)).left;
 		int cright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-3)).right;
-		Comparador c = (Comparador)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-3)).value;
+		SimboloCmp c = (SimboloCmp)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-3)).value;
 		int eleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)).left;
 		int eright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)).right;
 		Expresion e = (Expresion)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)).value;
@@ -1595,9 +1570,8 @@ class CUP$Sintactico$actions {
 		int iright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
 		Sentencia i = (Sentencia)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
 		
-            List<Sentencia> sentenciasWhenIs = new ArrayList<Sentencia>();
-            sentenciasWhenIs.add(i);
-            Bloque bloque = new Bloque(sentenciasWhenIs,"WhenIs",false);
+            Bloque bloque = i.toBloque();
+            bloque.setNombre("BLOQUE_WHEN_IS");
             RESULT= new WhenIs(c,e,bloque);
         
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("comparacion_is",34, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-4)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
@@ -1607,9 +1581,9 @@ class CUP$Sintactico$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 60: // comparador ::= MENOR 
             {
-              Comparador RESULT =null;
+              SimboloCmp RESULT =null;
 		
-            RESULT= Comparador.MENOR;
+            RESULT= new SimboloCmp( "<",Comparador.MENOR);
         
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("comparador",35, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
@@ -1618,9 +1592,9 @@ class CUP$Sintactico$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 61: // comparador ::= MENOR_IGUAL 
             {
-              Comparador RESULT =null;
+              SimboloCmp RESULT =null;
 		
-            RESULT= Comparador.MENORIGUAL;
+            RESULT= new SimboloCmp( "<=",Comparador.MENORIGUAL);
         
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("comparador",35, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
@@ -1629,9 +1603,9 @@ class CUP$Sintactico$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 62: // comparador ::= MAYOR 
             {
-              Comparador RESULT =null;
+              SimboloCmp RESULT =null;
 		
-            RESULT= Comparador.MAYOR;
+            RESULT= new SimboloCmp( ">",Comparador.MAYOR);
         
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("comparador",35, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
@@ -1640,9 +1614,9 @@ class CUP$Sintactico$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 63: // comparador ::= MAYOR_IGUAL 
             {
-              Comparador RESULT =null;
+              SimboloCmp RESULT =null;
 		
-            RESULT= Comparador.MAYORIGUAL;
+            RESULT= new SimboloCmp( ">=",Comparador.MAYORIGUAL);
         
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("comparador",35, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
@@ -1651,9 +1625,9 @@ class CUP$Sintactico$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 64: // comparador ::= IGUAL_IGUAL 
             {
-              Comparador RESULT =null;
+              SimboloCmp RESULT =null;
 		
-            RESULT= Comparador.IGUALIGUAL;
+            RESULT= new SimboloCmp( "==",Comparador.IGUALIGUAL);
         
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("comparador",35, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
@@ -1662,9 +1636,9 @@ class CUP$Sintactico$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 65: // comparador ::= DISTINTO 
             {
-              Comparador RESULT =null;
+              SimboloCmp RESULT =null;
 		
-            RESULT= Comparador.DISTINTO;
+            RESULT= new SimboloCmp( "!=",Comparador.DISTINTO);
         
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("comparador",35, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
@@ -1684,12 +1658,10 @@ class CUP$Sintactico$actions {
 		int i2right = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
 		Sentencia i2 = (Sentencia)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
 		
-            List<Sentencia> sentenciasIf = new ArrayList<Sentencia>();
-            sentenciasIf.add(i1);
-            Bloque bloqueThen = new Bloque(sentenciasIf,"BLOQUE_THEN",false);
-            List<Sentencia> sentenciasElse = new ArrayList<Sentencia>();
-            sentenciasElse.add(i2);
-            Bloque bloqueElse = new Bloque(sentenciasElse,"BLOQUE_ELSE",false);
+            Bloque bloqueThen = i1.toBloque();
+            bloqueThen.setNombre("BLOQUE_THEN");
+            Bloque bloqueElse = i2.toBloque();
+            bloqueElse.setNombre("BLOQUE_ELSE");
             RESULT= new If("IF/ELSE",c, bloqueThen, bloqueElse);
         
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("if",30, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-5)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
@@ -1707,9 +1679,8 @@ class CUP$Sintactico$actions {
 		int iright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
 		Sentencia i = (Sentencia)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
 		
-            List<Sentencia> sentenciasIf = new ArrayList<Sentencia>();
-            sentenciasIf.add(i);
-            Bloque bloqueThen = new Bloque(sentenciasIf,"BLOQUE_THEN",false);
+            Bloque bloqueThen = i.toBloque();
+            bloqueThen.setNombre("BLOQUE_THEN");
             RESULT= new If("IF",c, bloqueThen);
         
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("if",30, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-3)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);

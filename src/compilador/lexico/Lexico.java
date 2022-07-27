@@ -4,12 +4,13 @@
 
 package compilador.lexico;
 
+                                    //AREA DE IMPORTS
 import java.util.ArrayList;import java.util.Stack;
 import java_cup.runtime.*;
 import java_cup.sym;
 import compilador.sintactico.SintacticoSym;
 
-
+                                    //AREA DE OPCIONES
 
 // See https://github.com/jflex-de/jflex/issues/222
 @SuppressWarnings("FallThrough")

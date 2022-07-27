@@ -8,12 +8,18 @@ package compilador.ast.base;
 import java.util.HashMap;
 import java.util.Map;
 
+            // TABLA DE SIMBOLOS
+
 public class Alcance extends HashMap{
 
-    // diccionario
-    // ej clave:valor
-    private String nombre;  //nombre del alcance. si es de una funcion pepe() -> alcance pepe()
-    private Alcance padre;  // alcance padre que lo engloba. ej si esta es el alcance de un for, su padre puede ser programa u otro for si estan anidados
+    // diccionario   ==>  clave:valor
+    //                    nombre: DeclaracionVariable
+    //                    nombre: DeclaracionFuncion
+    //                    nombre: Parametro
+
+
+    private String nombre;  //nombre del alcance. si es de una funcion pepe() -> alcance pepe
+    private Alcance padre;  // alcance padre que lo engloba. para resolver nombres estatico tipo Algol
 
     public Alcance(String nombre, Alcance padre) {
         this.nombre = nombre;
@@ -41,7 +47,8 @@ public class Alcance extends HashMap{
         this.padre = padre;
     }
 
-    //retorna objeto encontrado o null si no lo encuentra
+    // busca un nombre con resolucion estatica tipo Algol (actual o padre hasta llegar a null)
+    // retorna objeto encontrado o null si no lo encuentra
     public Object resolver(String name){
         Alcance alcance_actual = this;
         Object elemento = null;

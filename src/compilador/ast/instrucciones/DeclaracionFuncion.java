@@ -13,19 +13,19 @@ public class DeclaracionFuncion extends Declaracion{
     private Tipo tipoRetorno;
     private List<Parametro> parametros = new ArrayList<>();
     private Bloque bloque;
+    private Alcance alcance;    //para no renegar con los parametros
 
     public DeclaracionFuncion(Identificador identificador, Tipo tipoRetorno, List<Parametro> parametros, Bloque bloque) {
         this.identificador = identificador;
         this.tipoRetorno = tipoRetorno;
-        acomodar(parametros);   // nose xq el sintactico me los genera al reves, por eso invierto el orden
         this.parametros =  parametros;
-        this.bloque = new Bloque(bloque.initSentencia(bloque),"BLOQUE_FUNCION",false);
+        this.bloque=bloque;
     }
 
     public DeclaracionFuncion(Identificador identificador, Tipo tipoRetorno, Bloque bloque) {
         this.identificador = identificador;
         this.tipoRetorno = tipoRetorno;
-        this.bloque = new Bloque(bloque.initSentencia(bloque),"BLOQUE_FUNCION",false);
+        this.bloque = bloque;
     }
 
     public DeclaracionFuncion(String nombre, Identificador identificador, Tipo tipoRetorno, List<Parametro> parametros, Bloque bloque) {
@@ -33,14 +33,14 @@ public class DeclaracionFuncion extends Declaracion{
         this.identificador = identificador;
         this.tipoRetorno = tipoRetorno;
         this.parametros = parametros;
-        this.bloque = new Bloque(bloque.initSentencia(bloque),"BLOQUE_FUNCION",false);
+        this.bloque = bloque;
     }
 
     public DeclaracionFuncion(String nombre, Identificador identificador, Tipo tipoRetorno, Bloque bloque) {
         super(nombre);
         this.identificador = identificador;
         this.tipoRetorno = tipoRetorno;
-        this.bloque = new Bloque(bloque.initSentencia(bloque),"BLOQUE_FUNCION",false);
+        this.bloque = bloque;
     }
 
     public Identificador getIdentificador() {
@@ -75,8 +75,12 @@ public class DeclaracionFuncion extends Declaracion{
         this.bloque = bloque;
     }
 
-    private void acomodar (List<Parametro> parametros){
-        Collections.reverse(parametros);
+    public Alcance getAlcance() {
+        return alcance;
+    }
+
+    public void setAlcance(Alcance alcance) {
+        this.alcance = alcance;
     }
 
     @Override

@@ -5,7 +5,11 @@
  */
 package compilador.ast.instrucciones;
 
+import compilador.ast.base.Bloque;
 import compilador.ast.base.Nodo;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class Sentencia extends Nodo{
 
@@ -16,4 +20,13 @@ public abstract class Sentencia extends Nodo{
         super(nombre);
     }
 
+    public Bloque toBloque() {
+        if(this.getClass() == Bloque.class){
+            return (Bloque) this;
+        } else {
+            List<Sentencia> sentencias = new ArrayList<>();
+            sentencias.add(this);
+            return new Bloque(sentencias,"BLOQUE");
+        }
+    }
 }

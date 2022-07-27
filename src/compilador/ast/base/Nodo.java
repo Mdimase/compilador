@@ -6,6 +6,8 @@ import compilador.visitor.Visitor;
 // concepto mas general, todas mis clases que formen parte del AST van a heredar de Nodo
 public abstract class Nodo{
     private String nombre;
+    //private int nLinea;
+    //private int nColumna;
 
     public Nodo() {}
 

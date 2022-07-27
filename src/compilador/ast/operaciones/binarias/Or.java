@@ -18,6 +18,11 @@ public class Or extends OperacionBinaria{
     }
 
     @Override
+    public String get_llvm_op_code() {
+        return "or";
+    }
+
+    @Override
     public <T> T accept(Visitor<T> v) throws ExcepcionDeAlcance{
         return v.visit(this);
     }

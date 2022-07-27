@@ -18,25 +18,25 @@ public class If extends Sentencia{
     public If(String nombre, Expresion condicion, Bloque bloqueThen, Bloque bloqueElse) {
         super(nombre);
         this.condicion = condicion;
-        this.bloqueThen = new Bloque(bloqueThen.initSentencia(bloqueThen),"BLOQUE_THEN",false);
-        this.bloqueElse = new Bloque(bloqueElse.initSentencia(bloqueElse),"BLOQUE_ELSE",false);
+        this.bloqueThen = bloqueThen;
+        this.bloqueElse = bloqueElse;
     }
 
     public If(String nombre, Expresion condicion, Bloque bloqueThen) {
         super(nombre);
         this.condicion = condicion;
-        this.bloqueThen = new Bloque(bloqueThen.initSentencia(bloqueThen),"BLOQUE_THEN",false);
+        this.bloqueThen = bloqueThen;
     }
 
     public If(Expresion condicion, Bloque bloqueThen) {
         this.condicion = condicion;
-        this.bloqueThen = new Bloque(bloqueThen.initSentencia(bloqueThen),"BLOQUE_THEN",false);
+        this.bloqueThen = bloqueThen;
     }
 
     public If(Expresion condicion, Bloque bloqueThen, Bloque bloqueElse) {
-        this.bloqueElse = new Bloque(bloqueElse.initSentencia(bloqueElse),"BLOQUE_ELSE",false);
+        this.bloqueElse = bloqueElse;
         this.condicion = condicion;
-        this.bloqueThen = new Bloque(bloqueThen.initSentencia(bloqueThen),"BLOQUE_THEN",false);
+        this.bloqueThen = bloqueThen;
     }
 
     public Expresion getCondicion() {

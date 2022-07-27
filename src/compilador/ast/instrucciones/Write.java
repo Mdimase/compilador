@@ -3,6 +3,7 @@ package compilador.ast.instrucciones;
 import compilador.ast.base.ExcepcionDeAlcance;
 import compilador.ast.base.ExcepcionDeTipos;
 import compilador.ast.base.Expresion;
+import compilador.ast.base.Mensaje;
 import compilador.visitor.Transformer;
 import compilador.visitor.Visitor;
 
@@ -10,6 +11,8 @@ public class Write extends Sentencia{
     private Expresion expresion;
     private Boolean esString=false;
     private Boolean esLn=false;
+    private Mensaje mensaje;
+    private String IrRefStr;
 
     public Write(Expresion expresion) {
         super("Write");
@@ -22,13 +25,17 @@ public class Write extends Sentencia{
         this.esLn = esLn;
     }
 
-    public Write(Boolean esLn) {
+    public Write(Boolean esLn,String mensaje) {
         super("WriteLn String");
         this.esLn = esLn;
+        this.mensaje = new Mensaje(mensaje);
+        this.esString = true;
     }
 
-    public Write() {
+    public Write(String mensaje) {
         super("Write String");
+        this.mensaje = new Mensaje(mensaje);
+        this.esString = true;
     }
 
     public Boolean getEsString() {
@@ -53,6 +60,22 @@ public class Write extends Sentencia{
 
     public void setExpresion(Expresion expresion) {
         this.expresion = expresion;
+    }
+
+    public Mensaje getMensaje() {
+        return mensaje;
+    }
+
+    public void setMensaje(Mensaje mensaje) {
+        this.mensaje = mensaje;
+    }
+
+    public String getIrRefStr() {
+        return IrRefStr;
+    }
+
+    public void setIrRefStr(String irRefStr) {
+        IrRefStr = irRefStr;
     }
 
     @Override

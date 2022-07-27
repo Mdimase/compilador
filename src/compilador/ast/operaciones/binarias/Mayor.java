@@ -18,6 +18,15 @@ public class Mayor extends ComparacionDesigualdad{
     }
 
     @Override
+    public String get_llvm_op_code() {
+        if(this.getIzquierda().getTipo() == Tipo.INTEGER){
+            return "icmp sgt";
+        } else{
+            return "fcmp ogt";
+        }
+    }
+
+    @Override
     public <T> T accept(Visitor<T> v) throws ExcepcionDeAlcance {
         return v.visit(this);
     }

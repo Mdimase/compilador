@@ -14,15 +14,13 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.List;
 
-// Visitor<String> me obliga a que todos mis metodos retornes un String
+// Visitor<String> me obliga a que todos mis metodos ,@override del Visitor, retornen un String
 public class ASTGraphviz extends Visitor<String>{
 
     private final Deque<Integer> parents;   //pila de IDs de los nodos
     /* cuando un nodo se grafique ,antes de que llame al graficado de sus hijos, va a apilar su ID
      * para que los hijos miren esa pila y sepan a quien engancharse dentro del grafico (lenguaje DOT) */
     private int current_id = 0; // id del nodo actual
-    private int cont = 0;   //contador para los break y continue, no utilizo un flag booleano x situaciones de while anidados
-    private boolean isFunc = false; //logica para validar el return
 
     public ASTGraphviz() {
         this.parents = new ArrayDeque<>();
@@ -105,10 +103,8 @@ public class ASTGraphviz extends Visitor<String>{
         current_id = this.getID();
         resultado.append(this.procesarNodo(declaracionFuncion));
         parents.push(current_id);
-        isFunc=true;    //logica para validar el return
         resultado.append(super.visit(declaracionFuncion)); //invoco los visit de sus nodos atributos
         parents.pop();
-        isFunc=false;   //logica para validar el return
         return resultado.toString();
     }
 
@@ -118,9 +114,17 @@ public class ASTGraphviz extends Visitor<String>{
         current_id = this.getID();
         resultado.append(this.procesarNodo(w));
         parents.push(current_id);
-        if(!w.getEsString()){    //si es writeln(expresion) o write(expresion)
-            resultado.append(super.visit(w));
-        }
+        resultado.append(super.visit(w));
+        parents.pop();
+        return resultado.toString();
+    }
+
+    @Override
+    public String visit(Mensaje m){
+        StringBuilder resultado = new StringBuilder();
+        current_id = this.getID();
+        resultado.append(this.procesarNodo(m));
+        parents.push(current_id);
         parents.pop();
         return resultado.toString();
     }
@@ -142,21 +146,7 @@ public class ASTGraphviz extends Visitor<String>{
         current_id = this.getID();
         resultado.append(this.procesarNodo(aWhile));
         parents.push(current_id);
-        cont++; //logica para sentencia break y continue
         resultado.append(super.visit(aWhile)); //invoco los visit de sus nodos atributos
-        parents.pop();
-        cont--; //logica para sentencia break y continue
-        return resultado.toString();
-    }
-
-    //DESUSO
-    @Override
-    public String visit(For aFor) throws ExcepcionDeAlcance{
-        StringBuilder resultado = new StringBuilder();
-        current_id = this.getID();
-        resultado.append(this.procesarNodo(aFor));
-        parents.push(current_id);
-        resultado.append(super.visit(aFor)); //invoco los visit de sus nodos atributos
         parents.pop();
         return resultado.toString();
     }
@@ -186,12 +176,12 @@ public class ASTGraphviz extends Visitor<String>{
 
     @Override
     //graficar nodo constante, es Hoja
+    //no ejecuta un super.visit xq no tiene atributos nodo. es una hoja
     public String visit(Constante c) {
         StringBuilder resultado = new StringBuilder();
         current_id = this.getID();
         resultado.append(this.procesarNodo(c));
         parents.push(current_id);
-        //no ejecuta un super.visit xq no tiene atributos nodo. es una hoja
         parents.pop();
         return resultado.toString();
     }
@@ -219,9 +209,6 @@ public class ASTGraphviz extends Visitor<String>{
 
     @Override
     public String visit(Continue c) throws ExcepcionDeAlcance {
-        if (cont == 0){ //logica para que el continue este en un while si o si
-            throw new ExcepcionDeAlcance("CONINUE en lugar inapropiado");
-        }
         StringBuilder resultado = new StringBuilder();
         current_id = this.getID();
         resultado.append(this.procesarNodo(c));
@@ -232,9 +219,6 @@ public class ASTGraphviz extends Visitor<String>{
 
     @Override
     public String visit(Break b) throws ExcepcionDeAlcance {
-        if (cont == 0){ //logica para que el break este en un while si o si
-            throw new ExcepcionDeAlcance("BREAK en lugar inapropiado");
-        }
         StringBuilder resultado = new StringBuilder();
         current_id = this.getID();
         resultado.append(this.procesarNodo(b));
@@ -246,14 +230,11 @@ public class ASTGraphviz extends Visitor<String>{
     //graficar nodo return
     @Override
     public String visit(Return r) throws ExcepcionDeAlcance{
-        if (!isFunc){
-            throw new ExcepcionDeAlcance("RETURN en lugar inapropiado");
-        }
         StringBuilder resultado = new StringBuilder();
         current_id = this.getID();
         resultado.append(this.procesarNodo(r));
         parents.push(current_id);
-        resultado.append(super.visit(r)); //invoco los visit de sus nodos atributos
+        resultado.append(super.visit(r));
         parents.pop();
         return resultado.toString();
     }
@@ -264,23 +245,43 @@ public class ASTGraphviz extends Visitor<String>{
         current_id = this.getID();
         resultado.append(this.procesarNodo(when));
         parents.push(current_id);
-        resultado.append(super.visit(when)); //invoco los visit de sus nodos atributos
+        resultado.append(super.visit(when));
+        parents.pop();
+        return resultado.toString();
+    }
+
+
+    @Override
+    public String visit(WhenIs wi) throws ExcepcionDeAlcance{
+        StringBuilder resultado = new StringBuilder();
+        current_id = this.getID();
+        resultado.append(this.procesarNodo(wi));
+        parents.push(current_id);
+        resultado.append(super.visit(wi));
         parents.pop();
         return resultado.toString();
     }
 
     @Override
-    protected String procesarWhenIs(WhenIs whenIs, String expresion, String bloque) {
-        return expresion+bloque;
+    public String visit(SimboloCmp simboloCmp){
+        StringBuilder resultado = new StringBuilder();
+        current_id = this.getID();
+        resultado.append(this.procesarNodo(simboloCmp));
+        parents.push(current_id);
+        parents.pop();
+        return resultado.toString();
+    }
+
+    @Override
+    protected String procesarWhenIs(WhenIs whenIs, String simboloCmp, String expresion, String bloque) {
+        return simboloCmp+expresion+bloque;
     }
 
     @Override
     protected String procesarWhen(When when, String expresion, List<String> whenIs, String bloque) {
         StringBuilder resultado = new StringBuilder();
         resultado.append(expresion);
-        whenIs.forEach((when_is) -> {
-            resultado.append(when_is);
-        });
+        whenIs.forEach(resultado::append);
         resultado.append(bloque);
         return resultado.toString();
     }
@@ -289,9 +290,7 @@ public class ASTGraphviz extends Visitor<String>{
     protected String procesarWhen(When when, String expresion, List<String> whenIs) {
         StringBuilder resultado = new StringBuilder();
         resultado.append(expresion);
-        whenIs.forEach((when_is) -> {
-            resultado.append(when_is);
-        });
+        whenIs.forEach(resultado::append);
         return resultado.toString();
     }
 
@@ -317,19 +316,14 @@ public class ASTGraphviz extends Visitor<String>{
 
     @Override
     protected String procesarDeclaracionFuncion(DeclaracionFuncion declaracionFuncion, String identificador, String bloque) {
-        StringBuilder resultado = new StringBuilder();
-        resultado.append(identificador);
-        resultado.append(bloque);
-        return resultado.toString();
+        return identificador + bloque;
     }
 
     @Override
     protected String procesarDeclaracionFuncion(DeclaracionFuncion declaracionFuncion, String identificador, List<String> parametros, String bloque) {
         StringBuilder resultado = new StringBuilder();
         resultado.append(identificador);
-        parametros.forEach((parametro) -> {
-            resultado.append(parametro);
-        });
+        parametros.forEach(resultado::append);
         resultado.append(bloque);
         return resultado.toString();
     }
@@ -338,9 +332,7 @@ public class ASTGraphviz extends Visitor<String>{
     protected String procesarInvocacionFuncion(InvocacionFuncion invocacionFuncion, String identificador, List<String> parametros) {
         StringBuilder resultado = new StringBuilder();
         resultado.append(identificador);
-        parametros.forEach((expresion) -> {
-            resultado.append(expresion);
-        });
+        parametros.forEach(resultado::append);
         return resultado.toString();
     }
 
@@ -351,30 +343,13 @@ public class ASTGraphviz extends Visitor<String>{
 
     @Override
     protected String procesarWhile(While aWhile, String expresion, String bloqueWhile) {
-        StringBuilder resultado = new StringBuilder();
-        resultado.append(expresion);
-        resultado.append(bloqueWhile);
-        return resultado.toString();
-    }
-
-    // QUEDO SIN USO, POR LA TRANSFORMACION DE UN FOR A WHILE EN EL PARSING
-    @Override
-    protected String procesarFor(For aFor, String identificador, String bloque, String from, String to, String by) {
-        StringBuilder resultado = new StringBuilder();
-        resultado.append(identificador);
-        resultado.append(from);
-        resultado.append(to);
-        resultado.append(by);
-        resultado.append(bloque);
-        return resultado.toString();
+        return expresion + bloqueWhile;
     }
 
     @Override
     protected String procesarBloque(Bloque b, List<String> sentencias) {
         StringBuilder resultado = new StringBuilder();
-        sentencias.forEach((sentencia) -> {
-            resultado.append(sentencia);
-        });
+        sentencias.forEach(resultado::append);
         return resultado.toString();
     }
 
@@ -390,19 +365,12 @@ public class ASTGraphviz extends Visitor<String>{
 
     @Override
     protected String procesarIf(If anIf, String expresion, String bloqueThen) {
-        StringBuilder resultado = new StringBuilder();
-        resultado.append(expresion);
-        resultado.append(bloqueThen);
-        return resultado.toString();
+        return expresion + bloqueThen;
     }
 
     @Override
     protected String procesarIf(If anIf, String expresion, String bloqueThen, String bloqueElse) {
-        StringBuilder resultado = new StringBuilder();
-        resultado.append(expresion);
-        resultado.append(bloqueThen);
-        resultado.append(bloqueElse);
-        return resultado.toString();
+        return expresion + bloqueThen + bloqueElse;
     }
 
     @Override

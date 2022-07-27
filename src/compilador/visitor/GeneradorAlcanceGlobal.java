@@ -6,32 +6,29 @@ import compilador.ast.operaciones.binarias.OperacionBinaria;
 
 import java.util.List;
 
+                                // GENERACION DE TABLA DE SIMBOLOS DE NOMBRES GLOBALES
+
+/*
+   cada vez que detecta una declaracion la guarda en el alcance, mi tabla de simbolos
+*/
+
 public class GeneradorAlcanceGlobal extends Visitor<Void>{
 
-    private Alcance alcance_global;
+    private Alcance alcance_global; //tabla de simbolos globales (variables + funciones)
 
     public Alcance getAlcance_global() {
         return alcance_global;
     }
 
     public void procesar(Programa programa) throws ExcepcionDeAlcance{
-        this.visit(programa);   // como aca no hay visit(programa) usa de la superclase
-    }
-
-    private void setGlobal(Bloque bloque){
-        bloque.setAlcance(new Alcance("global"));
-        this.alcance_global =  bloque.getAlcance();
-    }
-
-    public boolean estaDeclarado(Identificador identificador){
-        boolean esta=true;
-        Object elemento = alcance_global.resolver(identificador.getNombre());
-        if(elemento == null || elemento instanceof DeclaracionFuncion){
-            esta=false;
+        if(programa.getDeclaraciones() != null){
+            this.visit(programa.getDeclaraciones());
+        } else {
+            alcance_global = new Alcance("global"); //lo va a devolver vacio dado que no hay nada en el alcance global
         }
-        return esta;
     }
 
+    // funcion que me permite agregar un simbolo a la tabla de simbolos
     // agregarSimbolo(nombre , declaracion)
     private Object agregarSimbolo(String nombre, Object s) throws ExcepcionDeAlcance {
         if(alcance_global.resolver(nombre) != null){    //retorna el repetido, si no esta -> null
@@ -42,18 +39,15 @@ public class GeneradorAlcanceGlobal extends Visitor<Void>{
 
     @Override
     public Void visit(Bloque bloque) throws ExcepcionDeAlcance {
-        if (bloque.getNombre().equals("MAIN")) {
-            return null;
-        }
-        this.setGlobal(bloque);
+        bloque.setAlcance(new Alcance("global"));
+        this.alcance_global =  bloque.getAlcance();
         super.visit(bloque);
         return null;
     }
 
     @Override
     public Void visit(DeclaracionFuncion declaracionFuncion) throws ExcepcionDeAlcance {
-        Funcion funcion = new Funcion(declaracionFuncion);    // var : declaracionVariable
-        Object result = this.agregarSimbolo(funcion.getDeclaracionFuncion().getIdentificador().getNombre(), declaracionFuncion);
+        Object result = this.agregarSimbolo(declaracionFuncion.getIdentificador().getNombre(), declaracionFuncion);
         if(result!=null){   //repetido
             throw new ExcepcionDeAlcance(
                     String.format("El nombre de la funcion %1$s de tipo retorno %2$s fue utilizado previamente\"]\n",
@@ -64,8 +58,7 @@ public class GeneradorAlcanceGlobal extends Visitor<Void>{
 
     @Override
     public Void visit(DeclaracionVariable dv) throws ExcepcionDeAlcance{
-        Variable var = new Variable(dv);
-        Object result = this.agregarSimbolo(var.getDeclaracion().getId().getNombre(), dv);
+        Object result = this.agregarSimbolo(dv.getId().getNombre(), dv);
         if(result!=null){   //repetido
             throw new ExcepcionDeAlcance(String.format("El nombre de la variable %1$s de tipo %2$s fue utilizado previamente\"]\n",
                     dv.getId().getNombre(), dv.getTipo() ));
@@ -74,9 +67,10 @@ public class GeneradorAlcanceGlobal extends Visitor<Void>{
         return null;
     }
 
+    //esto evita que en la inicializacion de una variable, se use un nombre no definido previamente
     @Override
     public Void visit(Identificador identificador) throws ExcepcionDeAlcance {
-        if(!estaDeclarado(identificador)){
+        if(this.alcance_global.resolver(identificador.getNombre()) == null){
             throw new ExcepcionDeAlcance(String.format("%1$s NO esta declarado previamente\"]\n",identificador.getNombre()));
         }
         return null;
@@ -88,7 +82,7 @@ public class GeneradorAlcanceGlobal extends Visitor<Void>{
     }
 
     @Override
-    protected Void procesarWhenIs(WhenIs whenIs, Void expresion, Void bloque) {
+    protected Void procesarWhenIs(WhenIs whenIs,Void simboloCpm, Void expresion, Void bloque) {
         return null;
     }
 
@@ -144,11 +138,6 @@ public class GeneradorAlcanceGlobal extends Visitor<Void>{
 
     @Override
     protected Void procesarWhile(While aWhile, Void expresion, Void bloqueWhile) {
-        return null;
-    }
-
-    @Override
-    protected Void procesarFor(For aFor, Void identificador, Void bloque, Void from, Void to, Void by) {
         return null;
     }
 

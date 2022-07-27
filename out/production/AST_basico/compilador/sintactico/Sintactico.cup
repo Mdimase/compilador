@@ -1,37 +1,37 @@
 package compilador.sintactico;
 
+                                                //AREA DE IMPORTS
 import compilador.ast.base.*;
 import compilador.ast.instrucciones.*;
 import compilador.ast.operaciones.binarias.*;
 import compilador.ast.operaciones.unarias.*;
-
 import java.util.*;
-
 import java_cup.runtime.*;
 
-class Sintactico;
+class Sintactico;   // nombre de clase
 
 parser code
 {:
-    /*
-    public void syntax_error(Symbol s) {
-        System.out.println("Error en la línea " + (s.right+1) + ", columna " + s.left + ": "
-            + SintacticoSym.terminalNames[s.sym] + "(" + s.value + ") no reconocido.");
-    }   */
-
+    //codigo Java a utilizar en JCUP y se guarda en la misma clase
     public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{
             System.out.println("Error en la linea "+ (s.left+1)+ " Columna "+ s.right+ ". Valor simbolo '"
             +s.value+"' . Simbolo n° "+s.sym+ " no reconocido." );
         }
-
 :}
 
 action code
 {:
-
+            // variables o estructuras Java a utilizar en JCUP. se guarda en clase no publica separada del propio parser
 :}
 
+                                                    //LISTA DE SIMBOLOS
+
+// los terminales se tienen que corresponder con los TOKENS del lexico
+
+//tipo Object
 terminal MAIN,PUNTO,MAS, MENOS, MULTIPLICAR, DIVIDIR, APERTURA_PARENTESIS, CIERRE_PARENTESIS, MAYOR, MENOR, MAYOR_IGUAL, MENOR_IGUAL, IGUAL_IGUAL, DISTINTO, PUNTO_COMA, OR, AND, NOT, VARIABLE, IS, IGUAL,WHILE,DO,IF,THEN,ELSE,BEGIN,END,WRITE, WRITELN,READ_INTEGER,READ_BOOLEAN,READ_FLOAT,WHEN, BREAK,CONTINUE,FUNCTION,RETURN,COMA,FOR,BY,TO,FROM;
+
+//tipo String
 terminal String IDENTIFICADOR, INTEGER_LITERAL, FLOAT_LITERAL,TRUE,FALSE,INTEGER,FLOAT,BOOLEAN, STRING_LITERAL;
 
 non terminal Expresion invocacion_funciones,condicion,comparacion,expresion,exp_arit,exp_or,exp_and,exp_not, termino, factor;
@@ -48,19 +48,25 @@ non terminal Asignacion asignacion;
 non terminal Tipo tipo;
 non terminal Write write, writeln;
 non terminal While while;
-//non terminal For for;
 non terminal If if;
 non terminal Constante valor_defecto;
-//non terminal InvocacionFuncion invocacion_funciones; TUVIMOS QUE HACER QUE SEA EXPRESION Y QUE EXPRESION EXTIENDA DE SENTENCIA PARA SOLUCIONAR PROBLEMAS DE TIPOS ENEL PARSING
 non terminal When when;
 non terminal List<WhenIs> comparaciones_is;
 non terminal WhenIs comparacion_is;
-non terminal Comparador comparador;
+non terminal SimboloCmp comparador;
 
-precedence left IS; //para evitar shift/reduce en el when sin else
-precedence left ELSE; // para evitar shift/reduce en el if
+//reglas de precedencia asociativos de izquierda a derecha
+/* el orden => prioridad siendo la ultima de mayor prioridad  */
 
-start with programa;
+precedence left IS;     //para evitar shift/reduce en el when sin else -> hace shift
+precedence left ELSE;   // para evitar shift/reduce en el if -> hace shift
+
+start with programa;    //simbolo inicial
+
+/*
+    IMPORTANTE: para aprovechar y ganar tiempo, a medida que verifico que sintacticamente esta bien,
+                voy generando mi AST con informacion que me sera util para validar cosas en el futuro.
+*/
 
 programa ::= declaraciones:d bloque_main:bm{:
             Bloque declaraciones = new Bloque(d,"DECLARACIONES",false);
@@ -100,27 +106,25 @@ declaraciones ::= declaracion_funcion:df {:
 
 declaracion_funcion::= FUNCTION IDENTIFICADOR:id APERTURA_PARENTESIS parametros:p CIERRE_PARENTESIS RETURN tipo:t sentencia:s {:
             Identificador identificador = new Identificador(id,t);
-            List<Sentencia> aux = new ArrayList<Sentencia>();
-            aux.add(s);
-            Bloque bloque = new Bloque(aux,false);
+            Bloque bloque = s.toBloque();
+            bloque.setNombre("BLOQUE_FUNCION");
             RESULT= new DeclaracionFuncion(identificador,t,p,bloque);
         :};
 
 declaracion_funcion::= FUNCTION IDENTIFICADOR:id APERTURA_PARENTESIS CIERRE_PARENTESIS RETURN tipo:t sentencia:s {:
             Identificador identificador = new Identificador(id,t);
-            List<Sentencia> aux = new ArrayList<Sentencia>();
-            aux.add(s);
-            Bloque bloque = new Bloque(aux,false);
+            Bloque bloque = s.toBloque();
+            bloque.setNombre("BLOQUE_FUNCION");
             RESULT= new DeclaracionFuncion(identificador,t,bloque);
         :};
 
 parametros::= parametro:p COMA parametros:pp {:
-            pp.add(p);
+            pp.add(0,p);
             RESULT = pp;
         :};
 
 parametros::= parametro_con_v_defecto:p parametros_con_v_defecto:pp {:
-            pp.add(p);
+            pp.add(0,p);
             RESULT = pp;
         :};
 
@@ -131,7 +135,7 @@ parametros::= parametro:p {:
         :};
 
 parametros_con_v_defecto::= COMA parametro_con_v_defecto:p parametros_con_v_defecto:pp {:
-            pp.add(p);
+            pp.add(0,p);
             RESULT=pp;
         :};
 
@@ -253,113 +257,89 @@ asignacion ::=  IDENTIFICADOR:id IGUAL expresion:e {:
               :};
 
 while::= WHILE condicion:c DO instruccion:i {:
-            List<Sentencia> aux = new ArrayList<Sentencia>();
-            aux.add(i);
-            Bloque bloque = new Bloque(aux,"BLOQUE_WHILE",false);
+            Bloque bloque = i.toBloque();
+            bloque.setNombre("BLOQUE_WHILE");
             RESULT= new While("WHILE",c, bloque);
         :};
 
 for::= FOR IDENTIFICADOR:id FROM INTEGER_LITERAL:f TO INTEGER_LITERAL:t BY INTEGER_LITERAL:b DO instruccion:i{:
-/*
-            Identificador identificador = new Identificador(id);
-            Constante from = new Constante(f, Tipo.INTEGER);
-            Constante to = new Constante(t, Tipo.INTEGER);
-            Constante by = new Constante(b, Tipo.INTEGER);
-            List<Sentencia> aux = new ArrayList<Sentencia>();
-            aux.add(i);
-            Bloque bloque = new Bloque(aux,"FOR",false);
-            RESULT= new For(identificador,from,to,by,bloque);
-*/
-
-            List<Sentencia> cuerpoFor = new ArrayList<Sentencia>(); //lista de sentencias del bloque principal
             Expresion from = new Constante(f, Tipo.INTEGER);    //constante from
             Identificador identificador = new Identificador(id);    //identificador
-            Sentencia as = new Asignacion(identificador,from);  //primera asignacion id=f;
-            cuerpoFor.add(as);  //agrego esa sentencia al bloque principal
-            List<Sentencia> aux = new ArrayList<Sentencia>();   //lista de sentencias del bloque while interno
-            aux.add(i); //agrego todas las sentencias que eran del for original
+            //Sentencia as = new Asignacion(identificador,from);  //primera asignacion id=f;
+            Sentencia dv = new DeclaracionVariable(identificador,Tipo.INTEGER,from);
+            Bloque cuerpoFor = dv.toBloque();
+            cuerpoFor.setNombre("FOR->WHILE");
             Expresion by = new Constante(b, Tipo.INTEGER);  //constante by
             Expresion to = new Constante(t,Tipo.INTEGER);   //constante to
 
             if (Integer.valueOf(f) < Integer.valueOf(t)){
                 Expresion exp = new Suma(identificador,by); //expresion usada en la asignacion id+by;
                 Sentencia asig = new Asignacion(identificador,exp); // asignacion id=id+by;
-                aux.add(asig);  //agrego la asignacion a la lista de sentencias del bloque while interno
                 Expresion condicion = new MenorIgual(identificador,to); //condicion del while interno
 
-                Bloque bloque = new Bloque(aux,"BLOQUEAUX",false);  //bloque de sentencias del while interno
+                Bloque bloque = i.toBloque();  //bloque de sentencias del while interno
+                bloque.setNombre("BLOQUE_WHILE");
+                bloque.getSentencias().add(asig); //agrego la asignacion a la lista de sentencias del bloque while interno
 
                 While w = new While("WHILE",condicion,bloque);  // while interno completo
-                cuerpoFor.add(w);   //agrego el while completo a la lista de sentencias del cuerpo de mi for original
+                cuerpoFor.getSentencias().add(w);   //agrego el while completo a la lista de sentencias del cuerpo de mi for original
             } else {
                 Expresion exp = new Resta(identificador,by); //expresion usada en la asignacion id+by;
                 Sentencia asig = new Asignacion(identificador,exp); // asignacion id=id+by;
-                aux.add(asig);  //agrego la asignacion a la lista de sentencias del bloque while interno
                 Expresion condicion = new MenorIgual(to,identificador); //condicion del while interno
 
-                Bloque bloque = new Bloque(aux,"BLOQUE",false);  //bloque de sentencias del while interno
+                Bloque bloque = i.toBloque();
+                bloque.setNombre("BLOQUE_WHILE");
+                bloque.getSentencias().add(asig);
 
                 While w = new While("WHILE",condicion,bloque);  // while interno completo
-                cuerpoFor.add(w);   //agrego el while completo a la lista de sentencias del cuerpo de mi for original
+                cuerpoFor.getSentencias().add(w);   //agrego el while completo a la lista de sentencias del cuerpo de mi for original
             }
-            RESULT = new Bloque (cuerpoFor,"FOR->WHILE",false);
+            RESULT = cuerpoFor;
         :};
 
 for::= FOR IDENTIFICADOR:id FROM INTEGER_LITERAL:f TO INTEGER_LITERAL:t DO instruccion:i{:
-/*
-            Identificador identificador = new Identificador(id);
-            Constante from = new Constante(f, Tipo.INTEGER);
-            Constante to = new Constante(t, Tipo.INTEGER);
-            Constante by = new Constante(String.valueOf(1), Tipo.INTEGER);
-            List<Sentencia> aux = new ArrayList<Sentencia>();
-            aux.add(i);
-            Bloque bloque = new Bloque(aux,"FOR",false);
-            RESULT= new For(identificador,from,to,by,bloque);
-*/
-
-            List<Sentencia> cuerpoFor = new ArrayList<Sentencia>(); //lista de sentencias del bloque principal
             Expresion from = new Constante(f, Tipo.INTEGER);    //constante from
             Identificador identificador = new Identificador(id);    //identificador
-            Sentencia as = new Asignacion(identificador,from);  //primera asignacion id=f;
-            cuerpoFor.add(as);  //agrego esa sentencia al bloque principal
+            //Sentencia as = new Asignacion(identificador,from);  //primera asignacion id=f;
+            Sentencia dv = new DeclaracionVariable(identificador,Tipo.INTEGER,from);
+            Bloque cuerpoFor = dv.toBloque(); //bloque principal
+            cuerpoFor.setNombre("FOR->WHILE");
 
-            List<Sentencia> aux = new ArrayList<Sentencia>();   //lista de sentencias del bloque while interno
-            aux.add(i); //agrego todas las sentencias que eran del for original
             Expresion by = new Constante(String.valueOf(1), Tipo.INTEGER);  //constante by
             Expresion to = new Constante(t,Tipo.INTEGER);   //constante to
 
             if (Integer.valueOf(f) < Integer.valueOf(t)){
                 Expresion exp = new Suma(identificador,by); //expresion usada en la asignacion id+by;
                 Sentencia asig = new Asignacion(identificador,exp); // asignacion id=id+by;
-                aux.add(asig);  //agrego la asignacion a la lista de sentencias del bloque while interno
                 Expresion condicion = new MenorIgual(identificador,to); //condicion del while interno
 
-                Bloque bloque = new Bloque(aux,"BLOQUEAUX",false);  //bloque de sentencias del while interno
+                Bloque bloque = i.toBloque();  //bloque de sentencias del while interno
+                bloque.setNombre("BLOQUE_WHILE");
+                bloque.getSentencias().add(asig); //agrego la asignacion a la lista de sentencias del bloque while interno
 
                 While w = new While("WHILE",condicion,bloque);  // while interno completo
-                cuerpoFor.add(w);   //agrego el while completo a la lista de sentencias del cuerpo de mi for original
+                cuerpoFor.getSentencias().add(w);   //agrego el while completo a la lista de sentencias del cuerpo de mi for original
             } else {
                     Expresion exp = new Resta(identificador,by); //expresion usada en la asignacion id+by;
                     Sentencia asig = new Asignacion(identificador,exp); // asignacion id=id+by;
-                    aux.add(asig);  //agrego la asignacion a la lista de sentencias del bloque while interno
                     Expresion condicion = new MenorIgual(to,identificador); //condicion del while interno
 
-                    Bloque bloque = new Bloque(aux,"BLOQUE",false);  //bloque de sentencias del while interno
+                    Bloque bloque = i.toBloque();  //bloque de sentencias del while interno
+                    bloque.setNombre("BLOQUE_WHILE");
+                    bloque.getSentencias().add(asig); //agrego la asignacion a la lista de sentencias del bloque while interno
 
                     While w = new While("WHILE",condicion,bloque);  // while interno completo
-                    cuerpoFor.add(w);   //agrego el while completo a la lista de sentencias del cuerpo de mi for original
+                    cuerpoFor.getSentencias().add(w);   //agrego el while completo a la lista de sentencias del cuerpo de mi for original
             }
-
-            RESULT = new Bloque (cuerpoFor,"FOR->WHILE",false);
+            RESULT = cuerpoFor;
         :};
 
-// falla en una expresion
 invocacion_funciones ::= IDENTIFICADOR:id APERTURA_PARENTESIS parametros_invocacion:p CIERRE_PARENTESIS{:
             Identificador identificador = new Identificador(id);
             RESULT = new InvocacionFuncion(identificador,p);
         :};
 
-//falla en una expresion
 invocacion_funciones ::= IDENTIFICADOR:id APERTURA_PARENTESIS CIERRE_PARENTESIS {:
             Identificador identificador = new Identificador(id);
             RESULT = new InvocacionFuncion(identificador);
@@ -380,8 +360,8 @@ write::= WRITE APERTURA_PARENTESIS expresion:e CIERRE_PARENTESIS{:
             RESULT = new Write(e);
         :};
 
-write ::= WRITE APERTURA_PARENTESIS STRING_LITERAL CIERRE_PARENTESIS {:
-            Write w = new Write();
+write ::= WRITE APERTURA_PARENTESIS STRING_LITERAL:s CIERRE_PARENTESIS {:
+            Write w = new Write(s);
             w.setEsString(true);
             RESULT = w;
             :};
@@ -390,8 +370,8 @@ writeln ::= WRITELN APERTURA_PARENTESIS expresion:e CIERRE_PARENTESIS{:
             RESULT = new Write(e, true);
             :};
 
-writeln ::= WRITELN APERTURA_PARENTESIS STRING_LITERAL CIERRE_PARENTESIS{:
-            Write w = new Write(true);
+writeln ::= WRITELN APERTURA_PARENTESIS STRING_LITERAL:s CIERRE_PARENTESIS{:
+            Write w = new Write(true,s);
             w.setEsString(true);
             RESULT = w;
             :};
@@ -409,9 +389,8 @@ tipo::= BOOLEAN:b {:
         :};
 
 when::= WHEN expresion:e comparaciones_is:ci ELSE instruccion:i{:
-            List<Sentencia> sentenciasWhenElse = new ArrayList<Sentencia>();
-            sentenciasWhenElse.add(i);
-            Bloque bloque = new Bloque(sentenciasWhenElse,"WhenElse",false);
+            Bloque bloque = i.toBloque();
+            bloque.setNombre("BLOQUE_ELSE");
             RESULT= new When("When/else",e,ci,bloque);
         :};
 
@@ -431,52 +410,55 @@ comparaciones_is ::= comparacion_is:c {:
         :};
 
 comparacion_is::= IS comparador:c expresion:e THEN instruccion:i{:
-            List<Sentencia> sentenciasWhenIs = new ArrayList<Sentencia>();
-            sentenciasWhenIs.add(i);
-            Bloque bloque = new Bloque(sentenciasWhenIs,"WhenIs",false);
+            Bloque bloque = i.toBloque();
+            bloque.setNombre("BLOQUE_WHEN_IS");
             RESULT= new WhenIs(c,e,bloque);
         :};
 
 comparador::= MENOR {:
-            RESULT= Comparador.MENOR;
+            RESULT= new SimboloCmp( "<",Comparador.MENOR);
         :};
 
 comparador::= MENOR_IGUAL {:
-            RESULT= Comparador.MENORIGUAL;
+            RESULT= new SimboloCmp( "<=",Comparador.MENORIGUAL);
         :};
 
 comparador::= MAYOR {:
-            RESULT= Comparador.MAYOR;
+            RESULT= new SimboloCmp( ">",Comparador.MAYOR);
         :};
 
 comparador::= MAYOR_IGUAL {:
-            RESULT= Comparador.MAYORIGUAL;
+            RESULT= new SimboloCmp( ">=",Comparador.MAYORIGUAL);
         :};
 
 comparador::= IGUAL_IGUAL {:
-            RESULT= Comparador.IGUALIGUAL;
+            RESULT= new SimboloCmp( "==",Comparador.IGUALIGUAL);
         :};
 
 comparador::= DISTINTO {:
-            RESULT= Comparador.DISTINTO;
+            RESULT= new SimboloCmp( "!=",Comparador.DISTINTO);
         :};
+
+/*
+    tienen un conflicto de shift/reduce, dado que una vez que analizo if cond then i podria reducir a un if o
+    podria seguir apilando else i para recien ahi hacer un reduce a un if
+    para la entrada else en ese momento en la tabla hay 2 posibles salidas, con precedende ELSE, le indicamos que
+    siempre elija seguir observando, es decir, hace un shift
+*/
 
 // if una instruccion sin; + else una instruccion con ; al final(lo agrega la sentencia que engloba al if)
 if ::= IF condicion:c THEN instruccion:i1 ELSE instruccion:i2 {:
-            List<Sentencia> sentenciasIf = new ArrayList<Sentencia>();
-            sentenciasIf.add(i1);
-            Bloque bloqueThen = new Bloque(sentenciasIf,"BLOQUE_THEN",false);
-            List<Sentencia> sentenciasElse = new ArrayList<Sentencia>();
-            sentenciasElse.add(i2);
-            Bloque bloqueElse = new Bloque(sentenciasElse,"BLOQUE_ELSE",false);
+            Bloque bloqueThen = i1.toBloque();
+            bloqueThen.setNombre("BLOQUE_THEN");
+            Bloque bloqueElse = i2.toBloque();
+            bloqueElse.setNombre("BLOQUE_ELSE");
             RESULT= new If("IF/ELSE",c, bloqueThen, bloqueElse);
         :};
 
 // if una instruccion con ; al final(lo agrega la sentencia que engloba al if)
 if ::= IF condicion:c THEN instruccion:i {:
-            List<Sentencia> sentenciasIf = new ArrayList<Sentencia>();
-            sentenciasIf.add(i);
-            Bloque bloqueThen = new Bloque(sentenciasIf,"BLOQUE_THEN",false);
+            Bloque bloqueThen = i.toBloque();
+            bloqueThen.setNombre("BLOQUE_THEN");
             RESULT= new If("IF",c, bloqueThen);
         :};
 

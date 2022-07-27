@@ -70,14 +70,9 @@ public class Bloque extends Sentencia{
         this.sentencias = sentencias;
     }
 
-    //este metodo es para evitar que me quede un bloque dentro de otro, dado que en la gramatica un bloque es una sentencia
-    public List<Sentencia> initSentencia(Bloque bloque){
-        if(bloque.getSentencias().get(0).getClass() == Bloque.class){   //mi sentencia es un bloque de sentencias
-            Bloque aux = (Bloque) bloque.getSentencias().get(0);    //guardo dicho bloque de sentencias
-            return aux.getSentencias();
-        } else{
-            return bloque.getSentencias();
-        }
+    @Override
+    public Bloque toBloque(){
+        return this;
     }
 
     @Override

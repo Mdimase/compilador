@@ -14,6 +14,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+//  la secuencia de llamados sera igual a la del Visitor abstracto
+//  aca se va a poder modificar la estructura del AST, por eso en cada metodo se retorna el Nodo transformado
+//  por ende retorna un AST modificado a diferencia del Visitor comun que retorna nada o archivos externos como dot o llvm
+
 public abstract class Transformer {
 
     // retorna un Programa tranformado
@@ -44,10 +48,6 @@ public abstract class Transformer {
         return i;
     }
 
-    public Variable transform(Variable v) {
-        return v;
-    }
-
     public Asignacion transform(Asignacion a) throws ExcepcionDeTipos{
         Identificador id = a.getIdentificador().accept_transfomer(this);
         Expresion e = a.getExpresion().accept_transfomer(this);
@@ -70,50 +70,62 @@ public abstract class Transformer {
         return operacion;
     }
 
+    //retornan Expresion x el constant folding
     public Expresion transform(Division d) throws ExcepcionDeTipos {
         return transformar_operacion_binaria(d);
     }
 
+    //retornan Expresion x el constant folding
     public Expresion transform(Multiplicacion m) throws ExcepcionDeTipos {
         return transformar_operacion_binaria(m);
     }
 
+    //retornan Expresion x el constant folding
     public Expresion transform(Resta r) throws ExcepcionDeTipos {
         return transformar_operacion_binaria(r);
     }
 
+    //retornan Expresion x el constant folding
     public Expresion transform(Suma s) throws ExcepcionDeTipos {
         return transformar_operacion_binaria(s);
     }
 
+    //retornan Expresion x el constant folding
     public Expresion transform(Mayor mayor) throws ExcepcionDeTipos {
         return transformar_operacion_binaria(mayor);
     }
 
+    //retornan Expresion x el constant folding
     public Expresion transform(Menor menor) throws ExcepcionDeTipos {
         return transformar_operacion_binaria(menor);
     }
 
+    //retornan Expresion x el constant folding
     public Expresion transform(MayorIgual mayorIgual)  throws ExcepcionDeTipos {
         return transformar_operacion_binaria(mayorIgual);
     }
 
+    //retornan Expresion x el constant folding
     public Expresion transform(MenorIgual menorIgual)  throws ExcepcionDeTipos {
         return transformar_operacion_binaria(menorIgual);
     }
 
+    //retornan Expresion x el constant folding
     public Expresion transform(IgualIgual igualIgual)  throws ExcepcionDeTipos{
         return transformar_operacion_binaria(igualIgual);
     }
 
+    //retornan Expresion x el constant folding
     public Expresion transform(Distinto distinto)  throws ExcepcionDeTipos {
         return transformar_operacion_binaria(distinto);
     }
 
+    //retornan Expresion x el constant folding
     public Expresion transform(Or or) throws ExcepcionDeTipos {
         return transformar_operacion_binaria(or);
     }
 
+    //retornan Expresion x el constant folding
     public Expresion transform(And and) throws ExcepcionDeTipos {
         return transformar_operacion_binaria(and);
     }
@@ -127,6 +139,7 @@ public abstract class Transformer {
         return (MenosUnario) transformar_operacion_unaria(menosUnario);
     }
 
+    //retornan Expresion x el constant folding
     public Expresion transform(Not not) throws ExcepcionDeTipos {
         return transformar_operacion_unaria(not);
     }
@@ -137,6 +150,7 @@ public abstract class Transformer {
         return fae;
     }
 
+    //retornan Expresion x el constant folding
     public Expresion transform(EnteroAFlotante eaf) throws ExcepcionDeTipos {
         eaf.setExpresion(eaf.getExpresion().accept_transfomer(this));
         return eaf;
@@ -151,10 +165,6 @@ public abstract class Transformer {
         invocacionFuncion.setIdentificador(id);
         invocacionFuncion.setParams(result);
         return invocacionFuncion;
-    }
-
-    public Funcion transform(Funcion funcion) throws ExcepcionDeTipos {
-        return funcion;
     }
 
     public Break transform(Break aBreak){
@@ -196,20 +206,6 @@ public abstract class Transformer {
         return declaracionFuncion;
     }
 
-    public For transform(For aFor) throws ExcepcionDeTipos {
-        Identificador id = aFor.getIdentificador().accept_transfomer(this);
-        Bloque bloque = aFor.getBloque().accept_transfomer(this);
-        Constante from = aFor.getFrom().accept_transfomer(this);
-        Constante to = aFor.getTo().accept_transfomer(this);
-        Constante by = aFor.getBy().accept_transfomer(this);
-        aFor.setIdentificador(id);
-        aFor.setBloque(bloque);
-        aFor.setFrom(from);
-        aFor.setTo(to);
-        aFor.setBy(by);
-        return aFor;
-    }
-
     public If transform(If anIf) throws ExcepcionDeTipos {
         Expresion e = anIf.getCondicion().accept_transfomer(this);
         Bloque bloqueThen = anIf.getBloqueThen().accept_transfomer(this);
@@ -238,6 +234,10 @@ public abstract class Transformer {
         return write;
     }
 
+    public Mensaje transform(Mensaje mensaje){
+        return mensaje;
+    }
+
     public Read transform(Read read){
         return read;
     }
@@ -250,6 +250,8 @@ public abstract class Transformer {
         return whenIs;
     }
 
+    // retorna sentencia xq al reescribirlo en un if, dicho metodo retorna un Bloque
+    // y para tener un tipo compatible entre ambos visit, aca retorno Sentencia
     public Sentencia transform(When when) throws ExcepcionDeTipos {
         Expresion e = when.getExpresionBase().accept_transfomer(this);
         ArrayList<WhenIs> list = new ArrayList<>();
@@ -263,5 +265,9 @@ public abstract class Transformer {
         when.setExpresionBase(e);
         when.setWhenIs(list);
         return when;
+    }
+
+    public SimboloCmp transform(SimboloCmp simboloCmp){
+        return simboloCmp;
     }
 }

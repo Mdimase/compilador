@@ -17,6 +17,15 @@ public class Distinto extends ComparacionIgualdad{
     }
 
     @Override
+    public String get_llvm_op_code() {
+        if(this.getIzquierda().getTipo() == Tipo.INTEGER){
+            return "icmp ne";
+        } else{
+            return "fcmp one";
+        }
+    }
+
+    @Override
     public <T> T accept(Visitor<T> v) throws ExcepcionDeAlcance {
         return v.visit(this);
     }

@@ -9,6 +9,7 @@ public class Parametro extends Sentencia {
     private Tipo tipo;
     private Identificador identificador;
     private Constante valorDefecto;
+    private String irRef;
 
     public Parametro(Tipo tipo, Identificador identificador, Constante valorDefecto) {
         this.tipo = tipo;
@@ -43,6 +44,14 @@ public class Parametro extends Sentencia {
 
     public void setValorDefecto(Constante valorDefecto) {
         this.valorDefecto = valorDefecto;
+    }
+
+    public String getIrRef() {
+        return irRef;
+    }
+
+    public void setIrRef(String irRef) {
+        this.irRef = irRef;
     }
 
     @Override

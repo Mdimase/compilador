@@ -16,7 +16,16 @@ public class Resta extends OperacionBinaria{
     public Resta(Expresion izquierda, Expresion derecha, Tipo tipo) {
         super(izquierda, derecha, tipo, "-");
     }
-    
+
+    @Override
+    public String get_llvm_op_code() {
+        if(this.getTipo() == Tipo.INTEGER){
+            return "sub";
+        } else{
+            return "fsub";
+        }
+    }
+
     @Override
     public <T> T accept(Visitor<T> v) throws ExcepcionDeAlcance{
         return v.visit(this);

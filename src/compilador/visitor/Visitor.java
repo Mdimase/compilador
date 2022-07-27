@@ -8,7 +8,8 @@ package compilador.visitor;
 import compilador.ast.base.*;
 import compilador.ast.instrucciones.*;
 import compilador.ast.operaciones.binarias.OperacionBinaria;
-import compilador.ast.operaciones.unarias.OperacionUnaria;
+import compilador.ast.operaciones.unarias.*;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -16,6 +17,24 @@ import java.util.List;
 public abstract class Visitor<T> {
 
     private int iden=0;
+    private boolean enFuncion;  //flags para controlar el return
+    private boolean enBucle;    //flag para controlar el continue y el break
+
+    protected boolean isEnFuncion() {
+        return enFuncion;
+    }
+
+    protected void setEnFuncion(boolean enFuncion) {
+        this.enFuncion = enFuncion;
+    }
+
+    protected boolean isEnBucle() {
+        return enBucle;
+    }
+
+    protected void setEnBucle(boolean enBucle) {
+        this.enBucle = enBucle;
+    }
 
     protected int getID(){
         iden+=1;
@@ -42,8 +61,12 @@ public abstract class Visitor<T> {
         if(w.getExpresion() !=null ) {
             return w.getExpresion().accept(this);
         } else {
-            return procesarNodo(w);
+            return w.getMensaje().accept(this);
         }
+    }
+
+    public T visit(Mensaje mensaje){
+        return procesarNodo(mensaje);
     }
 
     public T visit(Read read){
@@ -94,7 +117,7 @@ public abstract class Visitor<T> {
         } else{
             List<T> parametros = new ArrayList<>();
             for (Expresion parametro : invocacionFuncion.getParams()){
-                parametros.add(parametro.accept(this)); //acepto cada una de las sentencias que estan en el bloque if
+                parametros.add(parametro.accept(this));
             }
             return procesarInvocacionFuncion(invocacionFuncion,id,parametros);
         }
@@ -123,27 +146,21 @@ public abstract class Visitor<T> {
         }
     }
 
-    // QUEDO SIN USO, POR LA TRANSFORMACION DE UN FOR A WHILE EN EL PARSING
-    public T visit(For aFor) throws ExcepcionDeAlcance {
-        T id = aFor.getIdentificador().accept(this);
-        T from = aFor.getFrom().accept(this);
-        T to = aFor.getTo().accept(this);
-        T by = aFor.getBy().accept(this);
-        T bloque = aFor.getBloque().accept(this);
-        return procesarFor(aFor,id,bloque,from,to,by);
-    }
-
-
     public T visit(While aWhile) throws ExcepcionDeAlcance {
+        boolean aux  = this.isEnBucle();
+        setEnBucle(true);
         T exp = aWhile.getCondicion().accept(this);
         T bloque = aWhile.getBloque().accept(this);
+        setEnBucle(aux);
         return procesarWhile(aWhile, exp, bloque);
     }
 
     public T visit(DeclaracionFuncion declaracionFuncion) throws ExcepcionDeAlcance {
+        setEnFuncion(true);
         T id = declaracionFuncion.getIdentificador().accept(this);
         if(declaracionFuncion.getParametros().isEmpty()){
             T bloque = declaracionFuncion.getBloque().accept(this);
+            setEnFuncion(false);
             return procesarDeclaracionFuncion(declaracionFuncion,id,bloque);
         } else{
             ArrayList<T> parametros = new ArrayList<>();
@@ -151,6 +168,7 @@ public abstract class Visitor<T> {
                 parametros.add(parametro.accept(this));
             }
             T bloque = declaracionFuncion.getBloque().accept(this);
+            setEnFuncion(false);
             return procesarDeclaracionFuncion(declaracionFuncion,id,parametros,bloque);
         }
     }
@@ -164,10 +182,15 @@ public abstract class Visitor<T> {
         return procesarParametro(parametro,id);
     }
 
+    public T visit(SimboloCmp simboloCmp){
+        return procesarNodo(simboloCmp);
+    }
+
     public T visit(WhenIs whenIs) throws ExcepcionDeAlcance {
+        T simboloCmp = whenIs.getSimboloCmp().accept(this);
         T exp = whenIs.getExpresion().accept(this);
         T bloque = whenIs.getBloque().accept(this);
-        return procesarWhenIs(whenIs,exp,bloque);
+        return procesarWhenIs(whenIs,simboloCmp,exp,bloque);
     }
 
     public T visit(When when) throws ExcepcionDeAlcance {
@@ -182,10 +205,9 @@ public abstract class Visitor<T> {
         } else {
             return procesarWhen(when,exp,list);
         }
-
     }
 
-    protected abstract T procesarWhenIs (WhenIs whenIs,T expresion, T bloque);
+    protected abstract T procesarWhenIs (WhenIs whenIs,T simboloCpm, T expresion, T bloque);
 
     protected abstract T procesarWhen(When when,T expresion,List<T> whenIs,T bloque);
 
@@ -209,8 +231,6 @@ public abstract class Visitor<T> {
 
     protected abstract T procesarWhile(While aWhile, T expresion, T bloqueWhile);
 
-    protected abstract T procesarFor(For aFor, T identificador,T bloque , T from, T to,T by);
-
     protected abstract T procesarBloque(Bloque bloque, List<T> sentencias);
 
     protected abstract T procesarOperacionBinaria(OperacionBinaria ob, T ei, T ed);
@@ -222,13 +242,5 @@ public abstract class Visitor<T> {
     protected abstract T procesarIf(If anIf,T expresion, T bloqueThen);
 
     protected abstract T procesarIf(If anIf, T expresion, T bloqueThen, T bloqueElse);
-
-    public <T> T visit(Variable v) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public <T> T visit(Funcion f) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
 }

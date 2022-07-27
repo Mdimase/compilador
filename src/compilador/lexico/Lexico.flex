@@ -1,18 +1,19 @@
 package compilador.lexico;
 
+                                    //AREA DE IMPORTS
 import java.util.ArrayList;import java.util.Stack;
 import java_cup.runtime.*;
 import java_cup.sym;
 import compilador.sintactico.SintacticoSym;
 
-
+                                    //AREA DE OPCIONES
 %%
 
-%public
-%class Lexico
+%public                 //clase publica
+%class Lexico           // nombre de la clase generada
 %cup
-%line
-%column
+%line                   // guardo en this.yyline la linea del lexema actual
+%column                 // guardo en this.yycolumn la columna del lexema actual
 
 %{
     /*************************************************************************
@@ -48,6 +49,8 @@ import compilador.sintactico.SintacticoSym;
             }
 %}
 
+                                            //  AREA DE DECLARACIONES
+
 /* espacios en blancos y caracteres validos */
 
 FinLinea = \r|\n|\r\n
@@ -74,11 +77,15 @@ ReducidoFloatLiteral = \.{ParteDecimal} | \.({Natural}|0+{Natural}) | \.0 | {Int
 //Letra=[a-z]|ñ|[A-Z]|Ñ
 Identificador= [^\W\d]\w*\??
 
+//estados
+//solo una de ellas estara activa en un determinado momento
 %state COMENTARIOPAR
 %state COMENTARIOLLA
 %state STRING
 
 %%
+                                                //AREA DE REGLAS
+/* yytext() -> lexema */
 
 <YYINITIAL> {
 /* palabras claves */
